@@ -1,10 +1,14 @@
-name: CI
+name: Master
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - 'master'
+
+  pull_request:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +23,3 @@ jobs:
 
     - name: Gradle Build
       run: /bin/sh ./gradlew build
-
-    - name: Gradle Publish
-      run: /bin/sh ./gradlew -Pgpr.user=${{ github.actor }} -Pgpr.key=${{ secrets.GITHUB_TOKEN }} publish 
