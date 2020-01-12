@@ -76,5 +76,5 @@ fabric.properties
 build/
 .gradle
 node_modules/
-src/main/resources/assets/journeymap/ui/bundled/
+src/main/resources/assets/journeymap/web/bundled/
 /.idea/discord.xml

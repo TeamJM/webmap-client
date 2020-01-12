@@ -24,7 +24,7 @@ task webpack(type: Exec) {
     inputs.dir("$projectDir/src/main/js")
     inputs.dir("$projectDir/src/main/css")
 
-    outputs.dir("$projectDir/src/main/resources/assets/journeymap/ui/bundled")
+    outputs.dir("$projectDir/src/main/resources/assets/journeymap/web/bundled")
 
     if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
         commandLine "cmd", "/c", "npm", "run", "build"
@@ -37,7 +37,7 @@ tasks.processResources.dependsOn webpack
 
 clean.doFirst {
     // Remove the Webpack bundled assets as part of the clean task
-    delete "$projectDir/src/main/resources/assets/journeymap/ui/bundled"
+    delete "$projectDir/src/main/resources/assets/journeymap/web/bundled"
 }
 
 publishing {
