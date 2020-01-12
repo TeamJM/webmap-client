@@ -52,5 +52,25 @@ on Linux.
 Testing
 -------
 
-As the JourneyMap mod is currently closed-source, we cannot easily provide you with a way to test the webmap client.
-We hope to make this possible after we've finished rewriting the mod portions of the webmap!
+**Please note:** These instructions currently only apply to people with direct access to the JourneyMap codebase, as 
+currently the version that implements support for the `journeymap.webmap.assets_root` property is unreleased. Once it 
+has released, anyone using that version or later will be able to follow these instructions.
+
+Once you've made your changes, you can tell JourneyMap to load the webmap's static assets from a directory on your
+filesystem. This will allow you to make changes to the webmap client and simply reload your browser tab to test
+changes, instead of having to repack everything and restart Minecraft.
+
+In your Minecraft launcher, find the setting that allows you to supply extra arguments, and add the following to it,
+assuming that you've cloned the webmap client to `/home/username/webmap-client`:
+
+```bash
+-Djourneymap.webmap.assets_root="/home/username/webmap-client/src/main/resources/assets/journeymap/web"
+```
+
+Once you've started Minecraft with this argument applied, you should see the following in the console output:
+
+```
+Detected 'journeymap.webmap.assets_root' property, serving static files from: /home/gdude/webmap-client/src/main/resources/assets/journeymap/web
+```
+
+That's all you need to do. Just head to the full screen map and enable the webmap as usual, and you're good to go!
