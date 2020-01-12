@@ -23,7 +23,8 @@ repositories {
 jar {
     manifest {
         attributes(
-            'Main-Class': 'info.journeymap.webmap_client.Main'
+            'Main-Class': 'info.journeymap.webmap_client.Main',
+            'Class-Path': 'assets/'
         )
     }
 }
