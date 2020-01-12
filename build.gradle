@@ -1,10 +1,16 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'com.palantir.git-version' version '0.12.2'
 }
 
 group 'info.journeymap'
-version '1.0-SNAPSHOT'
+
+if (project.hasProperty("production")) {
+    version release
+} else {
+    version "${release}-${gitVersion()}"
+}
 
 sourceCompatibility = 1.8
 
