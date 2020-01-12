@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group 'info.journeymap'
@@ -30,4 +31,22 @@ tasks.processResources.dependsOn webpack
 clean.doFirst {
     // Remove the Webpack bundled assets as part of the clean task
     delete "$projectDir/src/main/resources/assets/journeymap/ui/bundled"
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/TeamJM/webmap-client")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
