@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+group 'info.journeymap'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+task webpack(type: Exec) {
+    inputs.file("package-lock.json")
+    inputs.file("webpack.config.js")
+    inputs.dir("$projectDir/src/main/js")
+
+    outputs.dir("$projectDir/src/main/resources/assets/journeymap/ui/bundled")
+
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+        commandLine "cmd", "/c", "npm", "run", "build"
+    } else {
+        commandLine "npm", "run", "build"
+    }
+}
+
+tasks.processResources.dependsOn webpack
+
+clean.doFirst {
+    // Remove the Webpack bundled assets as part of the clean task
+    delete "$projectDir/src/main/resources/assets/journeymap/ui/bundled"
+}

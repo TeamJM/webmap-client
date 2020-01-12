@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>JourneyMap</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="JourneyMap Team" name="author">
+
+    <!-- IDEA says this isn't actually valid, we should do this server-side -->
+    <!-- <meta http-equiv="Cache-Control" content="no-cache">-->
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="img/ico/journeymap.png">
+    <link href="bundled/main.css" rel="stylesheet">
+</head>
+<body>
+    <div id="main">
+        <l-map :center="center" :zoom="0">
+            <l-tile-layer :url="tiles_url"></l-tile-layer>
+        </l-map>
+    </div>
+
+    <script src="bundled/bundle.js"></script>
+</body>
+</html>
