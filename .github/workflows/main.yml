@@ -10,9 +10,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     
-    - name: setup-java
+    - name: Java Set-Up
       # Java 8 by default, doesn't really matter for us
       uses: olafurpg/setup-scala@v6
+
+    - name: NodeJS Set-Up
+      run: npm install --save
 
     - name: Gradle Build
       run: /bin/sh ./gradlew build
