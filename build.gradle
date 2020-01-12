@@ -1,5 +1,4 @@
 plugins {
-    id 'application'
     id 'java'
     id 'maven-publish'
     id 'com.palantir.git-version' version '0.12.2'
@@ -14,19 +13,9 @@ if (project.hasProperty("production")) {
 }
 
 sourceCompatibility = 1.8
-mainClassName = 'info.journeymap.webmap_client.Main'
 
 repositories {
     mavenCentral()
-}
-
-jar {
-    manifest {
-        attributes(
-            'Main-Class': 'info.journeymap.webmap_client.Main',
-            'Class-Path': 'assets/'
-        )
-    }
 }
 
 task webpack(type: Exec) {
