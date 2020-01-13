@@ -18,7 +18,7 @@
 </head>
 <body>
     <div id="main">
-        <l-map :zoom="0">
+        <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :zoom="0">
             <l-tile-layer :url="tiles_url"></l-tile-layer>
         </l-map>
     </div>
