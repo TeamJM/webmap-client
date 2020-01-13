@@ -52,9 +52,9 @@ on Linux.
 Testing
 -------
 
-**Please note:** These instructions currently only apply to people with direct access to the JourneyMap codebase, as 
-currently the version that implements support for the `journeymap.webmap.assets_root` property is unreleased. Once it 
-has released, anyone using that version or later will be able to follow these instructions.
+**Please note:** The version of JourneyMap that implements support for the `journeymap.webmap.assets_root` property 
+is unreleased. If you'd like to work on the webmap client, please [join the discord server](https://discord.gg/eP8gE69)
+and ask to be given a testing-only JAR, and we'll give you a hand.
 
 Once you've made your changes, you can tell JourneyMap to load the webmap's static assets from a directory on your
 filesystem. This will allow you to make changes to the webmap client and simply reload your browser tab to test
@@ -74,3 +74,83 @@ Detected 'journeymap.webmap.assets_root' property, serving static files from: /h
 ```
 
 That's all you need to do. Just head to the full screen map and enable the webmap as usual, and you're good to go!
+
+Endpoints
+=========
+
+These are the endpoints that are currently exposed by the JourneyMap mod for use with the webmap. Feel free to open
+an issue if the feature you're working on requires changes or additions to this list!
+
+GET /
+-----
+
+This endpoint just returns the contents of `index.html`. It's powered by the static files handler, as detailed in the
+next section.
+
+GET /:path-or-filename
+----------------------
+
+This endpoint is also a static file handler, which is configured for files within `assets/journeymap/web`. This may
+be configured at runtime using the `journeymap.webmap.assets_root` property to enable easier testing - see the "Testing"
+section above for more information.
+
+GET /data/:type
+---------------
+
+Parameters:
+
+* `type` - The type of data to query for. Must be one of `all`, `animals`, `mobs`, `images`, `messages`, `player`, 
+  `players`, `world`, `villagers` or `waypoints`
+* `image.since` - Required parameter when `type` is set to `all` or `images`; undocumented as of right now 
+
+This endpoint returns a collection of data based on the `type` parameter that was provided. This will return a JSON
+object containing the requested data.
+
+No sample data is available just yet, we'll get around to it.
+
+GET /logs
+---------
+
+This endpoint returns the contents of the `journeymap.log` file.
+
+POST /properties
+----------------
+
+This endpoint provides a way to change the webmap properties - essentially, a set of settings. A setting is modified
+by providing it as a query parameter. To set a property, the parameter should be either `"true"` or `"false"`.
+
+Properties:
+
+* `showCaves` - Whether to auto-switch to cave mode
+* `showEntityNames` - Whether to show pet names, NPC names, etc
+* `showGrid` - Whether to show a grid overlaid onto the map
+* `showSelf` - Whether to show the player on the map
+* `showWaypoints` - Whether to show waypoints on the map
+
+GET /skin/:username
+-------------------
+
+Parameters:
+
+* `username` - The username of the player to get the skin data for
+
+This endpoint simply returns image data from the texture cache, representing the head part of a player's skin in PNG
+format. The player's skin must be in the texture cache for this to work (so they must have been online during this
+session).
+
+GET /tiles/tile.png
+-------------------
+
+Parameters:
+
+* `x` - The "x" coordinate of the tile
+* `y` - The "y" coordinate of the tile; this is only applicable for cave maps and represents the map layer
+* `z` - The "z" coordinate of the tile
+* `dimension` - The numerical dimension ID to retrieve the map for
+* `mapTypeString` - The map type; must be one of `day`, `night`, `surface`, `topo` or `underground`
+* `zoom` - A numerical value representing the map zoom level
+
+This endpoint returns a map tile in PNG format, corresponding with the above parameters.
+
+Please note that the `dimension` parameter does not change which world the map is displaying. The effect of this
+parameter is currently undocumented.
