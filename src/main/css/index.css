@@ -8,3 +8,9 @@ html, body, #main {
     width: 100%;
     overflow: hidden;
 }
+
+.leaflet-container {
+    /* Match JM's background colour */
+
+    background-color: #222436;
+}
