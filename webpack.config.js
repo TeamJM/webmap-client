@@ -6,7 +6,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-    entry: "./src/main/js/index.js",
+    entry: ["babel-polyfill", "./src/main/js/index.js"],
     mode: "production",
 
     devtool: "eval-source-map",

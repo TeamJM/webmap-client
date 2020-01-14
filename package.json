@@ -5,6 +5,7 @@
   "dependencies": {
     "@babel/core": "7.7.7",
     "@babel/preset-env": "7.7.7",
+    "babel-polyfill": "6.26.0",
     "babel-loader": "8.0.6",
     "buefy": "0.8.9",
     "css-loader": "3.4.2",
