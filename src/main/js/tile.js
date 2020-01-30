@@ -1,4 +1,5 @@
 import {JM} from "./journeymap";
+import {TileRegistry} from "./tileRegistry";
 
 
 export class JMTileLayer extends L.TileLayer
@@ -10,17 +11,8 @@ export class JMTileLayer extends L.TileLayer
 
     createTile(coords, done)
     {
-        let tile = super.createTile(coords, done);
-
-        setInterval(() =>
-        {
-            let url = this.getTileUrl(coords);
-
-            if (!tile.src.endsWith(url))
-            {
-                tile.src = url;
-            }
-        }, 1000);
+        const tile = super.createTile(coords, done);
+        TileRegistry.setTile(this, tile, {x: coords.x, y: coords.y});
 
         return tile;
     }

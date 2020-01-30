@@ -1,7 +1,7 @@
 "use strict";
 
 
-class JMError extends Error
+export class JMError extends Error
 {
     constructor(statusCode, errorText, responseObj)
     {
@@ -160,7 +160,6 @@ class Journeymap
             }
         }
 
-        console.log(data);
         this.lastTileCheck = now;
     }
 
@@ -185,7 +184,4 @@ class Journeymap
     }
 }
 
-module.exports = {
-    JM: new Journeymap(),
-    JMError: JMError,
-};
+export const JM = new Journeymap();
