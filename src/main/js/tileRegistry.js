@@ -44,9 +44,9 @@ class tileRegistry
         })
     }
 
-    setTile(tileLayer, tile, coords)
+    setTile(tileLayer, tile, coords, zoom)
     {
-        const coordKey = `${coords.x}/${coords.y}`;
+        const coordKey = `${coords.x}/${coords.y}/${zoom}`;
 
         tile.setAttribute("data-coord-key", coordKey);
         this.registry[coordKey] = [coords, tileLayer, tile];
@@ -54,9 +54,9 @@ class tileRegistry
         TileObserver.observe(tile);
     }
 
-    removeTile(coords)
+    removeTile(coords, zoom)
     {
-        delete this.registry[`${coords.x}/${coords.y}`];
+        delete this.registry[`${coords.x}/${coords.y}/${zoom}`];
     }
 }
 

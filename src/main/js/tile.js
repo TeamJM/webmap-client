@@ -12,7 +12,7 @@ export class JMTileLayer extends L.TileLayer
     createTile(coords, done)
     {
         const tile = super.createTile(coords, done);
-        TileRegistry.setTile(this, tile, {x: coords.x, y: coords.y});
+        TileRegistry.setTile(this, tile, coords, this._getZoomForUrl());
 
         return tile;
     }

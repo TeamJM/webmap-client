@@ -31,7 +31,7 @@ function mapReady()
                 {
                     e.responseObj.text().then((text) =>
                     {
-                        console.log(`Failed to check for tile changes: ${text}`)
+                        console.error(`Failed to check for tile changes: ${text}`)
                     })
                 }
             }
