@@ -13,13 +13,11 @@ class tileRegistry
 
     visibilityCallback(visible, invisible)
     {
-        console.log("Visible", visible);
-        console.log("Invisible", invisible);
-
         visible.forEach((entry) =>
         {
             this.visible.add(entry)
         });
+
         invisible.forEach((entry) =>
         {
             this.visible.delete(entry)
