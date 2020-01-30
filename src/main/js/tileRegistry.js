@@ -1,10 +1,9 @@
-import elementVisible from "element-visible"
-
 class tileRegistry
 {
     constructor()
     {
         this.registry = {};
+        this.visible = new Set();
 
         setInterval(() =>
         {
@@ -12,35 +11,87 @@ class tileRegistry
         }, 1000);
     }
 
+    visibilityCallback(visible, invisible)
+    {
+        console.log("Visible", visible);
+        console.log("Invisible", invisible);
+
+        visible.forEach((entry) =>
+        {
+            this.visible.add(entry)
+        });
+        invisible.forEach((entry) =>
+        {
+            this.visible.delete(entry)
+        });
+    }
+
     poll()
     {
-        for (const key in this.registry)
+        this.visible.forEach((key) =>
         {
-            let [coords, tileLayer, tile] = this.registry[key];
-
-            if (!elementVisible(tile, 0.5))
+            if (!key in this.registry)
             {
-                continue;
+                console.warn(`Previously removed tile with key ${key} is visible`);
+                return;
             }
 
+            let [coords, tileLayer, tile] = this.registry[key];
             let url = tileLayer.getTileUrl(coords);
 
             if (!tile.src.endsWith(url))
             {
                 tile.src = url;
             }
-        }
+        })
     }
 
     setTile(tileLayer, tile, coords)
     {
-        this.registry[`${coords.x}/${coords.y}`] = [coords, tileLayer, tile];
+        const coordKey = `${coords.x}/${coords.y}`;
+
+        tile.setAttribute("data-coord-key", coordKey);
+        this.registry[coordKey] = [coords, tileLayer, tile];
+
+        TileObserver.observe(tile);
     }
 
     removeTile(coords)
     {
-        delete this.registry[`${coords.x}/${coords.y}`]
+        delete this.registry[`${coords.x}/${coords.y}`];
     }
 }
 
+function visibilityCallback(entries, observer)
+{
+    const visible = [];
+    const invisible = [];
+
+    entries.forEach((entry) =>
+    {
+        const coordKey = entry.target.getAttribute("data-coord-key");
+
+        if (!coordKey instanceof String)
+        {
+            console.warn("Tile observer received element with no coord key", entry);
+            return;
+        }
+
+        if (entry.isIntersecting)
+        {
+            visible.push(coordKey);
+        }
+        else
+        {
+            invisible.push(coordKey);
+        }
+    });
+
+    TileRegistry.visibilityCallback(visible, invisible);
+}
+
 export const TileRegistry = new tileRegistry();
+
+export const TileObserver = new IntersectionObserver(
+    visibilityCallback, {threshold: 0.1}
+);

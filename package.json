@@ -9,7 +9,6 @@
     "babel-loader": "8.0.6",
     "buefy": "0.8.9",
     "css-loader": "3.4.2",
-    "element-visible": "1.0.2",
     "file-loader": "5.0.2",
     "leaflet": "1.6.0",
     "mini-css-extract-plugin": "0.9.0",
