@@ -4,6 +4,7 @@ import {JM, JMError} from "./journeymap";
 import {JMTileLayer} from "./tile";
 
 export const methods = {
+    getMarkerIconObj: getMarkerIconObj,
     mapReady: mapReady,
     updateZoom: updateZoom,
 
@@ -41,7 +42,7 @@ export function updateZoom()
     const mapElement = document.getElementById("map");
     const zoom = this.$refs.map.mapObject._zoom;
 
-    if (zoom !== 0)
+    if (zoom > 0)
     {
         mapElement.classList.add("pixelated")
     }
@@ -49,4 +50,20 @@ export function updateZoom()
     {
         mapElement.classList.remove("pixelated")
     }
+}
+
+export function getMarkerIconObj(marker)
+{
+    const icon = new L.Icon({
+        "iconUrl": marker.url,
+        "iconSize": marker.size,
+        "anchor": marker.anchor,
+    });
+
+    return icon
+}
+
+export function translateCoords(x, z)
+{
+    return [z * -1, x]
 }

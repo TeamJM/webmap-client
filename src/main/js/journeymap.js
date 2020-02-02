@@ -1,6 +1,10 @@
 "use strict";
 
 
+import {translateCoords} from "./methods";
+
+import markerPlayer32 from "../resources/assets/journeymap/web/img/marker-player-bg-32.png";
+
 export class JMError extends Error
 {
     constructor(statusCode, errorText, responseObj)
@@ -145,9 +149,9 @@ class Journeymap
     async _checkForChanges()
     {
         let now = Date.now();
-        let data = await this.data("images", this.lastTileCheck);
+        let data = await this.data("all", this.lastTileCheck);
 
-        for (let element of data.regions)
+        for (let element of data.images.regions)
         {
             for (let i of Array(5).keys())
             {
@@ -161,6 +165,29 @@ class Journeymap
         }
 
         this.lastTileCheck = now;
+
+        window.app.markers = this._buildMarkers(data)
+    }
+
+    _buildMarkers(data)
+    {
+        let markers = [];
+
+        const player = data.player;
+        const playerCoords = translateCoords(player.posX, player.posZ);
+
+        markers.push({
+            latLng: playerCoords,
+            url: "/bundled/" + markerPlayer32,
+            size: 32,
+
+            options: {
+                rotationAngle: player.heading,
+                rotationOrigin: "center"
+            }
+        });
+
+        return markers
     }
 
     _slugifyTile(x, z, givenZoom)

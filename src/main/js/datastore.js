@@ -10,6 +10,7 @@ export default {
             new Point(29999984, 29999984)
         ],
 
+        markers: [],
         tiles: {},
         JMTileLayer: JMTileLayer,
     }
