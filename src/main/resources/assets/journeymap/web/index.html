@@ -18,7 +18,8 @@
 </head>
 <body>
     <div id="main">
-        <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="4" :zoom="0" ref="map"
+        <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="4" :zoom="0" id="map"
+               ref="map"
                v-on:ready="mapReady" v-on:zoom="updateZoom">
             <l-tile-layer :tile-layer-class="getTileClass" ref="tiles"></l-tile-layer>
         </l-map>

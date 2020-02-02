@@ -10,7 +10,7 @@ import {Icon} from "leaflet";
 import "leaflet/dist/leaflet.css"
 
 import datastore from "./datastore";
-import methods from "./methods";
+import {methods} from "./methods";
 import "../css/index.css";
 
 Vue.component("l-map", LMap);
@@ -30,7 +30,7 @@ Vue.use(Buefy);
 const app = new Vue({
     el: "#main",
     data: datastore.state,
-    methods: methods.methods,
+    methods: methods,
 });
 
 window.app = app;  // To make it available for debugging and such

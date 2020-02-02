@@ -3,20 +3,17 @@
 import {JM, JMError} from "./journeymap";
 import {JMTileLayer} from "./tile";
 
+export const methods = {
+    mapReady: mapReady,
+    updateZoom: updateZoom,
 
-export default {
-    methods: {
-        mapReady: mapReady,
-        updateZoom: updateZoom,
-
-        getTileClass: (url, options) =>
-        {
-            return new JMTileLayer(url, options);
-        }
+    getTileClass: (url, options) =>
+    {
+        return new JMTileLayer(url, options);
     }
 };
 
-function mapReady()
+export function mapReady()
 {
     setInterval(
         () =>
@@ -39,7 +36,17 @@ function mapReady()
         1000)
 }
 
-function updateZoom()
+export function updateZoom()
 {
-    JM.setZoom(this.$refs.map.mapObject._zoom);
+    const mapElement = document.getElementById("map");
+    const zoom = this.$refs.map.mapObject._zoom;
+
+    if (zoom !== 0)
+    {
+        mapElement.classList.add("pixelated")
+    }
+    else
+    {
+        mapElement.classList.remove("pixelated")
+    }
 }
