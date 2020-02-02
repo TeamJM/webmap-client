@@ -25,6 +25,7 @@
         <l-marker :icon="getMarkerIconObj(marker)"
                   :lat-lng="marker.latLng"
                   :options="marker.options"
+                  :z-index-offset="marker.zIndex ? marker.zIndex : 0"
                   v-for="(marker) in markers"
         ></l-marker>
     </l-map>

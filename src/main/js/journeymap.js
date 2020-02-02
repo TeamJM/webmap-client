@@ -162,6 +162,7 @@ class Journeymap {
             latLng: translateCoords(player.posX, player.posZ),
             url: "/bundled/" + markerPlayer32,
             size: 32,
+            zIndex: 2,
 
             options: {
                 rotationAngle: player.heading,
