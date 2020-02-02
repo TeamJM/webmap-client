@@ -145,7 +145,6 @@ class Journeymap {
         this.lastTileCheck = now;
 
         data.animals = await this.data("animals", this.lastTileCheck);
-        data.messages = await this.data("messages", this.lastTileCheck);
         data.mobs = await this.data("mobs", this.lastTileCheck);
         data.players = await this.data("players", this.lastTileCheck);
         data.villagers = await this.data("villagers", this.lastTileCheck);
