@@ -1,15 +1,13 @@
 "use strict";
 
 
-import {translateCoords} from "./methods";
-
-import markerPlayer32 from "../resources/assets/journeymap/web/img/marker-player-bg-32.png";
 import markerDot32 from "../resources/assets/journeymap/web/img/marker-dot-arrow-32.png";
 
-export class JMError extends Error
-{
-    constructor(statusCode, errorText, responseObj)
-    {
+import markerPlayer32 from "../resources/assets/journeymap/web/img/marker-player-bg-32.png";
+import {translateCoords} from "./methods";
+
+export class JMError extends Error {
+    constructor(statusCode, errorText, responseObj) {
         super();
 
         this.statusCode = statusCode;
@@ -19,10 +17,8 @@ export class JMError extends Error
 }
 
 
-class Journeymap
-{
-    constructor()
-    {
+class Journeymap {
+    constructor() {
         this.tiles = {};
         this.changedTiles = [];
         this.lastTileCheck = Date.now();
@@ -33,105 +29,90 @@ class Journeymap
         this.currentZoom = 0;
     }
 
-    async data(type, imagesSince)
-    {
+    async data(type, imagesSince) {
         let url = `/data/${type}`;
 
-        if (imagesSince !== undefined)
-        {
+        if (imagesSince !== undefined) {
             url = url + `?images.since=${imagesSince}`
         }
 
         const response = await fetch(
             url,
-            {method: "GET"}
+            {method: "GET"},
         );
 
-        if (!response.ok)
-        {
+        if (! response.ok) {
             throw new JMError(response.status, response.statusText, response)
         }
 
         return await response.json()
     }
 
-    async logs()
-    {
+    async logs() {
         const response = await fetch(
             "/logs",
-            {method: "GET"}
+            {method: "GET"},
         );
 
-        if (!response.ok)
-        {
+        if (! response.ok) {
             throw new JMError(response.status, response.statusText, response)
         }
 
         return await response.json()
     }
 
-    async getProperties()
-    {
+    async getProperties() {
         const response = await fetch(
             "/properties",
-            {method: "GET"}
+            {method: "GET"},
         );
 
-        if (!response.ok)
-        {
+        if (! response.ok) {
             throw new JMError(response.status, response.statusText, response)
         }
 
         return await response.json()
     }
 
-    async setProperties(properties)
-    {
+    async setProperties(properties) {
         const data = new FormData();
 
-        for (let key of properties)
-        {
+        for (let key of properties) {
             data.append(key, properties[key]);
         }
 
         const response = await fetch(
             "/properties",
-            {method: "POST", body: data}
+            {method: "POST", body: data},
         );
 
-        if (!response.ok)
-        {
+        if (! response.ok) {
             throw new JMError(response.status, response.statusText, response)
         }
 
         return await response.json()
     }
 
-    skinUrl(username)
-    {
+    skinUrl(username) {
         return `/skin/${username}`
     }
 
-    tileUrl(x, z, givenZoom)
-    {
+    tileUrl(x, z, givenZoom) {
         let zoom = this.currentZoom;
 
-        if (givenZoom !== undefined)
-        {
+        if (givenZoom !== undefined) {
             zoom = givenZoom;
         }
 
         let slug = this._slugifyTile(x, z, zoom);
 
-        if (slug in this.tiles)
-        {
-            if (!this.changedTiles.includes(slug))
-            {
+        if (slug in this.tiles) {
+            if (! this.changedTiles.includes(slug)) {
                 return this.tiles[slug]
             }
 
             this.changedTiles.splice(
-                this.changedTiles.indexOf(slug), 1
+                this.changedTiles.indexOf(slug), 1,
             )
         }
 
@@ -147,19 +128,15 @@ class Journeymap
         return url
     }
 
-    async _checkForChanges()
-    {
+    async _checkForChanges() {
         let now = Date.now();
         let data = await this.data("all", this.lastTileCheck);
 
-        for (let element of data.images.regions)
-        {
-            for (let i of Array(5).keys())
-            {
+        for (let element of data.images.regions) {
+            for (let i of Array(5).keys()) {
                 let slug = this._slugifyTile(element[0], element[1], i);
 
-                if (!this.changedTiles.includes(slug))
-                {
+                if (! this.changedTiles.includes(slug)) {
                     this.changedTiles.push(slug);
                 }
             }
@@ -176,8 +153,7 @@ class Journeymap
         window.app.markers = this._buildMarkers(data);
     }
 
-    _buildMarkers(data)
-    {
+    _buildMarkers(data) {
         let markers = [];
 
         const player = data.player;
@@ -189,12 +165,11 @@ class Journeymap
 
             options: {
                 rotationAngle: player.heading,
-                rotationOrigin: "center"
-            }
+                rotationOrigin: "center",
+            },
         });
 
-        for (let animal of Object.values(data.animals))
-        {
+        for (let animal of Object.values(data.animals)) {
             markers.push({
                 latLng: translateCoords(animal.posX, animal.posZ),
                 url: "/bundled/" + markerDot32,
@@ -202,13 +177,12 @@ class Journeymap
 
                 options: {
                     rotationAngle: animal.heading,
-                    rotationOrigin: "center"
-                }
+                    rotationOrigin: "center",
+                },
             })
         }
 
-        for (let mob of Object.values(data.mobs))
-        {
+        for (let mob of Object.values(data.mobs)) {
             markers.push({
                 latLng: translateCoords(mob.posX, mob.posZ),
                 url: "/bundled/" + markerDot32,
@@ -216,13 +190,12 @@ class Journeymap
 
                 options: {
                     rotationAngle: mob.heading,
-                    rotationOrigin: "center"
-                }
+                    rotationOrigin: "center",
+                },
             })
         }
 
-        for (let villager of Object.values(data.villagers))
-        {
+        for (let villager of Object.values(data.villagers)) {
             markers.push({
                 latLng: translateCoords(villager.posX, villager.posZ),
                 url: "/bundled/" + markerDot32,
@@ -230,31 +203,28 @@ class Journeymap
 
                 options: {
                     rotationAngle: villager.heading,
-                    rotationOrigin: "center"
-                }
+                    rotationOrigin: "center",
+                },
             })
         }
 
         return markers
     }
 
-    _slugifyTile(x, z, givenZoom)
-    {
+    _slugifyTile(x, z, givenZoom) {
         let dim = this.currentDim,
             type = this.currentMapType,
             y = this.currentSlice,
             zoom = this.currentZoom;
 
-        if (givenZoom !== undefined)
-        {
+        if (givenZoom !== undefined) {
             zoom = givenZoom;
         }
 
         return `X ${x}, Y ${y}, Z ${z} / Dim ${dim}, Type ${type}, Zoom ${zoom}`
     }
 
-    setZoom(zoom)
-    {
+    setZoom(zoom) {
         this.currentZoom = zoom;
     }
 }
