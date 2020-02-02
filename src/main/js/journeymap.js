@@ -4,6 +4,7 @@
 import {translateCoords} from "./methods";
 
 import markerPlayer32 from "../resources/assets/journeymap/web/img/marker-player-bg-32.png";
+import markerDot32 from "../resources/assets/journeymap/web/img/marker-dot-arrow-32.png";
 
 export class JMError extends Error
 {
@@ -166,7 +167,13 @@ class Journeymap
 
         this.lastTileCheck = now;
 
-        window.app.markers = this._buildMarkers(data)
+        data.animals = await this.data("animals", this.lastTileCheck);
+        data.messages = await this.data("messages", this.lastTileCheck);
+        data.mobs = await this.data("mobs", this.lastTileCheck);
+        data.players = await this.data("players", this.lastTileCheck);
+        data.villagers = await this.data("villagers", this.lastTileCheck);
+
+        window.app.markers = this._buildMarkers(data);
     }
 
     _buildMarkers(data)
@@ -174,10 +181,9 @@ class Journeymap
         let markers = [];
 
         const player = data.player;
-        const playerCoords = translateCoords(player.posX, player.posZ);
 
         markers.push({
-            latLng: playerCoords,
+            latLng: translateCoords(player.posX, player.posZ),
             url: "/bundled/" + markerPlayer32,
             size: 32,
 
@@ -186,6 +192,48 @@ class Journeymap
                 rotationOrigin: "center"
             }
         });
+
+        for (let animal of Object.values(data.animals))
+        {
+            markers.push({
+                latLng: translateCoords(animal.posX, animal.posZ),
+                url: "/bundled/" + markerDot32,
+                size: 32,
+
+                options: {
+                    rotationAngle: animal.heading,
+                    rotationOrigin: "center"
+                }
+            })
+        }
+
+        for (let mob of Object.values(data.mobs))
+        {
+            markers.push({
+                latLng: translateCoords(mob.posX, mob.posZ),
+                url: "/bundled/" + markerDot32,
+                size: 32,
+
+                options: {
+                    rotationAngle: mob.heading,
+                    rotationOrigin: "center"
+                }
+            })
+        }
+
+        for (let villager of Object.values(data.villagers))
+        {
+            markers.push({
+                latLng: translateCoords(villager.posX, villager.posZ),
+                url: "/bundled/" + markerDot32,
+                size: 32,
+
+                options: {
+                    rotationAngle: villager.heading,
+                    rotationOrigin: "center"
+                }
+            })
+        }
 
         return markers
     }

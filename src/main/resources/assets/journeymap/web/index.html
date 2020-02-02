@@ -19,14 +19,13 @@
 <body>
     <div id="main">
         <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="5" :min-zoom="0" :zoom="0"
-               id="map"
-               ref="map" v-on:ready="mapReady" v-on:zoom="updateZoom">
+               id="map" ref="map" v-on:ready="mapReady" v-on:zoom="updateZoom">
             <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
 
             <l-marker :icon="getMarkerIconObj(marker)"
+                      v-for="(marker, index) in markers"
                       :lat-lng="marker.latLng"
                       :options="marker.options"
-                      v-for="(marker, index) in markers"
             ></l-marker>
         </l-map>
     </div>
