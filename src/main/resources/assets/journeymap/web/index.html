@@ -5,31 +5,31 @@
 
     <title>JourneyMap</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
     <meta content="JourneyMap Team" name="author">
 
     <!-- IDEA says this isn't actually valid, we should do this server-side -->
     <!-- <meta http-equiv="Cache-Control" content="no-cache">-->
 
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="apple-touch-icon-precomposed" href="img/ico/journeymap.png">
+    <link href="favicon.ico" rel="shortcut icon">
+    <link href="img/ico/journeymap.png" rel="apple-touch-icon-precomposed">
     <link href="bundled/main.css" rel="stylesheet">
 </head>
 <body>
-    <div id="main">
-        <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="5" :min-zoom="0" :zoom="0"
-               id="map" ref="map" v-on:ready="mapReady" v-on:zoom="updateZoom">
-            <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
+<div id="main">
+    <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="5" :min-zoom="0" :zoom="0"
+           id="map" ref="map" v-on:ready="mapReady" v-on:zoom="updateZoom">
+        <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
 
-            <l-marker :icon="getMarkerIconObj(marker)"
-                      v-for="(marker, index) in markers"
-                      :lat-lng="marker.latLng"
-                      :options="marker.options"
-            ></l-marker>
-        </l-map>
-    </div>
+        <l-marker :icon="getMarkerIconObj(marker)"
+                  :lat-lng="marker.latLng"
+                  :options="marker.options"
+                  v-for="(marker) in markers"
+        ></l-marker>
+    </l-map>
+</div>
 
-    <script src="bundled/bundle.js"></script>
+<script src="bundled/bundle.js"></script>
 </body>
 </html>

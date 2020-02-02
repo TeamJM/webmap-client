@@ -1,35 +1,26 @@
-class tileRegistry
-{
-    constructor()
-    {
+class tileRegistry {
+    constructor() {
         this.registry = {};
         this.visible = new Set();
 
-        setInterval(() =>
-        {
+        setInterval(() => {
             TileRegistry.poll()
         }, 1000);
     }
 
-    visibilityCallback(visible, invisible)
-    {
-        visible.forEach((entry) =>
-        {
+    visibilityCallback(visible, invisible) {
+        visible.forEach((entry) => {
             this.visible.add(entry)
         });
 
-        invisible.forEach((entry) =>
-        {
+        invisible.forEach((entry) => {
             this.visible.delete(entry)
         });
     }
 
-    poll()
-    {
-        this.visible.forEach((key) =>
-        {
-            if (!key in this.registry)
-            {
+    poll() {
+        this.visible.forEach((key) => {
+            if (! key in this.registry) {
                 console.warn(`Previously removed tile with key ${key} is visible`);
                 return;
             }
@@ -37,15 +28,13 @@ class tileRegistry
             let [coords, tileLayer, tile] = this.registry[key];
             let url = tileLayer.getTileUrl(coords);
 
-            if (!tile.src.endsWith(url))
-            {
+            if (! tile.src.endsWith(url)) {
                 tile.src = url;
             }
         })
     }
 
-    setTile(tileLayer, tile, coords, zoom)
-    {
+    setTile(tileLayer, tile, coords, zoom) {
         const coordKey = `${coords.x}/${coords.y}/${zoom}`;
 
         tile.setAttribute("data-coord-key", coordKey);
@@ -54,33 +43,26 @@ class tileRegistry
         TileObserver.observe(tile);
     }
 
-    removeTile(coords, zoom)
-    {
+    removeTile(coords, zoom) {
         delete this.registry[`${coords.x}/${coords.y}/${zoom}`];
     }
 }
 
-function visibilityCallback(entries, observer)
-{
+function visibilityCallback(entries) {
     const visible = [];
     const invisible = [];
 
-    entries.forEach((entry) =>
-    {
+    entries.forEach((entry) => {
         const coordKey = entry.target.getAttribute("data-coord-key");
 
-        if (!coordKey instanceof String)
-        {
+        if (! coordKey instanceof String) {
             console.warn("Tile observer received element with no coord key", entry);
             return;
         }
 
-        if (entry.isIntersecting)
-        {
+        if (entry.isIntersecting) {
             visible.push(coordKey);
-        }
-        else
-        {
+        } else {
             invisible.push(coordKey);
         }
     });
@@ -91,5 +73,5 @@ function visibilityCallback(entries, observer)
 export const TileRegistry = new tileRegistry();
 
 export const TileObserver = new IntersectionObserver(
-    visibilityCallback, {threshold: 0.1}
+    visibilityCallback, {threshold: 0.1},
 );

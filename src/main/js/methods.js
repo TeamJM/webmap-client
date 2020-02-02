@@ -8,27 +8,19 @@ export const methods = {
     mapReady: mapReady,
     updateZoom: updateZoom,
 
-    getTileClass: (url, options) =>
-    {
+    getTileClass: (url, options) => {
         return new JMTileLayer(url, options);
-    }
+    },
 };
 
-export function mapReady()
-{
+export function mapReady() {
     setInterval(
-        () =>
-        {
-            try
-            {
+        () => {
+            try {
                 JM._checkForChanges().then()
-            }
-            catch (e)
-            {
-                if (e instanceof JMError)
-                {
-                    e.responseObj.text().then((text) =>
-                    {
+            } catch (e) {
+                if (e instanceof JMError) {
+                    e.responseObj.text().then((text) => {
                         console.error(`Failed to check for tile changes: ${text}`)
                     })
                 }
@@ -37,33 +29,25 @@ export function mapReady()
         1000)
 }
 
-export function updateZoom()
-{
+export function updateZoom() {
     const mapElement = document.getElementById("map");
     const zoom = this.$refs.map.mapObject._zoom;
 
-    if (zoom > 0)
-    {
+    if (zoom > 0) {
         mapElement.classList.add("pixelated")
-    }
-    else
-    {
+    } else {
         mapElement.classList.remove("pixelated")
     }
 }
 
-export function getMarkerIconObj(marker)
-{
-    const icon = new L.Icon({
+export function getMarkerIconObj(marker) {
+    return new L.Icon({
         "iconUrl": marker.url,
         "iconSize": marker.size,
         "anchor": marker.anchor,
     });
-
-    return icon
 }
 
-export function translateCoords(x, z)
-{
+export function translateCoords(x, z) {
     return [z * -1, x]
 }
