@@ -23,6 +23,7 @@
         <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
 
         <l-marker :icon="getMarkerIconObj(marker)"
+                  :key="marker.key"
                   :lat-lng="marker.latLng"
                   :options="marker.options"
                   :z-index-offset="marker.zIndex ? marker.zIndex : 0"

@@ -173,12 +173,24 @@ class Journeymap {
             markers.push({
                 latLng: translateCoords(animal.posX, animal.posZ),
                 url: "/bundled/" + markerDot32,
-                size: 32,
+                size: 48,
+                zIndex: 1,
 
                 options: {
                     rotationAngle: animal.heading,
                     rotationOrigin: "center",
                 },
+
+                key: animal.entityId,
+            });
+
+            markers.push({
+                latLng: translateCoords(animal.posX, animal.posZ),
+                url: `/resources?resource=${encodeURIComponent(animal.iconLocation)}`,
+                size: 12,
+                zIndex: 2,
+
+                key: `${animal.entityId}/icon`,
             })
         }
 
@@ -186,12 +198,24 @@ class Journeymap {
             markers.push({
                 latLng: translateCoords(mob.posX, mob.posZ),
                 url: "/bundled/" + markerDot32,
-                size: 32,
+                size: 48,
+                zIndex: 1,
 
                 options: {
                     rotationAngle: mob.heading,
                     rotationOrigin: "center",
                 },
+
+                key: mob.entityId,
+            });
+
+            markers.push({
+                latLng: translateCoords(mob.posX, mob.posZ),
+                url: `/resources?resource=${encodeURIComponent(mob.iconLocation)}`,
+                size: 12,
+                zIndex: 2,
+
+                key: `${mob.entityId}/icon`,
             })
         }
 
@@ -199,12 +223,24 @@ class Journeymap {
             markers.push({
                 latLng: translateCoords(villager.posX, villager.posZ),
                 url: "/bundled/" + markerDot32,
-                size: 32,
+                size: 48,
+                zIndex: 1,
 
                 options: {
                     rotationAngle: villager.heading,
                     rotationOrigin: "center",
                 },
+
+                key: villager.entityId,
+            });
+
+            markers.push({
+                latLng: translateCoords(villager.posX, villager.posZ),
+                url: `/resources?resource=${encodeURIComponent(villager.iconLocation)}`,
+                size: 12,
+                zIndex: 2,
+
+                key: `${villager.entityId}/icon`,
             })
         }
 
