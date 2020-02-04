@@ -1,6 +1,8 @@
 "use strict";
 
 import {Point} from "leaflet";
+
+import followIconOff from "../images/follow-off.png"
 import {JMTileLayer} from "./tile";
 
 export default {
@@ -10,6 +12,7 @@ export default {
             new Point(29999984, 29999984),
         ],
 
+        followIcon: followIconOff,
         markers: [],
         tiles: {},
         JMTileLayer: JMTileLayer,

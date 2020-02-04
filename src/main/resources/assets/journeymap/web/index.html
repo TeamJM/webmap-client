@@ -19,8 +19,16 @@
 <body>
 <div id="main">
     <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="5" :min-zoom="0" :zoom="0"
-           id="map" ref="map" v-on:ready="mapReady" v-on:zoom="updateZoom">
+           @ready="mapReady" @update:center="centerUpdated" @zoom="updateZoom" id="map"
+           ref="map">
         <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
+
+        <l-control :position="'topleft'"
+                   class="leaflet-bar leaflet-control">
+            <a @click="toggleFollowMode()" id="center">
+                <img :src="followIcon"/>
+            </a>
+        </l-control>
 
         <l-marker :icon="getMarkerIconObj(marker)"
                   :key="marker.key"

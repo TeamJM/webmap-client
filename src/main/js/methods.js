@@ -4,9 +4,13 @@ import {JMIcon} from "./icon";
 import {JM, JMError} from "./journeymap";
 import {JMTileLayer} from "./tile";
 
+let lastCenter = null;
+
 export const methods = {
+    centerUpdated: centerUpdated,
     getMarkerIconObj: getMarkerIconObj,
     mapReady: mapReady,
+    toggleFollowMode: toggleFollowMode,
     updateZoom: updateZoom,
 
     getTileClass: (url, options) => {
@@ -52,4 +56,20 @@ export function getMarkerIconObj(marker) {
 
 export function translateCoords(x, z) {
     return [z * -1, x]
+}
+
+export function toggleFollowMode() {
+    JM.toggleFollowMode();
+}
+
+export function centerUpdated(center) {
+    if (center === lastCenter) {
+        return;
+    }
+
+    lastCenter = center;
+
+    if (JM.followMode) {
+        JM.setFollowMode(false);
+    }
 }

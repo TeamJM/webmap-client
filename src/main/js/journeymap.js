@@ -1,11 +1,15 @@
 "use strict";
 
+import {ToastProgrammatic as Toast} from 'buefy'
+import followIconOff from "../images/follow-off.png"
+import followIconOn from "../images/follow-on.png"
 
 import markerDotHostile from "../images/marker/dot-hostile.png";
 import markerDotNeutral from "../images/marker/dot-neutral.png";
 import markerDotVillager from "../images/marker/dot-villager.png";
-
 import markerPlayer from "../images/player/self.png";
+
+import datastore from "./datastore";
 import {translateCoords} from "./methods";
 
 export class JMError extends Error {
@@ -29,6 +33,9 @@ class Journeymap {
         this.currentMapType = "day";
         this.currentSlice = 0;
         this.currentZoom = 0;
+
+        this.followMode = false;
+        this.ignoreSetFollowMode = false;
     }
 
     async data(type, imagesSince) {
@@ -130,6 +137,35 @@ class Journeymap {
         return url
     }
 
+    setFollowMode(mode) {
+        if (this.ignoreSetFollowMode) {
+            this.ignoreSetFollowMode = false;
+            return;
+        }
+
+        this.followMode = mode;
+
+        if (this.followMode) {
+            datastore.state.followIcon = followIconOn;
+
+            Toast.open({
+                type: "is-success",
+                message: "Follow mode enabled.",
+            });
+        } else {
+            datastore.state.followIcon = followIconOff;
+
+            Toast.open({
+                type: "is-success",
+                message: "Follow mode disabled.",
+            });
+        }
+    }
+
+    toggleFollowMode() {
+        this.setFollowMode(! this.followMode);
+    }
+
     async _checkForChanges() {
         let now = Date.now();
         let data = await this.data("all", this.lastTileCheck);
@@ -152,6 +188,11 @@ class Journeymap {
         data.villagers = await this.data("villagers", this.lastTileCheck);
 
         window.app.markers = this._buildMarkers(data);
+
+        if (this.followMode) {
+            this.ignoreSetFollowMode = true;
+            app.$refs.map.mapObject.setView(translateCoords(data.player.posX, data.player.posZ))
+        }
     }
 
     _buildMarkers(data) {
