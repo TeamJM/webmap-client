@@ -27,9 +27,9 @@ Vue.component('l-circle-marker', LCircleMarker);
 delete Icon.Default.prototype._getIconUrl;
 
 Icon.Default.mergeOptions({
-    iconRetinaUrl: "/bundled/" + MarkerIcon2x,
-    iconUrl: "/bundled/" + MarkerIcon,
-    shadowUrl: "/bundled/" + MarkerShadow,
+    iconRetinaUrl: MarkerIcon2x,
+    iconUrl: MarkerIcon,
+    shadowUrl: MarkerShadow,
 });
 
 Vue.config.devtools = true;

@@ -23,6 +23,8 @@ task webpack(type: Exec) {
     inputs.file("webpack.config.js")
     inputs.dir("$projectDir/src/main/js")
     inputs.dir("$projectDir/src/main/css")
+    inputs.dir("$projectDir/src/main/images")
+    inputs.dir("$projectDir/src/main/resources")
 
     outputs.dir("$projectDir/src/main/resources/assets/journeymap/web/bundled")
 

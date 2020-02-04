@@ -1,5 +1,6 @@
 "use strict";
 
+import {JMIcon} from "./icon";
 import {JM, JMError} from "./journeymap";
 import {JMTileLayer} from "./tile";
 
@@ -41,10 +42,11 @@ export function updateZoom() {
 }
 
 export function getMarkerIconObj(marker) {
-    return new L.Icon({
+    return new JMIcon({
+        "anchor": marker.anchor,
+        "className": marker.className,
         "iconUrl": marker.url,
         "iconSize": marker.size,
-        "anchor": marker.anchor,
     });
 }
 

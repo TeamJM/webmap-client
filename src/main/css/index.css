@@ -26,3 +26,7 @@ html, body, #main {
 
     background-color: #222436;
 }
+
+.round-icon {
+    border-radius: 100%;
+}

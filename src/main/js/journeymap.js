@@ -1,9 +1,11 @@
 "use strict";
 
 
-import markerDot32 from "../resources/assets/journeymap/web/img/marker-dot-arrow-32.png";
+import markerDotHostile from "../images/marker/dot-hostile.png";
+import markerDotNeutral from "../images/marker/dot-neutral.png";
+import markerDotVillager from "../images/marker/dot-villager.png";
 
-import markerPlayer32 from "../resources/assets/journeymap/web/img/marker-player-bg-32.png";
+import markerPlayer from "../images/player/self.png";
 import {translateCoords} from "./methods";
 
 export class JMError extends Error {
@@ -159,9 +161,9 @@ class Journeymap {
 
         markers.push({
             latLng: translateCoords(player.posX, player.posZ),
-            url: "/bundled/" + markerPlayer32,
+            url: markerPlayer,
             size: 32,
-            zIndex: 2,
+            zIndex: 1000,
 
             options: {
                 rotationAngle: player.heading,
@@ -172,7 +174,7 @@ class Journeymap {
         for (let animal of Object.values(data.animals)) {
             markers.push({
                 latLng: translateCoords(animal.posX, animal.posZ),
-                url: "/bundled/" + markerDot32,
+                url: animal.hostile ? markerDotHostile : markerDotNeutral,
                 size: 48,
                 zIndex: 1,
 
@@ -185,9 +187,10 @@ class Journeymap {
             });
 
             markers.push({
+                className: "round-icon",
                 latLng: translateCoords(animal.posX, animal.posZ),
                 url: `/resources?resource=${encodeURIComponent(animal.iconLocation)}`,
-                size: 12,
+                size: 14,
                 zIndex: 2,
 
                 key: `${animal.entityId}/icon`,
@@ -197,7 +200,7 @@ class Journeymap {
         for (let mob of Object.values(data.mobs)) {
             markers.push({
                 latLng: translateCoords(mob.posX, mob.posZ),
-                url: "/bundled/" + markerDot32,
+                url: mob.hostile ? markerDotHostile : markerDotNeutral,
                 size: 48,
                 zIndex: 1,
 
@@ -210,9 +213,10 @@ class Journeymap {
             });
 
             markers.push({
+                className: "round-icon",
                 latLng: translateCoords(mob.posX, mob.posZ),
                 url: `/resources?resource=${encodeURIComponent(mob.iconLocation)}`,
-                size: 12,
+                size: 14,
                 zIndex: 2,
 
                 key: `${mob.entityId}/icon`,
@@ -222,7 +226,7 @@ class Journeymap {
         for (let villager of Object.values(data.villagers)) {
             markers.push({
                 latLng: translateCoords(villager.posX, villager.posZ),
-                url: "/bundled/" + markerDot32,
+                url: villager.hostile ? markerDotHostile : markerDotVillager,
                 size: 48,
                 zIndex: 1,
 
@@ -235,9 +239,10 @@ class Journeymap {
             });
 
             markers.push({
+                className: "round-icon",
                 latLng: translateCoords(villager.posX, villager.posZ),
                 url: `/resources?resource=${encodeURIComponent(villager.iconLocation)}`,
-                size: 12,
+                size: 14,
                 zIndex: 2,
 
                 key: `${villager.entityId}/icon`,
