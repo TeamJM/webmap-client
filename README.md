@@ -106,7 +106,90 @@ Parameters:
 This endpoint returns a collection of data based on the `type` parameter that was provided. This will return a JSON
 object containing the requested data.
 
+### Sample data
+
+See below for a list of keys and associated data returned (in JSON format) for each of the data types. Don't worry
+if something is missing - we'll get around to adding it at some point!
+
+This data will be moved from the README to somewhere more sensible later on.
+
+**Type: `all`**
+
+* `world`: Provides some information on the world the player is currently active on
+    * `name`: The name of the world
+    * `dimension`: The number of the current dimension
+    * `time`: The current time, in ticks
+    * `hardcore`: A boolean representing whether hardcode mode is enabled
+    * `singlePlayer`: A boolean representing whether the player is playing on a single-player world
+    * `features`: An object with a set of keys and boolean values representing which features are enabled
+        * Possible keys: `MapSurface`, `RadarAnimals`, `MapCaves`, `RadarVillagers`, `RadarMobs`, `RadarPlayers`, `MapTopo`
+    * `jm_version`: The current version of JourneyMap
+    * `latest_journeymap_version`: The latest Curse release of Journeymap
+    * `mc_version`: The current version of Minecraft
+    * `mod_name`: The full name of the mod, including version numbers
+    * `browser_poll`: The current value of the "Browser poll interval" setting in JM's settings
+* `player`: Provides some information on the player and their location
+    * `entityId`: The player's unique entity ID
+    * `iconLocation`: The Minecraft ResourceLocation string for this player's skin texture
+    * `hostile`: Always `false`
+    * `posX`, `posY` and `posZ`: The player's position in the world, in Minecraft block-relative coordinates
+    * `chunkCoordX`, `chunkCoordY` and `chunkCoordZ`: The chunk coordinates for the chunk the player is currently in
+    * `heading`: The direction the player is facing, given as degrees represented by a float
+    * `username`: The player's username
+    * `biome`: The biome type the player is currently within
+    * `dimension`: The dimension the player is currently within
+    * `underground`: A boolean representing whether the player is underground
+    * `invisible`: A boolean representing whether the player has the "Invisible" potion effect
+    * `sneaking`: A boolean representing whether the player is sneaking
+    * `passiveAnimal`: Always `false`
+    * `npc`: Always `false`
+    * `color`: _Currently unknown_
+* `images`: Provides information on which tiles have been modified since the time given in the `image.since` parameter
+    * `since`: The value of the `image.since` parameter
+    * `queryTime`: The time of the query being processed by the server
+    * `regions`: An array of regions that have had their tiles updated
+        * Each element is an array of `x`, `z` coordinates (tiles are generated per region)
+* `waypoints`: Provides an object containing the player's waypoints
+    * Each object is keyed based on its ID, as shown below
+    * `id`: The waypoint's unique ID, usually in the format `name_x,y,z` - but don't rely on this value for anything more than an identifier
+    * `name`: The given name of the waypoint, which usually defaults to `x, z`
+    * `icon`: The name of the icon used for this waypoint
+    * `x`, `y` and `z`: The waypoint's position in the world, in (floored) Minecraft block-relative coordinates
+    * `r`, `g` and `b`: The waypoint's RGB colour values
+    * `enable`: A boolean representing whether the waypoint is enabled
+    * `type`: The waypoint type (_no information is currently available on the list of possible types_)
+    * `origin`: The modid for the mod that created the waypoint (`journeymap` for our own)
+    * `dimensions`: An array of integers representing dimensions this waypoint is valid for
+    * `persistent`: A boolean representing whether this waypoint will be saved to disk by JourneyMap
+* `animals`: Currently, always an empty object for the `all` data type
+* `mobs`: Currently, always an empty object for the `all` data type
+* `players`: Currently, always an empty object for the `all` data type
+* `villagers`: Currently, always an empty object for the `all` data type
+
+**Type: `animals`**
+
+This endpoint returns an object representing all of the animals that are currently being shown on the map.
+
+* Each animal object is keyed based on the unique entity ID of the animal, prepended with `id`
+* The keys given here match the keys in the `player` object detailed in the `all` type above, with the following differences:
+    * Removed keys: `username`, `biome`, `underground`
+
+**Type: `mobs`**
+
+This endpoint returns an object representing all of the mobs that are currently being shown on the map.
+
+* Each mob object is keyed based on the unique entity ID of the mob, prepended with `id`
+* The keys given here match the keys in the `animal` objects detailed above
+
 No sample data is available just yet, we'll get around to it.
+
+**Type: `villagers`**
+
+This endpoint returns an object representing all of the villagers that are currently being shown on the map.
+
+* Each villagers object is keyed based on the unique entity ID of the villagers, prepended with `id`
+* The keys given here match the keys in the `animal` objects detailed above, with the following differences:
+    * Key added: `profession` - The profession assigned to this villager
 
 GET /logs
 ---------
@@ -126,6 +209,16 @@ Properties:
 * `showGrid` - Whether to show a grid overlaid onto the map
 * `showSelf` - Whether to show the player on the map
 * `showWaypoints` - Whether to show waypoints on the map
+
+GET /resources
+--------------
+
+This endpoint provides a way to retrieve a resource registered by Minecraft's resource loader. It will only allow
+you to retrieve a `.png` file - the URL for this endpoint can be embedded directly as an image.
+
+Parameters:
+
+* `resource` - The Minecraft ResourceLocation string representing the resource to get (`modid:/path`)
 
 GET /skin/:username
 -------------------
