@@ -52,7 +52,7 @@ on Linux.
 Testing
 -------
 
-**Please note:** The version of JourneyMap that implements support for the `journeymap.webmap.assets_root` property 
+**Please note:** The version of JourneyMap that implements support for the following properties 
 is unreleased. If you'd like to work on the webmap client, please [join the discord server](https://discord.gg/eP8gE69)
 and ask to be given a testing-only JAR, and we'll give you a hand.
 
@@ -60,12 +60,14 @@ Once you've made your changes, you can tell JourneyMap to load the webmap's stat
 filesystem. This will allow you to make changes to the webmap client and simply reload your browser tab to test
 changes, instead of having to repack everything and restart Minecraft.
 
-In your Minecraft launcher, find the setting that allows you to supply extra arguments, and add the following to it,
+In your Minecraft launcher, find the setting that allows you to supply extra arguments and add the following to it,
 assuming that you've cloned the webmap client to `/home/username/webmap-client`:
 
 ```bash
 -Djourneymap.webmap.assets_root="/home/username/webmap-client/src/main/resources/assets/journeymap/web"
 ```
+
+**Note:** _If you're on Windows, you'll need to use two backslashes in your path instead of one._
 
 Once you've started Minecraft with this argument applied, you should see the following in the console output:
 
@@ -73,9 +75,17 @@ Once you've started Minecraft with this argument applied, you should see the fol
 Detected 'journeymap.webmap.assets_root' property, serving static files from: /home/username/webmap-client/src/main/resources/assets/journeymap/web
 ```
 
-If you're on Windows, you'll need to use two backslashes in your path instead of one.
-
 That's all you need to do. Just head to the full screen map and enable the webmap as usual, and you're good to go!
+
+### Testing polygon support
+
+If you need to test polygon support, you can set the `journeymap.map_testing` property in a similar manner to any
+value you like, and a button will be added to the full-screen map which will add polygons denoting Minecraft regions
+to the map. If it doesn't show up, move the map a little and toggle the option a couple times.
+
+```bash
+-Djourneymap.map_testing="brother, may i have some loops?"
+```
 
 Endpoints
 =========
@@ -211,6 +221,25 @@ Properties:
 * `showGrid` - Whether to show a grid overlaid onto the map
 * `showSelf` - Whether to show the player on the map
 * `showWaypoints` - Whether to show waypoints on the map
+
+GET /polygons
+-------------
+
+This endpoint provides a complete list of polygons that are being rendered on the player's full-screen map (that is to
+say, they'll only be present in the world they're currently in). It returns a JSON array, containing objects
+structured as follows:
+
+* `fillColor`: A hex colour representing the colour to fill the inside of the polygon with
+* `fillOpacity`: A float with a value between `0` and `1`, denoting the opacity of the fill colour
+* `strokeColor`: A hex colour representing the colour of the outline of the polygon
+* `strokeOpacity`: A float with a value between `0` and `1`, denoting the opacity of the outline
+* `strokeWidth`: An integer representing the width of the polygon's outline
+* `holes`: A list of holes to create in the polygon
+    * Each element in this list represents a hole, and it contains a list of points denoting the corners of the hole
+        * Each point is an object with `x`, `y` and `z` integer values representing the coordinates of the point
+* `points`: A list of points denoting the corners of the polygon
+    * Each point is an object with `x`, `y` and `z` integer values representing the coordinates of the point
+
 
 GET /resources
 --------------
