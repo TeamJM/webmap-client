@@ -70,8 +70,10 @@ assuming that you've cloned the webmap client to `/home/username/webmap-client`:
 Once you've started Minecraft with this argument applied, you should see the following in the console output:
 
 ```
-Detected 'journeymap.webmap.assets_root' property, serving static files from: /home/gdude/webmap-client/src/main/resources/assets/journeymap/web
+Detected 'journeymap.webmap.assets_root' property, serving static files from: /home/username/webmap-client/src/main/resources/assets/journeymap/web
 ```
+
+If you're on Windows, you'll need to use two backslashes in your path instead of one.
 
 That's all you need to do. Just head to the full screen map and enable the webmap as usual, and you're good to go!
 
