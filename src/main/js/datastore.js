@@ -14,7 +14,9 @@ export default {
 
         followIcon: followIconOff,
         markers: [],
+        polygons: [],
         tiles: {},
+        waypoints: [],
         JMTileLayer: JMTileLayer,
     },
 };

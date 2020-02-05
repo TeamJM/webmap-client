@@ -43,6 +43,8 @@ export function updateZoom() {
     } else {
         mapElement.classList.remove("pixelated")
     }
+
+    JM.setZoom(zoom);
 }
 
 export function getMarkerIconObj(marker) {
@@ -54,8 +56,12 @@ export function getMarkerIconObj(marker) {
     });
 }
 
-export function translateCoords(x, z) {
-    return [z * -1, x]
+export function translateCoords(x, z, offset) {
+    if (offset === undefined) {
+        offset = 0;
+    }
+
+    return [(z * -1) + offset, x + offset]
 }
 
 export function toggleFollowMode() {

@@ -35,8 +35,26 @@
                   :lat-lng="marker.latLng"
                   :options="marker.options"
                   :z-index-offset="marker.zIndex ? marker.zIndex : 0"
+
                   v-for="(marker) in markers"
         ></l-marker>
+
+        <l-polygon :color="waypoint.color"
+                   :fill-opacity="0.9"
+                   :lat-lngs="waypoint.latLngs"
+
+                   v-for="(waypoint) in waypoints"
+        ></l-polygon>
+
+        <l-polygon :color="polygon.strokeColor"
+                   :fill-color="polygon.fillColor"
+                   :fill-opacity="polygon.fillOpacity"
+                   :lat-lngs="polygon.latLngs"
+                   :opacity="polygon.strokeOpacity"
+                   :weight="polygon.strokeWidth"
+
+                   v-for="(polygon) in polygons"
+        ></l-polygon>
     </l-map>
 </div>
 

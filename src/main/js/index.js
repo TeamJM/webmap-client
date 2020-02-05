@@ -13,7 +13,7 @@ import MarkerShadow from "leaflet/dist/images/marker-shadow.png"
 import "leaflet/dist/leaflet.css"
 import Vue from "vue";
 
-import {LCircleMarker, LControl, LMap, LMarker, LTileLayer} from "vue2-leaflet";
+import {LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer} from "vue2-leaflet";
 import "../css/index.css";
 
 import datastore from "./datastore";
@@ -23,6 +23,7 @@ Vue.component('l-circle-marker', LCircleMarker);
 Vue.component("l-control", LControl);
 Vue.component("l-map", LMap);
 Vue.component("l-marker", LMarker);
+Vue.component('l-polygon', LPolygon);
 Vue.component("l-tile-layer", LTileLayer);
 
 delete Icon.Default.prototype._getIconUrl;

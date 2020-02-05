@@ -57,6 +57,20 @@ class Journeymap {
         return await response.json()
     }
 
+    async polygons() {
+        const url = "/polygons";
+        const response = await fetch(
+            url,
+            {method: "GET"},
+        );
+
+        if (! response.ok) {
+            throw new JMError(response.status, response.statusText, response)
+        }
+
+        return await response.json()
+    }
+
     async logs() {
         const response = await fetch(
             "/logs",
@@ -107,7 +121,7 @@ class Journeymap {
     }
 
     tileUrl(x, z, givenZoom) {
-        let zoom = this.currentZoom;
+        let zoom = 0;
 
         if (givenZoom !== undefined) {
             zoom = givenZoom;
@@ -184,10 +198,13 @@ class Journeymap {
 
         data.animals = await this.data("animals", this.lastTileCheck);
         data.mobs = await this.data("mobs", this.lastTileCheck);
+        data.polygons = await this.polygons();
         data.players = await this.data("players", this.lastTileCheck);
         data.villagers = await this.data("villagers", this.lastTileCheck);
 
         window.app.markers = this._buildMarkers(data);
+        window.app.polygons = this._buildPolygons(data);
+        window.app.waypoints = this._buildWaypoints(data);
 
         if (this.followMode) {
             this.ignoreSetFollowMode = true;
@@ -293,11 +310,82 @@ class Journeymap {
         return markers
     }
 
+    _buildPolygons(data) {
+        let polygons = [];
+
+        for (let polygon of Object.values(data.polygons)) {
+            let coords = [];
+            let holes = [];
+
+            for (let point of Object.values(polygon.points)) {
+                coords.push(translateCoords(point.x, point.z))
+            }
+
+            if (polygon.holes.size > 0) {
+                for (let holeObj of Object.values(polygon.holes)) {
+                    let hole = [];
+
+                    for (let point of Object.values(holeObj)) {
+                        hole.push(translateCoords(point.x, point.z))
+                    }
+
+                    holes.push(hole)
+                }
+
+                coords = coords.concat([coords], holes)
+            }
+
+            polygons.push({
+                latLngs: coords,
+
+                strokeColor: polygon.strokeColor,
+                strokeOpacity: polygon.strokeOpacity,
+                strokeWidth: polygon.strokeWidth,
+
+                fillColor: polygon.fillColor,
+                fillOpacity: polygon.fillOpacity,
+            })
+        }
+
+        return polygons
+    }
+
+    _buildWaypoints(data) {
+        let waypoints = [];
+        const zoomOffset = 6 - this.currentZoom;
+
+        for (let waypoint of Object.values(data.waypoints)) {
+            if (! waypoint.enable) {
+                continue;
+            }
+
+            let coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5);
+
+            let red = waypoint.r.toString(16).padStart(2, "0");
+            let green = waypoint.g.toString(16).padStart(2, "0");
+            let blue = waypoint.b.toString(16).padStart(2, "0");
+
+            waypoints.push({
+                coords: coords,
+                latLngs: [
+                    [coords[0] + zoomOffset, coords[1]],
+                    [coords[0], coords[1] + zoomOffset],
+                    [coords[0] - zoomOffset, coords[1]],
+                    [coords[0], coords[1] - zoomOffset],
+                ],
+
+                color: `#${red}${green}${blue}`,
+            })
+        }
+
+        return waypoints
+    }
+
     _slugifyTile(x, z, givenZoom) {
         let dim = this.currentDim,
             type = this.currentMapType,
             y = this.currentSlice,
-            zoom = this.currentZoom;
+            zoom = 0;
 
         if (givenZoom !== undefined) {
             zoom = givenZoom;
@@ -307,7 +395,18 @@ class Journeymap {
     }
 
     setZoom(zoom) {
-        this.currentZoom = zoom;
+        this.currentZoom = Number(zoom);
+
+        const zoomOffset = 6 - this.currentZoom;
+
+        for (let waypoint of Object.values(window.app.waypoints)) {
+            waypoint.latLngs = [
+                [waypoint.coords[0] + zoomOffset, waypoint.coords[1]],
+                [waypoint.coords[0], waypoint.coords[1] + zoomOffset],
+                [waypoint.coords[0] - zoomOffset, waypoint.coords[1]],
+                [waypoint.coords[0], waypoint.coords[1] - zoomOffset],
+            ]
+        }
     }
 }
 
