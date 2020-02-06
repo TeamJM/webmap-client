@@ -342,74 +342,43 @@ class Journeymap {
     }
 
     setMapMode(mapMode) {
-        let curDayIcon, curNightIcon, curTopoIcon, curUndergroundIcon;
+        datastore.state.dayIcon = dayIcon;
+        datastore.state.nightIcon = nightIcon;
+        datastore.state.topoIcon = topoIcon;
+        datastore.state.undergroundIcon = undergroundIcon;
 
-        if (this.currentDim === -1 && mapMode !== "underground") {
-            return this.setMapMode("underground")
+        if (this.currentDim === -1) {  // Nether has only cave mode; TODO: Think about other Nether dims
+            datastore.state.dayIcon = dayIconDisabled;
+            datastore.state.nightIcon = nightIconDisabled;
+            datastore.state.topoIcon = topoIconDisabled;
+            datastore.state.undergroundIcon = undergroundIconActive;
+
+            this.currentMapType = "underground";
+            return;
         }
 
-        if (this.currentDim === 1 && mapMode === "night") {
-            return this.setMapMode("day")
+        if (this.currentDim === 1) {
+            datastore.state.nightIcon = nightIconDisabled;
+
+            if (mapMode === "night") {  // End has no night mode; TODO: Think about other End dims
+                return this.setMapMode("day")
+            }
         }
 
         switch (mapMode) {
             case "day":
-                if (this.currentDim === 1) {  // End has no night mode; TODO: Think about other End dims
-                    curNightIcon = nightIconDisabled;
-                } else {
-                    curNightIcon = nightIcon;
-                }
-
-                curDayIcon = dayIconActive;
-                curTopoIcon = topoIcon;
-                curUndergroundIcon = undergroundIcon;
+                datastore.state.dayIcon = dayIconActive;
                 break;
             case "night":
-                curDayIcon = dayIcon;
-                curNightIcon = nightIconActive;
-                curTopoIcon = topoIcon;
-                curUndergroundIcon = undergroundIcon;
+                datastore.state.nightIcon = nightIconActive;
                 break;
             case "topo":
-                if (this.currentDim === 1) {  // End has no night mode; TODO: Think about other End dims
-                    curNightIcon = nightIconDisabled;
-                } else {
-                    curNightIcon = nightIcon;
-                }
-
-                curDayIcon = dayIcon;
-                curTopoIcon = topoIconActive;
-                curUndergroundIcon = undergroundIcon;
+                datastore.state.topoIcon = topoIconActive;
                 break;
             case "underground":
-                if (this.currentDim === -1) {  // Nether has only cave mode; TODO: Think about other Nether dims
-                    curDayIcon = dayIconDisabled;
-                    curNightIcon = nightIconDisabled;
-                    curTopoIcon = topoIconDisabled;
-                } else if (this.currentDim === 1) {  // End has no night mode; TODO: Think about other End dims
-                    curDayIcon = dayIcon;
-                    curNightIcon = nightIconDisabled;
-                    curTopoIcon = topoIcon;
-                } else {
-                    curDayIcon = dayIcon;
-                    curNightIcon = nightIcon;
-                    curTopoIcon = topoIcon;
-                }
-
-                curUndergroundIcon = undergroundIconActive;
+                datastore.state.undergroundIcon = undergroundIconActive;
                 break;
-            default:
-                curDayIcon = dayIcon;
-                curNightIcon = nightIcon;
-                curTopoIcon = topoIcon;
-                curUndergroundIcon = undergroundIcon;
         }
-
-
-        datastore.state.dayIcon = curDayIcon;
-        datastore.state.nightIcon = curNightIcon;
-        datastore.state.topoIcon = curTopoIcon;
-        datastore.state.undergroundIcon = curUndergroundIcon;
 
         this.currentMapType = mapMode;
     }
