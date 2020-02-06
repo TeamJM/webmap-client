@@ -1,26 +1,36 @@
 "use strict";
 
 import {ToastProgrammatic as Toast} from 'buefy'
+import dayIconActive from "../images/day-active.png";
+import dayIconDisabled from "../images/day-disabled.png";
+
+
+import dayIcon from "../images/day.png";
 import followIconOff from "../images/follow-off.png"
 import followIconOn from "../images/follow-on.png"
 
 import markerDotHostile from "../images/marker/dot-hostile.png";
 import markerDotNeutral from "../images/marker/dot-neutral.png";
 import markerDotVillager from "../images/marker/dot-villager.png";
+import nightIconActive from "../images/night-active.png";
+import nightIconDisabled from "../images/night-disabled.png";
+
+import nightIcon from "../images/night.png";
 import markerPlayer from "../images/player/self.png";
+import topoIconActive from "../images/topo-active.png";
+import topoIconDisabled from "../images/topo-disabled.png";
+
+import topoIcon from "../images/topo.png";
+import undergroundIconActive from "../images/underground-active.png";
+
+import undergroundIcon from "../images/underground.png";
+import {getAllData, getTileUrl} from "./api";
 
 import datastore from "./datastore";
-import {translateCoords} from "./methods";
+import {translateCoords} from "./utils";
 
-export class JMError extends Error {
-    constructor(statusCode, errorText, responseObj) {
-        super();
 
-        this.statusCode = statusCode;
-        this.errorText = errorText;
-        this.responseObj = responseObj;
-    }
-}
+const HAS_Y_VALUE = ["underground", "surface"];
 
 
 class Journeymap {
@@ -38,96 +48,20 @@ class Journeymap {
         this.ignoreSetFollowMode = false;
     }
 
-    async data(type, imagesSince) {
-        let url = `/data/${type}`;
-
-        if (imagesSince !== undefined) {
-            url = url + `?images.since=${imagesSince}`
+    tileUrl(x, z, slice, mapType, dimension) {
+        if (slice === undefined) {
+            slice = this.currentSlice;
         }
 
-        const response = await fetch(
-            url,
-            {method: "GET"},
-        );
-
-        if (! response.ok) {
-            throw new JMError(response.status, response.statusText, response)
+        if (mapType === undefined) {
+            mapType = this.currentMapType;
         }
 
-        return await response.json()
-    }
-
-    async polygons() {
-        const url = "/polygons";
-        const response = await fetch(
-            url,
-            {method: "GET"},
-        );
-
-        if (! response.ok) {
-            throw new JMError(response.status, response.statusText, response)
+        if (dimension === undefined) {
+            dimension = this.currentDim;
         }
 
-        return await response.json()
-    }
-
-    async logs() {
-        const response = await fetch(
-            "/logs",
-            {method: "GET"},
-        );
-
-        if (! response.ok) {
-            throw new JMError(response.status, response.statusText, response)
-        }
-
-        return await response.json()
-    }
-
-    async getProperties() {
-        const response = await fetch(
-            "/properties",
-            {method: "GET"},
-        );
-
-        if (! response.ok) {
-            throw new JMError(response.status, response.statusText, response)
-        }
-
-        return await response.json()
-    }
-
-    async setProperties(properties) {
-        const data = new FormData();
-
-        for (let key of properties) {
-            data.append(key, properties[key]);
-        }
-
-        const response = await fetch(
-            "/properties",
-            {method: "POST", body: data},
-        );
-
-        if (! response.ok) {
-            throw new JMError(response.status, response.statusText, response)
-        }
-
-        return await response.json()
-    }
-
-    skinUrl(username) {
-        return `/skin/${username}`
-    }
-
-    tileUrl(x, z, givenZoom) {
-        let zoom = 0;
-
-        if (givenZoom !== undefined) {
-            zoom = givenZoom;
-        }
-
-        let slug = this._slugifyTile(x, z, zoom);
+        let slug = this._slugifyTile(x, z, slice, mapType, dimension);
 
         if (slug in this.tiles) {
             if (! this.changedTiles.includes(slug)) {
@@ -139,12 +73,17 @@ class Journeymap {
             )
         }
 
-        const dimension = this.currentDim,
-            mapTypeString = this.currentMapType,
-            y = this.currentSlice;
+        const params = {
+            x: x,
+            z: z,
 
-        const time = Date.now();  // This ensures that we don't end up with a cached URL
-        const url = `/tiles/tile.png?x=${x}&y=${y}&z=${z}&dimension=${dimension}&mapTypeString=${mapTypeString}&zoom=${zoom}&t=${time}`;
+            dimension: dimension,
+            mapTypeString: mapType,
+            y: slice,
+            zoom: 0,
+        };
+
+        const url = getTileUrl(params);
 
         this.tiles[slug] = url;
 
@@ -182,25 +121,25 @@ class Journeymap {
 
     async _checkForChanges() {
         let now = Date.now();
-        let data = await this.data("all", this.lastTileCheck);
+        let data = await getAllData(this.lastTileCheck);
+
+        this.setDimension(data.world.dimension);
+
+        if (HAS_Y_VALUE.includes(this.currentMapType)) {
+            this.currentSlice = Math.floor(data.player.posY) >> 4;
+        } else {
+            this.currentSlice = 0;
+        }
 
         for (let element of data.images.regions) {
-            for (let i of Array(5).keys()) {
-                let slug = this._slugifyTile(element[0], element[1], i);
+            let slug = this._slugifyTile(element[0], element[1], this.currentSlice, this.currentMapType, this.currentDim);
 
-                if (! this.changedTiles.includes(slug)) {
-                    this.changedTiles.push(slug);
-                }
+            if (! this.changedTiles.includes(slug)) {
+                this.changedTiles.push(slug);
             }
         }
 
         this.lastTileCheck = now;
-
-        data.animals = await this.data("animals", this.lastTileCheck);
-        data.mobs = await this.data("mobs", this.lastTileCheck);
-        data.polygons = await this.polygons();
-        data.players = await this.data("players", this.lastTileCheck);
-        data.villagers = await this.data("villagers", this.lastTileCheck);
 
         window.app.markers = this._buildMarkers(data);
         window.app.polygons = this._buildPolygons(data);
@@ -355,43 +294,131 @@ class Journeymap {
         const zoomOffset = 6 - this.currentZoom;
 
         for (let waypoint of Object.values(data.waypoints)) {
-            if (! waypoint.enable) {
+            if (! waypoint.enable || ! waypoint.dimensions.includes(this.currentDim)) {
                 continue;
             }
 
-            let coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5);
+            let hellTranslate = this.currentDim === -1;
+            let coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5, hellTranslate);
 
             let red = waypoint.r.toString(16).padStart(2, "0");
             let green = waypoint.g.toString(16).padStart(2, "0");
             let blue = waypoint.b.toString(16).padStart(2, "0");
 
-            waypoints.push({
-                coords: coords,
-                latLngs: [
+            let latLngs;
+
+            if (waypoint.type === "Death") {
+                // Draw an X for death markers
+                latLngs = [
+                    [coords[0] + zoomOffset, coords[1] + zoomOffset],
+                    [coords[0] - zoomOffset, coords[1] - zoomOffset],
+                    [coords[0], coords[1]],  // Center of the X
+                    [coords[0] - zoomOffset, coords[1] + zoomOffset],
+                    [coords[0] + zoomOffset, coords[1] - zoomOffset],
+                    [coords[0], coords[1]],  // Center of the X
+                ]
+            } else {
+                latLngs = [
                     [coords[0] + zoomOffset, coords[1]],
                     [coords[0], coords[1] + zoomOffset],
                     [coords[0] - zoomOffset, coords[1]],
                     [coords[0], coords[1] - zoomOffset],
-                ],
+                ]
+            }
 
+            waypoints.push({
                 color: `#${red}${green}${blue}`,
+                coords: coords,
+                latLngs: latLngs,
+                type: waypoint.type,
             })
         }
 
         return waypoints
     }
 
-    _slugifyTile(x, z, givenZoom) {
-        let dim = this.currentDim,
-            type = this.currentMapType,
-            y = this.currentSlice,
-            zoom = 0;
+    _slugifyTile(x, z, slice, type, dimension) {
+        return `X ${x}, Z ${z}, Slice ${slice} / Dim ${dimension}, Type ${type},`
+    }
 
-        if (givenZoom !== undefined) {
-            zoom = givenZoom;
+    setMapMode(mapMode) {
+        let curDayIcon, curNightIcon, curTopoIcon, curUndergroundIcon;
+
+        if (this.currentDim === -1 && mapMode !== "underground") {
+            return this.setMapMode("underground")
         }
 
-        return `X ${x}, Y ${y}, Z ${z} / Dim ${dim}, Type ${type}, Zoom ${zoom}`
+        if (this.currentDim === 1 && mapMode === "night") {
+            return this.setMapMode("day")
+        }
+
+        switch (mapMode) {
+            case "day":
+                if (this.currentDim === 1) {  // End has no night mode; TODO: Think about other End dims
+                    curNightIcon = nightIconDisabled;
+                } else {
+                    curNightIcon = nightIcon;
+                }
+
+                curDayIcon = dayIconActive;
+                curTopoIcon = topoIcon;
+                curUndergroundIcon = undergroundIcon;
+                break;
+            case "night":
+                curDayIcon = dayIcon;
+                curNightIcon = nightIconActive;
+                curTopoIcon = topoIcon;
+                curUndergroundIcon = undergroundIcon;
+                break;
+            case "topo":
+                if (this.currentDim === 1) {  // End has no night mode; TODO: Think about other End dims
+                    curNightIcon = nightIconDisabled;
+                } else {
+                    curNightIcon = nightIcon;
+                }
+
+                curDayIcon = dayIcon;
+                curTopoIcon = topoIconActive;
+                curUndergroundIcon = undergroundIcon;
+                break;
+            case "underground":
+                if (this.currentDim === -1) {  // Nether has only cave mode; TODO: Think about other Nether dims
+                    curDayIcon = dayIconDisabled;
+                    curNightIcon = nightIconDisabled;
+                    curTopoIcon = topoIconDisabled;
+                } else if (this.currentDim === 1) {  // End has no night mode; TODO: Think about other End dims
+                    curDayIcon = dayIcon;
+                    curNightIcon = nightIconDisabled;
+                    curTopoIcon = topoIcon;
+                } else {
+                    curDayIcon = dayIcon;
+                    curNightIcon = nightIcon;
+                    curTopoIcon = topoIcon;
+                }
+
+                curUndergroundIcon = undergroundIconActive;
+                break;
+            default:
+                curDayIcon = dayIcon;
+                curNightIcon = nightIcon;
+                curTopoIcon = topoIcon;
+                curUndergroundIcon = undergroundIcon;
+        }
+
+
+        datastore.state.dayIcon = curDayIcon;
+        datastore.state.nightIcon = curNightIcon;
+        datastore.state.topoIcon = curTopoIcon;
+        datastore.state.undergroundIcon = curUndergroundIcon;
+
+        this.currentMapType = mapMode;
+    }
+
+    setDimension(dim) {
+        this.currentDim = dim;
+
+        // Update allowable map types and do fixes
+        this.setMapMode(this.currentMapType)
     }
 
     setZoom(zoom) {
@@ -400,12 +427,29 @@ class Journeymap {
         const zoomOffset = 6 - this.currentZoom;
 
         for (let waypoint of Object.values(window.app.waypoints)) {
-            waypoint.latLngs = [
-                [waypoint.coords[0] + zoomOffset, waypoint.coords[1]],
-                [waypoint.coords[0], waypoint.coords[1] + zoomOffset],
-                [waypoint.coords[0] - zoomOffset, waypoint.coords[1]],
-                [waypoint.coords[0], waypoint.coords[1] - zoomOffset],
-            ]
+
+            let latLngs;
+
+            if (waypoint.type === "Death") {
+                // Draw an X for death markers
+                latLngs = [
+                    [waypoint.coords[0] + zoomOffset, waypoint.coords[1] + zoomOffset],
+                    [waypoint.coords[0] - zoomOffset, waypoint.coords[1] - zoomOffset],
+                    [waypoint.coords[0], waypoint.coords[1]],  // Center of the X
+                    [waypoint.coords[0] - zoomOffset, waypoint.coords[1] + zoomOffset],
+                    [waypoint.coords[0] + zoomOffset, waypoint.coords[1] - zoomOffset],
+                    [waypoint.coords[0], waypoint.coords[1]],  // Center of the X
+                ]
+            } else {
+                latLngs = [
+                    [waypoint.coords[0] + zoomOffset, waypoint.coords[1]],
+                    [waypoint.coords[0], waypoint.coords[1] + zoomOffset],
+                    [waypoint.coords[0] - zoomOffset, waypoint.coords[1]],
+                    [waypoint.coords[0], waypoint.coords[1] - zoomOffset],
+                ]
+            }
+
+            waypoint.latLngs = latLngs;
         }
     }
 }

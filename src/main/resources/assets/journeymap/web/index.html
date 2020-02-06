@@ -30,6 +30,26 @@
             </a>
         </l-control>
 
+        <l-control :position="'topleft'"
+                   class="leaflet-bar leaflet-control">
+            <a @click="setMapMode('day')" id="mapTypeDay">
+                <img :src="dayIcon"/>
+            </a>
+            <a @click="setMapMode('night')" id="mapTypeNight">
+                <img :src="nightIcon"/>
+            </a>
+            <a @click="setMapMode('topo')" id="mapTypeTopo">
+                <img :src="topoIcon"/>
+            </a>
+            <a @click="setMapMode('underground')" id="mapTypeUnderground">
+                <img :src="undergroundIcon"/>
+            </a>
+            <!-- I honestly have no clue what the heck a "surface" map is, and I can't get it to render anything -->
+            <!-- <a @click="setMapMode('surface')" id="mapTypeSurface">-->
+            <!-- <img :src="followIcon"/>-->
+            <!-- </a>-->
+        </l-control>
+
         <l-marker :icon="getMarkerIconObj(marker)"
                   :key="marker.key"
                   :lat-lng="marker.latLng"
@@ -40,7 +60,8 @@
         ></l-marker>
 
         <l-polygon :color="waypoint.color"
-                   :fill-opacity="0.9"
+                   :fill-color="waypoint.color"
+                   :fill-opacity="0.7"
                    :lat-lngs="waypoint.latLngs"
 
                    v-for="(waypoint) in waypoints"

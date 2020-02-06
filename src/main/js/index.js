@@ -18,6 +18,9 @@ import "../css/index.css";
 
 import datastore from "./datastore";
 import {methods} from "./methods";
+import {patch} from "./utils";
+
+patch();
 
 Vue.component('l-circle-marker', LCircleMarker);
 Vue.component("l-control", LControl);

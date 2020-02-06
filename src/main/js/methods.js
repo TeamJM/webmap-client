@@ -1,7 +1,8 @@
 "use strict";
 
+import {JMHttpError} from "./error";
 import {JMIcon} from "./icon";
-import {JM, JMError} from "./journeymap";
+import {JM} from "./journeymap";
 import {JMTileLayer} from "./tile";
 
 let lastCenter = null;
@@ -10,6 +11,7 @@ export const methods = {
     centerUpdated: centerUpdated,
     getMarkerIconObj: getMarkerIconObj,
     mapReady: mapReady,
+    setMapMode: setMapMode,
     toggleFollowMode: toggleFollowMode,
     updateZoom: updateZoom,
 
@@ -24,7 +26,7 @@ export function mapReady() {
             try {
                 JM._checkForChanges().then()
             } catch (e) {
-                if (e instanceof JMError) {
+                if (e instanceof JMHttpError) {
                     e.responseObj.text().then((text) => {
                         console.error(`Failed to check for tile changes: ${text}`)
                     })
@@ -56,14 +58,6 @@ export function getMarkerIconObj(marker) {
     });
 }
 
-export function translateCoords(x, z, offset) {
-    if (offset === undefined) {
-        offset = 0;
-    }
-
-    return [(z * -1) + offset, x + offset]
-}
-
 export function toggleFollowMode() {
     JM.toggleFollowMode();
 }
@@ -78,4 +72,8 @@ export function centerUpdated(center) {
     if (JM.followMode) {
         JM.setFollowMode(false);
     }
+}
+
+export function setMapMode(mapMode) {
+    JM.setMapMode(mapMode);
 }
