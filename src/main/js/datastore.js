@@ -27,6 +27,9 @@ export default {
         polygons: [],
         tiles: {},
         waypoints: [],
+
+        mouseCoords: "0, 0",
+
         JMTileLayer: JMTileLayer,
     },
 };

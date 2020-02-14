@@ -1,5 +1,6 @@
 "use strict";
 
+import datastore from "./datastore";
 import {JMHttpError} from "./error";
 import {JMIcon} from "./icon";
 import {JM} from "./journeymap";
@@ -11,6 +12,7 @@ export const methods = {
     centerUpdated: centerUpdated,
     getMarkerIconObj: getMarkerIconObj,
     mapReady: mapReady,
+    onMapClicked: onMapClicked,
     setMapMode: setMapMode,
     toggleFollowMode: toggleFollowMode,
     updateZoom: updateZoom,
@@ -76,4 +78,10 @@ export function centerUpdated(center) {
 
 export function setMapMode(mapMode) {
     JM.setMapMode(mapMode);
+}
+
+export function onMapClicked(event) {
+    const [x, y] = [event.latlng.lat, event.latlng.lng];
+
+    datastore.state.mouseCoords = `${y} / ${x}`
 }

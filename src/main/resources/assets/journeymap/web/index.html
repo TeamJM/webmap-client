@@ -18,8 +18,9 @@
 </head>
 <body>
 <div id="main">
-    <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="5" :min-zoom="0" :zoom="0"
+    <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="5" :min-zoom="-2" :zoom="0"
            @ready="mapReady" @update:center="centerUpdated" @zoom="updateZoom" id="map"
+           @click="onMapClicked"
            ref="map">
         <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
 
@@ -27,6 +28,13 @@
                    class="leaflet-bar leaflet-control">
             <a @click="toggleFollowMode()" id="center">
                 <img :src="followIcon"/>
+            </a>
+        </l-control>
+
+        <l-control :position="'topright'"
+                   class="leaflet-control">
+            <a>
+                <span id="coords" v-text="mouseCoords"></span>
             </a>
         </l-control>
 

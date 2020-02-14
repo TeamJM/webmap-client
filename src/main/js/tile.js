@@ -6,6 +6,7 @@ export class JMTileLayer extends L.TileLayer {
     constructor(url, options) {
         options["minNativeZoom"] = 0;
         options["maxNativeZoom"] = 0;
+        options["minZoom"] = -2;
 
         super(url, options);
     }
