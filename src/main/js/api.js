@@ -25,6 +25,7 @@ const URLS = {
     POLYGONS: "/polygons",
     RESOURCES: "/resources?resource={resource}",
     SKIN: "/skin/{username}",
+    STATUS: "/status",
     TILE: "/tiles/tile.png",
 };
 
@@ -119,6 +120,10 @@ export function getResourceUrl(resource) {
 
 export function getSkinUrl(username) {
     return URLS.SKIN.format({username: username})
+}
+
+export async function getStatus() {
+    return await text(URLS.STATUS, GET)
 }
 
 export function getTileUrl(parameters) {

@@ -1,4 +1,7 @@
 body {
+    /* Match JM's background colour */
+    background-color: #222436;
+
     padding: 0;
     margin: 0;
 }
@@ -21,9 +24,12 @@ html, body, #main {
     -ms-interpolation-mode: nearest-neighbor;
 }
 
+.front {
+    z-index: 1000000000;
+}
+
 .leaflet-container {
     /* Match JM's background colour */
-
     background-color: #222436;
 }
 

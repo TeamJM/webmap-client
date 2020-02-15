@@ -18,11 +18,18 @@
 </head>
 <body>
 <div id="main">
-    <l-map :bounds="map_bounds" :crs="L.CRS.Simple" :fade-animation="false" :max-zoom="5" :min-zoom="-2" :zoom="0"
+    <l-map :bounds="map_bounds"
+           :fade-animation="false"
+           :max-zoom="5"
+           :min-zoom="-2"
+           :zoom="0"
+           crs="L.CRS.Simple"
+
            @ready="mapReady" @update:center="centerUpdated" @zoom="updateZoom" id="map"
            @click="onMapClicked"
            ref="map">
-        <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
+        <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"
+                      v-if="status === 'ready'"></l-tile-layer>
 
         <l-control :position="'topleft'"
                    class="leaflet-bar leaflet-control">
@@ -64,6 +71,7 @@
                   :options="marker.options"
                   :z-index-offset="marker.zIndex ? marker.zIndex : 0"
 
+                  v-if="status === 'ready'"
                   v-for="(marker) in markers"
         ></l-marker>
 
@@ -72,6 +80,7 @@
                    :fill-opacity="0.7"
                    :lat-lngs="waypoint.latLngs"
 
+                   v-if="status === 'ready'"
                    v-for="(waypoint) in waypoints"
         ></l-polygon>
 
@@ -82,9 +91,30 @@
                    :opacity="polygon.strokeOpacity"
                    :weight="polygon.strokeWidth"
 
+                   v-if="status === 'ready'"
                    v-for="(polygon) in polygons"
         ></l-polygon>
     </l-map>
+
+    <b-modal :active="status !== 'ready'"
+             :can-cancel="false"
+             aria-modal
+             aria-role="dialog"
+             custom-class="front"
+             trap-focus
+    >
+        <div class="card">
+            <div class="card-content">
+                <div class="content" v-if="status === 'no_world'">
+                    No world is loaded - please join a server, or start a single-player world.
+                </div>
+                <div class="content" v-if="status === 'starting'">
+                    JourneyMap is busy, please wait...
+                </div>
+            </div>
+        </div>
+
+    </b-modal>
 </div>
 
 <script src="bundled/bundle.js"></script>

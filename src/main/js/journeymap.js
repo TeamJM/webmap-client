@@ -24,7 +24,7 @@ import topoIcon from "../images/topo.png";
 import undergroundIconActive from "../images/underground-active.png";
 
 import undergroundIcon from "../images/underground.png";
-import {getAllData, getTileUrl} from "./api";
+import {getAllData, getStatus, getTileUrl} from "./api";
 
 import datastore from "./datastore";
 import {translateCoords} from "./utils";
@@ -120,6 +120,14 @@ class Journeymap {
     }
 
     async _checkForChanges() {
+        let status = await getStatus();
+
+        datastore.state.status = status;
+
+        if (status !== "ready") {
+            return;
+        }
+
         let now = Date.now();
         let data = await getAllData(this.lastTileCheck);
 
