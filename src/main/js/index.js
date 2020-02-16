@@ -17,7 +17,7 @@ import {LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer} from "vue2
 import "../css/index.css";
 
 import datastore from "./datastore";
-import {methods, startPolling} from "./methods";
+import {methods} from "./methods";
 import {patch} from "./utils";
 
 patch();
@@ -47,5 +47,3 @@ const app = new Vue({
 });
 
 window.app = app;  // To make it available for debugging and such
-
-startPolling();

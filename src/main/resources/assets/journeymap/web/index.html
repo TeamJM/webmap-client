@@ -27,7 +27,7 @@
            crs="L.CRS.Simple"
            ref="map"
 
-           @update:center="centerUpdated" @zoom="updateZoom" id="map"
+           @ready="mapReady" @update:center="centerUpdated" @zoom="updateZoom" id="map"
            @click="onMapClicked"
 
            v-if="status === 'ready'">
