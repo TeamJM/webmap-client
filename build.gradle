@@ -9,7 +9,8 @@ group 'info.journeymap'
 if (project.hasProperty("production")) {
     version release
 } else {
-    version "${release}-${gitVersion()}"
+    def details = versionDetails()
+    version "${release}-${details.gitHash}"
 }
 
 sourceCompatibility = 1.8
