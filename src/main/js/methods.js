@@ -11,7 +11,6 @@ let lastCenter = null;
 export const methods = {
     centerUpdated: centerUpdated,
     getMarkerIconObj: getMarkerIconObj,
-    mapReady: mapReady,
     onMapClicked: onMapClicked,
     setMapMode: setMapMode,
     toggleFollowMode: toggleFollowMode,
@@ -22,7 +21,7 @@ export const methods = {
     },
 };
 
-export function mapReady() {
+export function startPolling() {
     setInterval(
         () => {
             try {
