@@ -19,12 +19,12 @@
 <body>
 <div id="main">
     <l-map :bounds="map_bounds"
+           :crs="L.CRS.Simple"
            :fade-animation="false"
            :max-zoom="5"
            :min-zoom="-2"
            :zoom="0"
 
-           crs="L.CRS.Simple"
            ref="map"
 
            @ready="mapReady" @update:center="centerUpdated" @zoom="updateZoom" id="map"
