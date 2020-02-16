@@ -29,7 +29,7 @@ export default {
         waypoints: [],
 
         mouseCoords: "0, 0",
-        status: "no_world",
+        status: "other",
 
         JMTileLayer: JMTileLayer,
     },
