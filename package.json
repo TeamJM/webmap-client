@@ -16,7 +16,7 @@
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "terser-webpack-plugin": "2.3.2",
     "vue": "2.6.11",
-    "vue2-leaflet": "2.4.2",
+    "vue2-leaflet": "2.5.2",
     "vue-loader": "15.8.3",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.10"
