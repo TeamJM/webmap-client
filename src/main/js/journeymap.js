@@ -44,8 +44,10 @@ class Journeymap {
         this.currentSlice = 0;
         this.currentZoom = 0;
 
+        this.player_x = 0;
+        this.player_z = 0;
+
         this.followMode = false;
-        this.ignoreSetFollowMode = false;
     }
 
     tileUrl(x, z, slice, mapType, dimension) {
@@ -91,11 +93,6 @@ class Journeymap {
     }
 
     setFollowMode(mode) {
-        if (this.ignoreSetFollowMode) {
-            this.ignoreSetFollowMode = false;
-            return;
-        }
-
         this.followMode = mode;
 
         if (this.followMode) {
@@ -153,9 +150,11 @@ class Journeymap {
         window.app.polygons = this._buildPolygons(data);
         window.app.waypoints = this._buildWaypoints(data);
 
+        this.player_x = data.player.posX;
+        this.player_z = data.player.posZ;
+
         if (this.followMode) {
-            this.ignoreSetFollowMode = true;
-            app.$refs.map.mapObject.setView(translateCoords(data.player.posX, data.player.posZ))
+            app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z))
         }
     }
 
@@ -399,6 +398,10 @@ class Journeymap {
     }
 
     setZoom(zoom) {
+        if (this.followMode) {
+            app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z))
+        }
+
         this.currentZoom = Number(zoom);
 
         const zoomOffset = 6 - this.currentZoom;

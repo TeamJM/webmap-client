@@ -27,8 +27,10 @@
 
            ref="map"
 
-           @ready="mapReady" @update:center="centerUpdated" @zoom="updateZoom" id="map"
-           @click="onMapClicked">
+           @click="onMapClicked"
+           @dragstart="dragStart"
+           @ready="mapReady"
+           @zoom="updateZoom" id="map">
         <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
 
         <l-control :position="'topleft'"

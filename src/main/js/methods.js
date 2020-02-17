@@ -9,7 +9,7 @@ import {JMTileLayer} from "./tile";
 let lastCenter = null;
 
 export const methods = {
-    centerUpdated: centerUpdated,
+    dragStart: dragStart,
     getMarkerIconObj: getMarkerIconObj,
     mapReady: mapReady,
     onMapClicked: onMapClicked,
@@ -64,13 +64,7 @@ export function toggleFollowMode() {
     JM.toggleFollowMode();
 }
 
-export function centerUpdated(center) {
-    if (center === lastCenter) {
-        return;
-    }
-
-    lastCenter = center;
-
+export function dragStart(event) {
     if (JM.followMode) {
         JM.setFollowMode(false);
     }
