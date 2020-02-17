@@ -22,3 +22,16 @@ export function translateCoords(x, z, hellTranslate, offset) {
 
     return [(z * -1) + offset, x + offset]
 }
+
+export function reverseTranslateCoords(z, x, hellTranslate, offset) {
+    if (hellTranslate === true) {
+        x = Math.floor(x * 8);
+        z = Math.floor(z * 8);
+    }
+
+    if (offset === undefined) {
+        offset = 0;
+    }
+
+    return [x - offset, (z * -1) - offset]
+}

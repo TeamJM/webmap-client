@@ -5,6 +5,7 @@ import {JMHttpError} from "./error";
 import {JMIcon} from "./icon";
 import {JM} from "./journeymap";
 import {JMTileLayer} from "./tile";
+import {reverseTranslateCoords} from "./utils";
 
 let lastCenter = null;
 
@@ -75,7 +76,7 @@ export function setMapMode(mapMode) {
 }
 
 export function onMapClicked(event) {
-    const [x, y] = [event.latlng.lat, event.latlng.lng];
+    const [x, z] = reverseTranslateCoords(Math.floor(event.latlng.lat), Math.floor(event.latlng.lng));
 
-    datastore.state.mouseCoords = `${y} / ${x}`
+    datastore.state.mouseCoords = `x: ${x}, z: ${z - 1}`
 }

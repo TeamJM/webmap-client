@@ -25,12 +25,13 @@
            :min-zoom="-2"
            :zoom="0"
 
+           @zoom="updateZoom"
            ref="map"
 
            @click="onMapClicked"
            @dragstart="dragStart"
            @ready="mapReady"
-           @zoom="updateZoom" id="map">
+           id="map">
         <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
 
         <l-control :position="'topleft'"
@@ -40,11 +41,9 @@
             </a>
         </l-control>
 
-        <l-control :position="'topright'"
+        <l-control :position="'bottomright'"
                    class="leaflet-control">
-            <a>
-                <span id="coords" v-text="mouseCoords"></span>
-            </a>
+            <span id="coords" v-text="mouseCoords"></span>
         </l-control>
 
         <l-control :position="'topleft'"
