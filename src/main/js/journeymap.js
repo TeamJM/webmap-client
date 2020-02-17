@@ -298,7 +298,13 @@ class Journeymap {
 
     _buildWaypoints(data) {
         let waypoints = [];
-        const zoomOffset = 6 - this.currentZoom;
+        let zoomOffset = 6;
+
+        if (this.currentZoom >= 0) {
+            zoomOffset = zoomOffset - this.currentZoom
+        } else {
+            zoomOffset = zoomOffset - (this.currentZoom * 5);
+        }
 
         for (let waypoint of Object.values(data.waypoints)) {
             if (! waypoint.enable || ! waypoint.dimensions.includes(this.currentDim)) {
@@ -404,7 +410,13 @@ class Journeymap {
 
         this.currentZoom = Number(zoom);
 
-        const zoomOffset = 6 - this.currentZoom;
+        let zoomOffset = 6;
+
+        if (this.currentZoom >= 0) {
+            zoomOffset = zoomOffset - this.currentZoom
+        } else {
+            zoomOffset = zoomOffset - (this.currentZoom * 3);
+        }
 
         for (let waypoint of Object.values(window.app.waypoints)) {
 
