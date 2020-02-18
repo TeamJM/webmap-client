@@ -32,6 +32,7 @@
            @dragstart="dragStart"
            @ready="mapReady"
            id="map">
+
         <l-tile-layer
                 :tile-layer-class="getTileClass"
                 :tile-size="512"
@@ -93,10 +94,15 @@
             <a @click="setMapMode('underground')" id="mapTypeUnderground">
                 <img :src="undergroundIcon"/>
             </a>
-            <!-- I honestly have no clue what the heck a "surface" map is, and I can't get it to render anything -->
-            <!-- <a @click="setMapMode('surface')" id="mapTypeSurface">-->
-            <!-- <img :src="followIcon"/>-->
-            <!-- </a>-->
+        </l-control>
+
+        <l-control :position="'bottomleft'"
+                   class="leaflet-bar leaflet-control">
+            <b-tooltip :animated="true" class="is-flex" label="JourneyMap Website" position="is-right">
+                <a href="https://journeymap.info" id="aboutButton" target="_blank">
+                    <img :src="jmIcon"/>
+                </a>
+            </b-tooltip>
         </l-control>
 
         <l-marker :icon="getMarkerIconObj(marker)"
@@ -129,13 +135,14 @@
 
     <b-modal :active="status !== 'ready'"
              :can-cancel="false"
+             :width="640"
+
              aria-modal
              aria-role="dialog"
              custom-class="front"
-             trap-focus
-    >
+             trap-focus>
         <div class="card">
-            <div class="card-content">
+            <div class="card-content has-text-centered">
                 <div class="content" v-if="status === 'no_world'">
                     No world is loaded - please join a server, or start a single-player world.
                 </div>
@@ -147,7 +154,6 @@
                 </div>
             </div>
         </div>
-
     </b-modal>
 </div>
 

@@ -1,9 +1,10 @@
 "use strict";
 
 import {Point} from "leaflet";
-import dayIconActive from "../images/day-active.png";
 
+import dayIconActive from "../images/day-active.png";
 import followIconOff from "../images/follow-off.png"
+import jmIcon from "../images/journeymap.png"
 import nightIcon from "../images/night.png";
 import topoIcon from "../images/topo.png";
 import undergroundIcon from "../images/underground.png";
@@ -16,6 +17,8 @@ export default {
             new Point(-29999984, -29999984),
             new Point(29999984, 29999984),
         ],
+
+        jmIcon: jmIcon,
 
         dayIcon: dayIconActive,
         followIcon: followIconOff,
