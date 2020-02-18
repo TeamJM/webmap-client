@@ -30,7 +30,7 @@ const URLS = {
 };
 
 
-async function request(url, init, params) {
+async function request(url, init = {}, params) {
     if (init.method !== "GET" && params !== undefined) {
         init = init.copy();
 
@@ -55,13 +55,13 @@ async function request(url, init, params) {
 async function json(url, init, params) {
     const response = await request(url, init, params);
 
-    return await response.json();
+    return response.json();
 }
 
 async function text(url, init, params) {
     const response = await request(url, init, params);
 
-    return await response.text();
+    return response.text();
 }
 
 
@@ -82,7 +82,7 @@ export async function getData(type, imagesSince) {
         url = `${url}?images.since=${imagesSince}`;
     }
 
-    return await json(url, GET);
+    return json(url, GET);
 }
 
 export async function getAllData(imagesSince) {
@@ -99,19 +99,19 @@ export async function getAllData(imagesSince) {
 }
 
 export async function getLogs() {
-    return await text(URLS.LOGS, GET);
+    return text(URLS.LOGS, GET);
 }
 
 export async function getProperties() {
-    return await json(URLS.PROPERTIES, GET);
+    return json(URLS.PROPERTIES, GET);
 }
 
 export async function setProperties(properties) {
-    return await json(URLS.PROPERTIES, POST, properties)
+    return json(URLS.PROPERTIES, POST, properties)
 }
 
 export async function getPolygons() {
-    return await json(URLS.POLYGONS, GET);
+    return json(URLS.POLYGONS, GET);
 }
 
 export function getResourceUrl(resource) {
@@ -123,7 +123,7 @@ export function getSkinUrl(username) {
 }
 
 export async function getStatus() {
-    return await json(URLS.STATUS, GET)
+    return json(URLS.STATUS, GET)
 }
 
 export function getTileUrl(parameters) {
