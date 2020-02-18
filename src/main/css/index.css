@@ -87,3 +87,9 @@ html, body, #main {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+/* I have no idea why this is set to black. None at all. */
+
+.toast > div {
+    color: white !important;
+}
