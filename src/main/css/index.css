@@ -36,3 +36,54 @@ html, body, #main {
 .round-icon {
     border-radius: 100%;
 }
+
+/* Styles for the info pane */
+
+.info-pane {
+    background-clip: padding-box;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    box-shadow: none;
+    clear: both;
+    color: #000;
+    cursor: auto;
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0 10px 10px 0;
+    pointer-events: auto;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    z-index: 800;
+}
+
+.info-pane a {
+    color: revert;
+    cursor: pointer;
+}
+
+.info-pane > * {
+    border-bottom: 1px solid rgb(204, 204, 204);
+    display: block;
+    padding: 5px 10px;
+}
+
+.info-pane > *:last-child {
+    border-bottom: none;
+}
+
+.info-pane * svg {
+    margin-right: 5px;
+}
+
+.info-pane .light-text {
+    color: rgb(154, 154, 154);
+}
+
+.info-pane .truncate {
+    max-width: 15em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

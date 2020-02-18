@@ -1,11 +1,9 @@
 "use strict";
 
-import datastore from "./datastore";
 import {JMHttpError} from "./error";
 import {JMIcon} from "./icon";
 import {JM} from "./journeymap";
 import {JMTileLayer} from "./tile";
-import {reverseTranslateCoords} from "./utils";
 
 let lastCenter = null;
 
@@ -13,7 +11,6 @@ export const methods = {
     dragStart: dragStart,
     getMarkerIconObj: getMarkerIconObj,
     mapReady: mapReady,
-    onMapClicked: onMapClicked,
     setMapMode: setMapMode,
     toggleFollowMode: toggleFollowMode,
     updateZoom: updateZoom,
@@ -75,8 +72,8 @@ export function setMapMode(mapMode) {
     JM.setMapMode(mapMode);
 }
 
-export function onMapClicked(event) {
-    const [x, z] = reverseTranslateCoords(Math.floor(event.latlng.lat), Math.floor(event.latlng.lng));
-
-    datastore.state.mouseCoords = `x: ${x}, z: ${z - 1}`
-}
+// export function onMapClicked(event) {
+//     const [x, z] = reverseTranslateCoords(Math.floor(event.latlng.lat), Math.floor(event.latlng.lng));
+//
+//     datastore.state.mouseCoords = `x: ${x}, z: ${z - 1}`
+// }

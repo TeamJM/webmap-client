@@ -1,18 +1,22 @@
 "use strict";
 
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {fab} from '@fortawesome/free-brands-svg-icons'
+import {fas} from '@fortawesome/free-solid-svg-icons'
+
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import Buefy from "buefy";
 import "buefy/dist/buefy.css";
 
 import {Icon} from "leaflet";
-
 import "leaflet-rotatedmarker"
-
 import MarkerIcon2x from "leaflet/dist/images/marker-icon-2x.png"
 import MarkerIcon from "leaflet/dist/images/marker-icon.png"
 import MarkerShadow from "leaflet/dist/images/marker-shadow.png"
-import "leaflet/dist/leaflet.css"
-import Vue from "vue";
 
+import "leaflet/dist/leaflet.css"
+
+import Vue from "vue";
 import {LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer} from "vue2-leaflet";
 import "../css/index.css";
 
@@ -21,6 +25,9 @@ import {methods} from "./methods";
 import {patch} from "./utils";
 
 patch();
+library.add(fab, fas);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.component('l-circle-marker', LCircleMarker);
 Vue.component("l-control", LControl);

@@ -23,16 +23,21 @@
            :fade-animation="false"
            :max-zoom="5"
            :min-zoom="-2"
+           :options="{'attributionControl': false}"
            :zoom="0"
 
            @zoom="updateZoom"
            ref="map"
 
-           @click="onMapClicked"
            @dragstart="dragStart"
            @ready="mapReady"
            id="map">
-        <l-tile-layer :tile-layer-class="getTileClass" :tile-size="512" ref="tiles"></l-tile-layer>
+        <l-tile-layer
+                :tile-layer-class="getTileClass"
+                :tile-size="512"
+
+                ref="tiles">
+        </l-tile-layer>
 
         <l-control :position="'topleft'"
                    class="leaflet-bar leaflet-control">
@@ -42,8 +47,36 @@
         </l-control>
 
         <l-control :position="'bottomright'"
-                   class="leaflet-control">
-            <span id="coords" v-text="mouseCoords"></span>
+                   class="info-pane">
+            <b-tooltip :animated="true" label="Player biome" position="is-left">
+                <div>
+                    <font-awesome-icon icon="cube"></font-awesome-icon>
+                    <span v-text="playerBiome"></span>
+                </div>
+            </b-tooltip>
+
+            <b-tooltip :animated="true" label="Player coordinates" position="is-left">
+                <div class="truncate">
+                    <font-awesome-icon icon="location-arrow"></font-awesome-icon>
+
+                    <span class="light-text">x:</span>
+                    <span v-text="playerX"></span>
+                    <span class="light-text">z:</span>
+                    <span v-text="playerZ"></span>
+                    <span class="light-text">y:</span>
+                    <span v-text="playerY"></span>
+                </div>
+            </b-tooltip>
+        </l-control>
+
+        <l-control :position="'bottomright'"
+                   class="info-pane">
+            <b-tooltip :animated="true" label="World" position="is-left">
+                <div>
+                    <font-awesome-icon icon="globe-europe"></font-awesome-icon>
+                    <span v-text="playerWorld"></span>
+                </div>
+            </b-tooltip>
         </l-control>
 
         <l-control :position="'topleft'"

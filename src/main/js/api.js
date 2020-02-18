@@ -24,7 +24,7 @@ const URLS = {
     PROPERTIES: "/properties",
     POLYGONS: "/polygons",
     RESOURCES: "/resources?resource={resource}",
-    SKIN: "/skin/{username}",
+    SKIN: "/skin/{uuid}",
     STATUS: "/status",
     TILE: "/tiles/tile.png",
 };
@@ -115,11 +115,11 @@ export async function getPolygons() {
 }
 
 export function getResourceUrl(resource) {
-    return URLS.RESOURCES.format({resource: resource})
+    return URLS.RESOURCES.format({resource: encodeURIComponent(resource)})
 }
 
 export function getSkinUrl(username) {
-    return URLS.SKIN.format({username: username})
+    return URLS.SKIN.format({uuid: encodeURIComponent(username)})
 }
 
 export async function getStatus() {

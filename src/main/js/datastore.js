@@ -28,7 +28,13 @@ export default {
         tiles: {},
         waypoints: [],
 
-        mouseCoords: "0, 0",
+
+        playerBiome: "Loading...",
+        playerWorld: "Loading...",
+        playerX: "~",
+        playerY: "~",
+        playerZ: "~",
+
         status: "other",
 
         JMTileLayer: JMTileLayer,

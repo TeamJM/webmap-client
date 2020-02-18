@@ -11,6 +11,7 @@ import followIconOn from "../images/follow-on.png"
 
 import markerDotHostile from "../images/marker/dot-hostile.png";
 import markerDotNeutral from "../images/marker/dot-neutral.png";
+import markerDotPlayer from "../images/marker/dot-player.png";
 import markerDotVillager from "../images/marker/dot-villager.png";
 import nightIconActive from "../images/night-active.png";
 import nightIconDisabled from "../images/night-disabled.png";
@@ -24,7 +25,7 @@ import topoIcon from "../images/topo.png";
 import undergroundIconActive from "../images/underground-active.png";
 
 import undergroundIcon from "../images/underground.png";
-import {getAllData, getStatus, getTileUrl} from "./api";
+import {getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl} from "./api";
 
 import datastore from "./datastore";
 import {translateCoords} from "./utils";
@@ -45,6 +46,7 @@ class Journeymap {
         this.currentZoom = 0;
 
         this.player_x = 0;
+        this.player_y = 0;
         this.player_z = 0;
 
         this.followMode = false;
@@ -151,7 +153,15 @@ class Journeymap {
         window.app.waypoints = this._buildWaypoints(data);
 
         this.player_x = data.player.posX;
+        this.player_y = data.player.posY;
         this.player_z = data.player.posZ;
+
+        datastore.state.playerX = `${Math.floor(this.player_x)}`;
+        datastore.state.playerY = `${Math.floor(this.player_y)}`;
+        datastore.state.playerZ = `${Math.floor(this.player_z)}`;
+
+        datastore.state.playerBiome = `${data.player.biome}`;
+        datastore.state.playerWorld = `${data.world.name}`;
 
         if (this.followMode) {
             app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z))
@@ -193,7 +203,7 @@ class Journeymap {
             markers.push({
                 className: "round-icon",
                 latLng: translateCoords(animal.posX, animal.posZ),
-                url: `/resources?resource=${encodeURIComponent(animal.iconLocation)}`,
+                url: getResourceUrl(animal.iconLocation),
                 size: 14,
                 zIndex: 2,
 
@@ -219,7 +229,7 @@ class Journeymap {
             markers.push({
                 className: "round-icon",
                 latLng: translateCoords(mob.posX, mob.posZ),
-                url: `/resources?resource=${encodeURIComponent(mob.iconLocation)}`,
+                url: getResourceUrl(mob.iconLocation),
                 size: 14,
                 zIndex: 2,
 
@@ -245,12 +255,38 @@ class Journeymap {
             markers.push({
                 className: "round-icon",
                 latLng: translateCoords(villager.posX, villager.posZ),
-                url: `/resources?resource=${encodeURIComponent(villager.iconLocation)}`,
+                url: getResourceUrl(villager.iconLocation),
                 size: 14,
                 zIndex: 2,
 
                 key: `${villager.entityId}/icon`,
             })
+        }
+
+        for (let player of Object.values(data.players)) {
+            markers.push({
+                latLng: translateCoords(player.posX, player.posZ),
+                url: markerDotPlayer,
+                size: 48,
+                zIndex: 1,
+
+                options: {
+                    rotationAngle: player.heading,
+                    rotationOrigin: "center",
+                },
+
+                key: player.entityId,
+            });
+
+            markers.push({
+                className: "round-icon",
+                latLng: translateCoords(player.posX, player.posZ),
+                url: getSkinUrl(player.entityId),
+                size: 14,
+                zIndex: 2,
+
+                key: `${player.entityId}/icon`,
+            });
         }
 
         return markers
