@@ -88,8 +88,50 @@ html, body, #main {
     white-space: nowrap;
 }
 
-/* I have no idea why this is set to black. None at all. */
+/* Log viewer */
 
-.toast > div {
-    color: white !important;
+#logContent {
+    max-height: calc(100vh - 35vh);
+    overflow: scroll;
+}
+
+#logModal {
+    height: 100vh;
+}
+
+/* Make tooltipped buttons look like untooltipped buttons */
+
+.leaflet-touch .leaflet-bar > span:first-child {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.leaflet-touch .leaflet-bar > span:last-child {
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.leaflet-touch .leaflet-bar > span {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    padding-bottom: 30px; /* I admit that I have no idea why this is needed */
+}
+
+.leaflet-bar > span {
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.leaflet-bar > span, .leaflet-bar > span:hover {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+}
+
+.leaflet-bar > span:last-child {
+    border-bottom: none;
 }

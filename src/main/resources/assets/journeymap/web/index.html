@@ -105,6 +105,25 @@
             </b-tooltip>
         </l-control>
 
+        <l-control :position="'bottomleft'"
+                   class="leaflet-bar leaflet-control">
+            <b-tooltip :animated="true" class="is-flex" label="Toggle full-screen" position="is-right">
+                <a @click="toggleFullScreen">
+                    <font-awesome-icon icon="expand-arrows-alt"></font-awesome-icon>
+                </a>
+            </b-tooltip>
+
+            <b-tooltip :animated="true" class="is-flex" label="View journeymap.log" position="is-right">
+                <a @click="logModalActive = true" id="logButton">
+                    <font-awesome-icon icon="file-alt"></font-awesome-icon>
+                </a>
+            </b-tooltip>
+        </l-control>
+
+        <l-control :position="'bottomleft'"
+                   class="leaflet-bar leaflet-control">
+        </l-control>
+
         <l-marker :icon="getMarkerIconObj(marker)"
                   :key="marker.key"
                   :lat-lng="marker.latLng"
@@ -133,13 +152,38 @@
         ></l-polygon>
     </l-map>
 
-    <b-modal :active="status !== 'ready'"
-             :can-cancel="false"
-             :width="640"
+    <b-modal :active.sync="logModalActive"
 
              aria-modal
              aria-role="dialog"
              custom-class="front"
+             id="logModal"
+    >
+        <div class="content">
+            <pre id="logContent">{{ logContent ? logContent : "Click 'Load Logs' to get the latest logs from journeymap.log"  }}</pre>
+
+            <button :class="'button is-info is-pulled-left' + (logsLoading ? ' is-loading' : '')" @click="reloadLog"
+                    type="button">Reload Logs
+            </button>
+
+            <div class="field is-grouped is-grouped-right">
+                <p class="control">
+                    <button @click="downloadLog" class="button is-primary" type="button">Download</button>
+                </p>
+                <p class="control">
+                    <button @click="logModalActive = false" class="button is-danger" type="button">Close</button>
+                </p>
+            </div>
+        </div>
+    </b-modal>
+
+    <b-modal :active="status !== 'ready'"
+             :can-cancel="false"
+
+             aria-modal
+             aria-role="dialog"
+             custom-class="front"
+             has-modal-card
              trap-focus>
         <div class="card">
             <div class="card-content has-text-centered">

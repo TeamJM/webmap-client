@@ -123,7 +123,7 @@ export function getSkinUrl(username) {
 }
 
 export async function getStatus() {
-    return await text(URLS.STATUS, GET)
+    return await json(URLS.STATUS, GET)
 }
 
 export function getTileUrl(parameters) {

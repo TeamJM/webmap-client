@@ -31,12 +31,15 @@ export default {
         tiles: {},
         waypoints: [],
 
-
-        playerBiome: "Loading...",
-        playerWorld: "Loading...",
+        playerBiome: "N/A",
+        playerWorld: "N/A",
         playerX: "~",
         playerY: "~",
         playerZ: "~",
+
+        logContent: null,
+        logModalActive: false,
+        logsLoading: false,
 
         status: "other",
 

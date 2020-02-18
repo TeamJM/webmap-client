@@ -121,9 +121,9 @@ class Journeymap {
     async _checkForChanges() {
         let status = await getStatus();
 
-        datastore.state.status = status;
+        datastore.state.status = status.status;
 
-        if (status !== "ready") {
+        if (status.status !== "ready") {
             return;
         }
 
@@ -164,7 +164,8 @@ class Journeymap {
         datastore.state.playerWorld = `${data.world.name}`;
 
         if (this.followMode) {
-            app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z))
+            app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z));
+            this.setMapMode(status.mapType);
         }
     }
 
@@ -396,7 +397,7 @@ class Journeymap {
         datastore.state.topoIcon = topoIcon;
         datastore.state.undergroundIcon = undergroundIcon;
 
-        if (this.currentDim === -1) {  // Nether has only cave mode; TODO: Think about other Nether dims
+        if (this.currentDim === -1) {  // Nether has only cave mode
             datastore.state.dayIcon = dayIconDisabled;
             datastore.state.nightIcon = nightIconDisabled;
             datastore.state.topoIcon = topoIconDisabled;
@@ -409,7 +410,7 @@ class Journeymap {
         if (this.currentDim === 1) {
             datastore.state.nightIcon = nightIconDisabled;
 
-            if (mapMode === "night") {  // End has no night mode; TODO: Think about other End dims
+            if (mapMode === "night") {  // End has no night mode
                 return this.setMapMode("day")
             }
         }

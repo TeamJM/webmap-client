@@ -1,18 +1,29 @@
 "use strict";
 
+import {ToastProgrammatic as Toast} from 'buefy';
+import {getLogs} from "./api";
+import datastore from "./datastore";
 import {JMHttpError} from "./error";
 import {JMIcon} from "./icon";
 import {JM} from "./journeymap";
 import {JMTileLayer} from "./tile";
 
-let lastCenter = null;
+const FS_ELEMENT = document.body;
+const ENTER_FS_FUNC = FS_ELEMENT.requestFullScreen || FS_ELEMENT.webkitRequestFullScreen || FS_ELEMENT.mozRequestFullScreen || FS_ELEMENT.msRequestFullscreen;
+const EXIT_FS_FUNC = document.cancelFullScreen || document.webkitCancelFullScreen || document.mozCancelFullScreen || document.msExitFullscreen;
+
+let isFullScreen = false;
+
 
 export const methods = {
+    downloadLog: downloadLog,
     dragStart: dragStart,
     getMarkerIconObj: getMarkerIconObj,
     mapReady: mapReady,
+    reloadLog: reloadLog,
     setMapMode: setMapMode,
     toggleFollowMode: toggleFollowMode,
+    toggleFullScreen: toggleFullScreen,
     updateZoom: updateZoom,
 
     getTileClass: (url, options) => {
@@ -70,6 +81,58 @@ export function dragStart(event) {
 
 export function setMapMode(mapMode) {
     JM.setMapMode(mapMode);
+}
+
+export function reloadLog() {
+    datastore.state.logsLoading = true;
+
+    getLogs().then((logs) => {
+        datastore.state.logContent = logs;
+        datastore.state.logsLoading = false;
+    })
+}
+
+export function downloadLog() {
+    const content = datastore.state.logContent;
+
+    let element = document.createElement("a");
+    element.setAttribute("href", `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
+    element.setAttribute("download", "journeymap.log");
+
+    element.style.display = "none";
+
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
+export function toggleFullScreen(event) {
+    if (! ENTER_FS_FUNC || ! EXIT_FS_FUNC) {
+        Toast.open({
+            type: "is-danger",
+            message: "Full-screen mode is not supported in this browser.",
+        });
+
+        return
+    }
+
+    if (isFullScreen) {
+        EXIT_FS_FUNC.call(document).then(() => {
+            Toast.open({
+                type: "is-success",
+                message: "Exited full-screen mode.",
+            });
+        });
+    } else {
+        ENTER_FS_FUNC.call(FS_ELEMENT).then(() => {
+            Toast.open({
+                type: "is-success",
+                message: "Entered full-screen mode.",
+            });
+        });
+    }
+
+    isFullScreen = ! isFullScreen;
 }
 
 // export function onMapClicked(event) {

@@ -5,7 +5,7 @@ class tileRegistry {
 
         setInterval(() => {
             TileRegistry.poll()
-        }, 1000);
+        }, 100);
     }
 
     visibilityCallback(visible, invisible) {
@@ -42,15 +42,13 @@ class tileRegistry {
 
         TileObserver.observe(tile);
     }
-
-    removeTile(coords, zoom) {
-        delete this.registry[`${coords.x}/${coords.y}/${zoom}`];
-    }
 }
 
 function visibilityCallback(entries) {
     const visible = [];
     const invisible = [];
+
+    entries = [...entries];  // Copy the list for safety
 
     entries.forEach((entry) => {
         const coordKey = entry.target.getAttribute("data-coord-key");
@@ -73,5 +71,5 @@ function visibilityCallback(entries) {
 export const TileRegistry = new tileRegistry();
 
 export const TileObserver = new IntersectionObserver(
-    visibilityCallback, {threshold: 0.1},
+    visibilityCallback, {threshold: 0.01},
 );
