@@ -195,122 +195,132 @@ class Journeymap {
     _buildMarkers(data) {
         let markers = [];
 
-        const player = data.player;
+        if (datastore.state.visiblePlayer) {
+            const player = data.player;
 
-        markers.push({
-            latLng: translateCoords(player.posX, player.posZ),
-            url: markerPlayer,
-            size: 32,
-            zIndex: 1000,
-
-            options: {
-                rotationAngle: player.heading,
-                rotationOrigin: "center",
-            },
-        });
-
-        for (let animal of Object.values(data.animals)) {
-            markers.push({
-                latLng: translateCoords(animal.posX, animal.posZ),
-                url: animal.hostile ? markerDotHostile : markerDotNeutral,
-                size: 48,
-                zIndex: 1,
-
-                options: {
-                    rotationAngle: animal.heading,
-                    rotationOrigin: "center",
-                },
-
-                key: animal.entityId,
-            });
-
-            markers.push({
-                className: "round-icon",
-                latLng: translateCoords(animal.posX, animal.posZ),
-                url: getResourceUrl(animal.iconLocation),
-                size: 14,
-                zIndex: 2,
-
-                key: `${animal.entityId}/icon`,
-            })
-        }
-
-        for (let mob of Object.values(data.mobs)) {
-            markers.push({
-                latLng: translateCoords(mob.posX, mob.posZ),
-                url: mob.hostile ? markerDotHostile : markerDotNeutral,
-                size: 48,
-                zIndex: 1,
-
-                options: {
-                    rotationAngle: mob.heading,
-                    rotationOrigin: "center",
-                },
-
-                key: mob.entityId,
-            });
-
-            markers.push({
-                className: "round-icon",
-                latLng: translateCoords(mob.posX, mob.posZ),
-                url: getResourceUrl(mob.iconLocation),
-                size: 14,
-                zIndex: 2,
-
-                key: `${mob.entityId}/icon`,
-            })
-        }
-
-        for (let villager of Object.values(data.villagers)) {
-            markers.push({
-                latLng: translateCoords(villager.posX, villager.posZ),
-                url: villager.hostile ? markerDotHostile : markerDotVillager,
-                size: 48,
-                zIndex: 1,
-
-                options: {
-                    rotationAngle: villager.heading,
-                    rotationOrigin: "center",
-                },
-
-                key: villager.entityId,
-            });
-
-            markers.push({
-                className: "round-icon",
-                latLng: translateCoords(villager.posX, villager.posZ),
-                url: getResourceUrl(villager.iconLocation),
-                size: 14,
-                zIndex: 2,
-
-                key: `${villager.entityId}/icon`,
-            })
-        }
-
-        for (let player of Object.values(data.players)) {
             markers.push({
                 latLng: translateCoords(player.posX, player.posZ),
-                url: markerDotPlayer,
-                size: 48,
-                zIndex: 1,
+                url: markerPlayer,
+                size: 32,
+                zIndex: 1000,
 
                 options: {
                     rotationAngle: player.heading,
                     rotationOrigin: "center",
                 },
-
-                key: player.entityId,
             });
+        }
 
-            markers.push({
-                className: "round-icon",
-                latLng: translateCoords(player.posX, player.posZ),
-                url: getSkinUrl(player.entityId),
-                size: 14,
-                zIndex: 2,
+        if (datastore.state.visibleAnimals) {
+            for (let animal of Object.values(data.animals)) {
+                markers.push({
+                    latLng: translateCoords(animal.posX, animal.posZ),
+                    url: animal.hostile ? markerDotHostile : markerDotNeutral,
+                    size: 48,
+                    zIndex: 1,
 
-                key: `${player.entityId}/icon`,
-            });
+                    options: {
+                        rotationAngle: animal.heading,
+                        rotationOrigin: "center",
+                    },
+
+                    key: animal.entityId,
+                });
+
+                markers.push({
+                    className: "round-icon",
+                    latLng: translateCoords(animal.posX, animal.posZ),
+                    url: getResourceUrl(animal.iconLocation),
+                    size: 14,
+                    zIndex: 2,
+
+                    key: `${animal.entityId}/icon`,
+                })
+            }
+        }
+
+        if (datastore.state.visibleMobs) {
+            for (let mob of Object.values(data.mobs)) {
+                markers.push({
+                    latLng: translateCoords(mob.posX, mob.posZ),
+                    url: mob.hostile ? markerDotHostile : markerDotNeutral,
+                    size: 48,
+                    zIndex: 1,
+
+                    options: {
+                        rotationAngle: mob.heading,
+                        rotationOrigin: "center",
+                    },
+
+                    key: mob.entityId,
+                });
+
+                markers.push({
+                    className: "round-icon",
+                    latLng: translateCoords(mob.posX, mob.posZ),
+                    url: getResourceUrl(mob.iconLocation),
+                    size: 14,
+                    zIndex: 2,
+
+                    key: `${mob.entityId}/icon`,
+                })
+            }
+        }
+
+        if (datastore.state.visibleVillagers) {
+            for (let villager of Object.values(data.villagers)) {
+                markers.push({
+                    latLng: translateCoords(villager.posX, villager.posZ),
+                    url: villager.hostile ? markerDotHostile : markerDotVillager,
+                    size: 48,
+                    zIndex: 1,
+
+                    options: {
+                        rotationAngle: villager.heading,
+                        rotationOrigin: "center",
+                    },
+
+                    key: villager.entityId,
+                });
+
+                markers.push({
+                    className: "round-icon",
+                    latLng: translateCoords(villager.posX, villager.posZ),
+                    url: getResourceUrl(villager.iconLocation),
+                    size: 14,
+                    zIndex: 2,
+
+                    key: `${villager.entityId}/icon`,
+                })
+            }
+        }
+
+        if (datastore.state.visiblePlayers) {
+            for (let player of Object.values(data.players)) {
+                markers.push({
+                    latLng: translateCoords(player.posX, player.posZ),
+                    url: markerDotPlayer,
+                    size: 48,
+                    zIndex: 1,
+
+                    options: {
+                        rotationAngle: player.heading,
+                        rotationOrigin: "center",
+                    },
+
+                    key: player.entityId,
+                });
+
+                markers.push({
+                    className: "round-icon",
+                    latLng: translateCoords(player.posX, player.posZ),
+                    url: getSkinUrl(player.entityId),
+                    size: 14,
+                    zIndex: 2,
+
+                    key: `${player.entityId}/icon`,
+                });
+            }
         }
 
         return markers
@@ -318,6 +328,10 @@ class Journeymap {
 
     _buildPolygons(data) {
         let polygons = [];
+
+        if (! datastore.state.visiblePolygons) {
+            return polygons;
+        }
 
         for (let polygon of Object.values(data.polygons)) {
             let coords = [];
@@ -358,6 +372,11 @@ class Journeymap {
 
     _buildWaypoints(data) {
         let waypoints = [];
+
+        if (! datastore.state.visibleWaypoints) {
+            return waypoints;
+        }
+
         let zoomOffset = 6;
 
         if (this.currentZoom >= 0) {

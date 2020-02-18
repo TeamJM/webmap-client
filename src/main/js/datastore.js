@@ -48,6 +48,18 @@ export default {
 
         status: "other",
 
+        settingsVisible: false,
+
+        visiblePlayer: true,
+
+        visibleAnimals: true,
+        visibleMobs: true,
+        visiblePlayers: true,
+        visibleVillagers: true,
+
+        visiblePolygons: true,
+        visibleWaypoints: true,
+
         JMTileLayer: JMTileLayer,
     },
 };

@@ -135,3 +135,53 @@ html, body, #main {
 .leaflet-bar > span:last-child {
     border-bottom: none;
 }
+
+/* Settings panel */
+
+.settings-pane {
+    margin-right: 10px;
+    margin-top: 10px;
+    pointer-events: auto;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    text-decoration: none;
+    top: 0;
+    z-index: 799;
+}
+
+.settings-pane > div {
+    padding: 0;
+}
+
+.settings-pane .collapse-trigger {
+    display: none;
+}
+
+.settings-pane .settings-pane-header {
+    line-height: 24px;
+    font-size: 18px;
+    margin-right: 30px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    padding: 3px 0 3px 10px;
+}
+
+.settings-pane .content {
+    padding: 5px 10px;
+}
+
+.settings-pane .settings-group {
+    border-top: 2px solid rgba(0, 0, 0, 0.2);
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.settings-pane .settings-group:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+.settings-pane .settings-group:last-child {
+    padding-bottom: 0;
+}
