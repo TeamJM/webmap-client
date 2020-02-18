@@ -1,15 +1,14 @@
-"use strict";
+"use strict"
 
-import {Point} from "leaflet";
+import { JMTileLayer } from "./tile"
+import { Point } from "leaflet"
 
-import dayIconActive from "../images/day-active.png";
+import dayIconActive from "../images/day-active.png"
 import followIconOff from "../images/follow-off.png"
 import jmIcon from "../images/journeymap.png"
-import nightIcon from "../images/night.png";
-import topoIcon from "../images/topo.png";
-import undergroundIcon from "../images/underground.png";
-
-import {JMTileLayer} from "./tile";
+import nightIcon from "../images/night.png"
+import topoIcon from "../images/topo.png"
+import undergroundIcon from "../images/underground.png"
 
 export default {
     state: {
@@ -62,4 +61,4 @@ export default {
 
         JMTileLayer: JMTileLayer,
     },
-};
+}

@@ -1,16 +1,16 @@
 export class JMError extends Error {
-    constructor(errorText) {
-        super();
+    constructor (errorText) {
+        super()
 
-        this.errorText = errorText;
+        this.errorText = errorText
     }
 }
 
 export class JMHttpError extends JMError {
-    constructor(statusCode, errorText, responseObj) {
-        super(errorText);
+    constructor (statusCode, errorText, responseObj) {
+        super(errorText)
 
-        this.responseObj = responseObj;
-        this.statusCode = statusCode;
+        this.responseObj = responseObj
+        this.statusCode = statusCode
     }
 }

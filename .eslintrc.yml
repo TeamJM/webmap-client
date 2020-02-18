@@ -1,0 +1,36 @@
+env:
+  browser: true
+  es6: true
+extends:
+  - 'plugin:vue/essential'
+  - standard
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+  L: true
+  app: true
+parserOptions:
+  ecmaVersion: 2018
+  sourceType: module
+plugins:
+  - vue
+rules:
+  quotes:
+    - error
+    - double
+  no-extend-native:
+    - error
+    - exceptions:
+        - String
+  indent:
+    - error
+    - 4
+  comma-dangle:
+    - error
+    - arrays: always-multiline
+      objects: always-multiline
+      imports: always-multiline
+      exports: always-multiline
+      functions: always-multiline
+  sort-imports:
+    - error

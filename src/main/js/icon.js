@@ -1,19 +1,19 @@
-import {setOptions} from "leaflet";
+import { Icon, setOptions } from "leaflet"
 
-export const JMIcon = L.Icon.extend({
+export const JMIcon = Icon.extend({
     initialize: function (options) {
-        setOptions(this, options);
+        setOptions(this, options)
 
         this.className = options.className
     },
 
     createIcon: function (oldIcon) {
-        let img = this._createIcon('icon', oldIcon);
+        const img = this._createIcon("icon", oldIcon)
 
         if (this.className !== undefined) {
-            img.classList.add(this.className);
+            img.classList.add(this.className)
         }
 
-        return img;
+        return img
     },
-});
+})
