@@ -82,16 +82,16 @@
 
         <l-control :position="'topleft'"
                    class="leaflet-bar leaflet-control">
-            <a @click="setMapMode('day')" id="mapTypeDay">
+            <a @click="setMapMode('day')" id="mapTypeDay" v-if="surfaceMappingAllowed">
                 <img :src="dayIcon"/>
             </a>
-            <a @click="setMapMode('night')" id="mapTypeNight">
+            <a @click="setMapMode('night')" id="mapTypeNight" v-if="surfaceMappingAllowed">
                 <img :src="nightIcon"/>
             </a>
-            <a @click="setMapMode('topo')" id="mapTypeTopo">
+            <a @click="setMapMode('topo')" id="mapTypeTopo" v-if="topoMappingAllowed">
                 <img :src="topoIcon"/>
             </a>
-            <a @click="setMapMode('underground')" id="mapTypeUnderground">
+            <a @click="setMapMode('underground')" id="mapTypeUnderground" v-if="caveMappingAllowed">
                 <img :src="undergroundIcon"/>
             </a>
         </l-control>
@@ -192,6 +192,9 @@
                 </div>
                 <div class="content" v-if="status === 'starting'">
                     JourneyMap is busy, please wait...
+                </div>
+                <div class="content" v-if="status === 'disabled'">
+                    Mapping is currently disabled.
                 </div>
                 <div class="content" v-if="status === 'other'">
                     Just a sec...

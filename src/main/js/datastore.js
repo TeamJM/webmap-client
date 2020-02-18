@@ -18,6 +18,7 @@ export default {
             new Point(29999984, 29999984),
         ],
 
+        followMode: false,
         jmIcon: jmIcon,
 
         dayIcon: dayIconActive,
@@ -30,6 +31,10 @@ export default {
         polygons: [],
         tiles: {},
         waypoints: [],
+
+        caveMappingAllowed: true,
+        surfaceMappingAllowed: true,
+        topoMappingAllowed: true,
 
         playerBiome: "N/A",
         playerWorld: "N/A",

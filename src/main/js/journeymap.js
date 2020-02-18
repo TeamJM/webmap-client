@@ -96,6 +96,7 @@ class Journeymap {
 
     setFollowMode(mode) {
         this.followMode = mode;
+        datastore.state.followMode = this.followMode;
 
         if (this.followMode) {
             datastore.state.followIcon = followIconOn;
@@ -126,6 +127,10 @@ class Journeymap {
         if (status.status !== "ready") {
             return;
         }
+
+        datastore.state.surfaceMappingAllowed = status.allowedMapTypes.surface;
+        datastore.state.topoMappingAllowed = status.allowedMapTypes.topo;
+        datastore.state.caveMappingAllowed = status.allowedMapTypes.cave;
 
         let now = Date.now();
         let data = await getAllData(this.lastTileCheck);
@@ -162,6 +167,24 @@ class Journeymap {
 
         datastore.state.playerBiome = `${data.player.biome}`;
         datastore.state.playerWorld = `${data.world.name}`;
+
+        let mapType = this.currentMapType;
+
+        if ((! datastore.state.surfaceMappingAllowed) && (mapType === "day" || mapType === "night")) {
+            mapType = "topo";
+        }
+
+        if ((! datastore.state.topoMappingAllowed) && mapType === "topo") {
+            mapType = "underground";
+        }
+
+        if ((! datastore.state.caveMappingAllowed) && mapType === "underground") {
+            mapType = "day";
+        }
+
+        if (mapType !== this.currentMapType && ! this.followMode) {
+            this.setMapMode(mapType);
+        }
 
         if (this.followMode) {
             app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z));
