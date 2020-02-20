@@ -1,8 +1,20 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
+    }
+}
+
 plugins {
     id 'java'
     id 'maven-publish'
     id 'com.palantir.git-version' version '0.12.2'
 }
+
+// This is weird, but I can't seem to get at the plugin the other way
+apply plugin: 'com.jfrog.bintray'
 
 group 'info.journeymap'
 
@@ -43,19 +55,47 @@ clean.doFirst {
     delete "$projectDir/src/main/resources/assets/journeymap/web/bundled"
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/TeamJM/webmap-client")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+def bintrayUser = project.findProperty("bintray.user") ?: System.getenv("BINTRAY_USER")
+def bintrayKey = project.findProperty("bintray.password") ?: System.getenv("BINTRAY_PASSWORD")
+
+if (project.hasProperty("production")) {
+    // Bintray is _only_ for releases, not snapshots
+    bintray {
+        user = bintrayUser
+        key = bintrayKey
+
+        pkg {
+            name = "webmap-client"
+            repo = "JourneyMap"
+            userOrg = "teamjm"
+
+            publications = ["maven"]
+
+            version {
+                name = project.release
+                released = new Date()
             }
         }
     }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "JourneyMap"
+            url = uri("https://jm.gserv.me/repository/maven-snapshots/")
+
+            credentials {
+                username = project.findProperty("journeymap.user") ?: System.getenv("JOURNEYMAP_USER")
+                password = project.findProperty("journeymap.password") ?: System.getenv("JOURNEYMAP_PASSWORD")
+            }
+
+            version = project.release
+        }
+    }
+
     publications {
-        gpr(MavenPublication) {
+        maven(MavenPublication) {
             from(components.java)
         }
     }

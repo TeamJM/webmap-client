@@ -23,4 +23,4 @@ jobs:
         run: /bin/sh ./gradlew build
 
       - name: Gradle Publish
-        run: /bin/sh ./gradlew -Pgpr.user=${{ github.actor }} -Pgpr.key=${{ secrets.GITHUB_TOKEN }} publish
+        run: /bin/sh ./gradlew -Pjourneymap.user=${{ secrets.JOURNEYMAP_USER }} -Pjourneymap.password=${{ secrets.JOURNEYMAP_PASSWORD }} publish
