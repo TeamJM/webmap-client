@@ -117,14 +117,18 @@ export function toggleFullScreen(event) {
     }
 
     if (isFullScreen) {
-        EXIT_FS_FUNC.call(document).then(() => {
+        // This isn't always a coroutine, depending on the browser.
+        // Thanks, Chrome.
+        Promise.resolve(EXIT_FS_FUNC.call(document)).then(() => {
             Toast.open({
                 type: "is-success",
                 message: "Exited full-screen mode.",
             })
         })
     } else {
-        ENTER_FS_FUNC.call(FS_ELEMENT).then(() => {
+        // This isn't always a coroutine, depending on the browser.
+        // Thanks, Chrome.
+        Promise.resolve(ENTER_FS_FUNC.call(FS_ELEMENT)).then(() => {
             Toast.open({
                 type: "is-success",
                 message: "Entered full-screen mode.",
