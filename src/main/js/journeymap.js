@@ -145,9 +145,9 @@ class Journeymap {
 
         this.lastTileCheck = now
 
-        window.app.markers = this._buildMarkers(data)
-        window.app.polygons = this._buildPolygons(data)
-        window.app.waypoints = this._buildWaypoints(data)
+        datastore.state.markers = this._buildMarkers(data)
+        datastore.state.polygons = this._buildPolygons(data)
+        datastore.state.waypoints = this._buildWaypoints(data)
 
         this.player_x = data.player.posX
         this.player_y = data.player.posY

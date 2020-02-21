@@ -5,7 +5,6 @@ import "leaflet/dist/leaflet"
 
 import "buefy/dist/buefy.css"
 import "leaflet/dist/leaflet.css"
-import "leaflet-rotatedmarker"
 import "../css/index.css"
 
 import { LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer } from "vue2-leaflet"
@@ -23,6 +22,10 @@ import datastore from "./datastore"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { methods } from "./methods"
 import { patch } from "./utils"
+
+/* eslint sort-imports:0 */
+// Unfortunately, imports order is everything in JS - this has to be here to work.
+import "leaflet-rotatedmarker"
 
 patch()
 
