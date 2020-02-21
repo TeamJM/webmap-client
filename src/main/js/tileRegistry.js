@@ -1,14 +1,14 @@
-class TileRegistryClass {
-    constructor () {
-        this.registry = {}
-        this.visible = new Set()
+import datastore from "./datastore"
 
-        setInterval(() => {
-            TileRegistry.poll()
-        }, 100)
+class TileRegistryClass {
+    constructor() {
+        this.visible = new Set()
+        this.unobserved = new Set() // A crutch for Chrome support
+
+        setInterval(this.poll, 100)
     }
 
-    visibilityCallback (visible, invisible) {
+    visibilityCallback(visible, invisible) {
         visible.forEach((entry) => {
             this.visible.add(entry)
         })
@@ -18,14 +18,34 @@ class TileRegistryClass {
         })
     }
 
-    poll () {
-        this.visible.forEach((key) => {
-            if (!(key in this.registry)) {
+    poll() {
+        const unobserved = [...TileRegistry.unobserved] // Copy it to be safe
+
+        unobserved.forEach((key) => { // We only have to do this because Chromium is stupid
+            const tile = datastore.state.tiles[key][2]
+
+            if (isVisible(tile)) {
+                visibilityCallback([{
+                    isIntersecting: true,
+                    target: tile,
+                }])
+            } else {
+                visibilityCallback([{
+                    isIntersecting: false,
+                    target: tile,
+                }])
+            }
+
+            TileRegistry.unobserved.delete(key)
+        })
+
+        TileRegistry.visible.forEach((key) => {
+            if (!(key in datastore.state.tiles)) {
                 console.warn(`Previously removed tile with key ${key} is visible`)
                 return
             }
 
-            const [coords, tileLayer, tile] = this.registry[key]
+            const [coords, tileLayer, tile] = datastore.state.tiles[key]
             const url = tileLayer.getTileUrl(coords)
 
             if (!tile.src.endsWith(url)) {
@@ -34,17 +54,31 @@ class TileRegistryClass {
         })
     }
 
-    setTile (tileLayer, tile, coords, zoom) {
+    setTile(tileLayer, tile, coords, zoom) {
         const coordKey = `${coords.x}/${coords.y}/${zoom}`
 
         tile.setAttribute("data-coord-key", coordKey)
-        this.registry[coordKey] = [coords, tileLayer, tile]
+        datastore.state.tiles[coordKey] = [coords, tileLayer, tile]
+
+        this.unobserved.add(coordKey)
 
         TileObserver.observe(tile)
     }
 }
 
-function visibilityCallback (entries) {
+function isVisible(element) {
+    const elementRect = element.getBoundingClientRect()
+    const documentElement = document.documentElement
+
+    return (
+        elementRect.top <= (window.innerHeight || documentElement.clientHeight) &&
+        elementRect.left <= (window.innerWidth || document.clientWidth) &&
+        elementRect.bottom >= 0 &&
+        elementRect.right >= 0
+    )
+}
+
+function visibilityCallback(entries) {
     const visible = []
     const invisible = []
 
@@ -68,8 +102,12 @@ function visibilityCallback (entries) {
     TileRegistry.visibilityCallback(visible, invisible)
 }
 
-export const TileRegistry = new TileRegistryClass()
-
 export const TileObserver = new IntersectionObserver(
-    visibilityCallback, { threshold: 0.01 },
+    visibilityCallback, {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.01,
+    },
 )
+
+export const TileRegistry = new TileRegistryClass()

@@ -27,7 +27,7 @@ import undergroundIconActive from "../images/underground-active.png"
 const HAS_Y_VALUE = ["underground", "surface"]
 
 class Journeymap {
-    constructor () {
+    constructor() {
         this.tiles = {}
         this.changedTiles = []
         this.lastTileCheck = Date.now()
@@ -44,7 +44,7 @@ class Journeymap {
         this.followMode = false
     }
 
-    tileUrl (x, z, slice, mapType, dimension) {
+    tileUrl(x, z, slice, mapType, dimension) {
         if (slice === undefined) {
             slice = this.currentSlice
         }
@@ -86,7 +86,7 @@ class Journeymap {
         return url
     }
 
-    setFollowMode (mode) {
+    setFollowMode(mode) {
         this.followMode = mode
         datastore.state.followMode = this.followMode
 
@@ -107,11 +107,11 @@ class Journeymap {
         }
     }
 
-    toggleFollowMode () {
+    toggleFollowMode() {
         this.setFollowMode(!this.followMode)
     }
 
-    async _checkForChanges () {
+    async _checkForChanges() {
         const status = await getStatus()
 
         datastore.state.status = status.status
@@ -184,7 +184,7 @@ class Journeymap {
         }
     }
 
-    _buildMarkers (data) {
+    _buildMarkers(data) {
         const markers = []
 
         if (datastore.state.visiblePlayer) {
@@ -318,7 +318,7 @@ class Journeymap {
         return markers
     }
 
-    _buildPolygons (data) {
+    _buildPolygons(data) {
         const polygons = []
 
         if (!datastore.state.visiblePolygons) {
@@ -362,7 +362,7 @@ class Journeymap {
         return polygons
     }
 
-    _buildWaypoints (data) {
+    _buildWaypoints(data) {
         const waypoints = []
 
         if (!datastore.state.visibleWaypoints) {
@@ -421,11 +421,11 @@ class Journeymap {
         return waypoints
     }
 
-    _slugifyTile (x, z, slice, type, dimension) {
+    _slugifyTile(x, z, slice, type, dimension) {
         return `X ${x}, Z ${z}, Slice ${slice} / Dim ${dimension}, Type ${type},`
     }
 
-    setMapMode (mapMode) {
+    setMapMode(mapMode) {
         datastore.state.dayIcon = dayIcon
         datastore.state.nightIcon = nightIcon
         datastore.state.topoIcon = topoIcon
@@ -467,14 +467,14 @@ class Journeymap {
         this.currentMapType = mapMode
     }
 
-    setDimension (dim) {
+    setDimension(dim) {
         this.currentDim = dim
 
         // Update allowable map types and do fixes
         this.setMapMode(this.currentMapType)
     }
 
-    setZoom (zoom) {
+    setZoom(zoom) {
         if (this.followMode) {
             app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z))
         }

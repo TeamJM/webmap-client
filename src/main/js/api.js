@@ -29,7 +29,7 @@ const URLS = {
     TILE: "/tiles/tile.png",
 }
 
-async function request (url, init = {}, params) {
+async function request(url, init = {}, params) {
     if (init.method !== "GET" && params !== undefined) {
         init = init.copy()
 
@@ -51,19 +51,19 @@ async function request (url, init = {}, params) {
     return response
 }
 
-async function json (url, init, params) {
+async function json(url, init, params) {
     const response = await request(url, init, params)
 
     return response.json()
 }
 
-async function text (url, init, params) {
+async function text(url, init, params) {
     const response = await request(url, init, params)
 
     return response.text()
 }
 
-export async function getData (type, imagesSince) {
+export async function getData(type, imagesSince) {
     if (!Object.values(DATA_TYPES).includes(type)) {
         throw TypeError(`Unknown type: ${type}`)
     }
@@ -83,7 +83,7 @@ export async function getData (type, imagesSince) {
     return json(url, GET)
 }
 
-export async function getAllData (imagesSince) {
+export async function getAllData(imagesSince) {
     const data = await getData(DATA_TYPES.ALL, imagesSince)
 
     data.animals = await getData(DATA_TYPES.ANIMALS)
@@ -96,35 +96,35 @@ export async function getAllData (imagesSince) {
     return data
 }
 
-export async function getLogs () {
+export async function getLogs() {
     return text(URLS.LOGS, GET)
 }
 
-export async function getProperties () {
+export async function getProperties() {
     return json(URLS.PROPERTIES, GET)
 }
 
-export async function setProperties (properties) {
+export async function setProperties(properties) {
     return json(URLS.PROPERTIES, POST, properties)
 }
 
-export async function getPolygons () {
+export async function getPolygons() {
     return json(URLS.POLYGONS, GET)
 }
 
-export function getResourceUrl (resource) {
+export function getResourceUrl(resource) {
     return URLS.RESOURCES.format({ resource: encodeURIComponent(resource) })
 }
 
-export function getSkinUrl (username) {
+export function getSkinUrl(username) {
     return URLS.SKIN.format({ uuid: encodeURIComponent(username) })
 }
 
-export async function getStatus () {
+export async function getStatus() {
     return json(URLS.STATUS, GET)
 }
 
-export function getTileUrl (parameters) {
+export function getTileUrl(parameters) {
     if (parameters.t === undefined) {
         // To ensure the URL isn't cached
         parameters.t = Date.now().toString()

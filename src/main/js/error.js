@@ -1,5 +1,5 @@
 export class JMError extends Error {
-    constructor (errorText) {
+    constructor(errorText) {
         super()
 
         this.errorText = errorText
@@ -7,7 +7,7 @@ export class JMError extends Error {
 }
 
 export class JMHttpError extends JMError {
-    constructor (statusCode, errorText, responseObj) {
+    constructor(statusCode, errorText, responseObj) {
         super(errorText)
 
         this.responseObj = responseObj

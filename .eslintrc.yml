@@ -34,3 +34,6 @@ rules:
       functions: always-multiline
   sort-imports:
     - error
+  space-before-function-paren:
+    - error
+    - never

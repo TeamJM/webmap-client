@@ -1,13 +1,13 @@
 import { Icon, setOptions } from "leaflet"
 
 export const JMIcon = Icon.extend({
-    initialize: function (options) {
+    initialize: function(options) {
         setOptions(this, options)
 
         this.className = options.className
     },
 
-    createIcon: function (oldIcon) {
+    createIcon: function(oldIcon) {
         const img = this._createIcon("icon", oldIcon)
 
         if (this.className !== undefined) {

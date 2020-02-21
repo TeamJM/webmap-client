@@ -1,5 +1,5 @@
-export function patch () {
-    String.prototype.format = function (params) {
+export function patch() {
+    String.prototype.format = function(params) {
         let formatted = this
 
         for (const [key, value] of Object.entries(params)) {
@@ -10,7 +10,7 @@ export function patch () {
     }
 }
 
-export function translateCoords (x, z, hellTranslate, offset = 0) {
+export function translateCoords(x, z, hellTranslate, offset = 0) {
     if (hellTranslate) {
         x = Math.floor(x / 8)
         z = Math.floor(z / 8)
@@ -19,7 +19,7 @@ export function translateCoords (x, z, hellTranslate, offset = 0) {
     return [(z * -1) + offset, x + offset]
 }
 
-export function reverseTranslateCoords (z, x, hellTranslate, offset = 0) {
+export function reverseTranslateCoords(z, x, hellTranslate, offset = 0) {
     if (hellTranslate) {
         x = Math.floor(x * 8)
         z = Math.floor(z * 8)

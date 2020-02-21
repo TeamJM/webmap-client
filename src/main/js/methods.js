@@ -31,7 +31,7 @@ export const methods = {
     },
 }
 
-export function mapReady () {
+export function mapReady() {
     setInterval(
         () => {
             try {
@@ -47,7 +47,7 @@ export function mapReady () {
         1000)
 }
 
-export function updateZoom () {
+export function updateZoom() {
     const mapElement = document.getElementById("map")
     const zoom = this.$refs.map.mapObject._zoom
 
@@ -60,7 +60,7 @@ export function updateZoom () {
     JM.setZoom(zoom)
 }
 
-export function getMarkerIconObj (marker) {
+export function getMarkerIconObj(marker) {
     return new JMIcon({
         anchor: marker.anchor,
         className: marker.className,
@@ -69,21 +69,21 @@ export function getMarkerIconObj (marker) {
     })
 }
 
-export function toggleFollowMode () {
+export function toggleFollowMode() {
     JM.toggleFollowMode()
 }
 
-export function dragStart (event) {
+export function dragStart(event) {
     if (JM.followMode) {
         JM.setFollowMode(false)
     }
 }
 
-export function setMapMode (mapMode) {
+export function setMapMode(mapMode) {
     JM.setMapMode(mapMode)
 }
 
-export function reloadLog () {
+export function reloadLog() {
     datastore.state.logsLoading = true
 
     getLogs().then((logs) => {
@@ -92,7 +92,7 @@ export function reloadLog () {
     })
 }
 
-export function downloadLog () {
+export function downloadLog() {
     const content = datastore.state.logContent
 
     const element = document.createElement("a")
@@ -106,7 +106,7 @@ export function downloadLog () {
     document.body.removeChild(element)
 }
 
-export function toggleFullScreen (event) {
+export function toggleFullScreen(event) {
     if (!ENTER_FS_FUNC || !EXIT_FS_FUNC) {
         Toast.open({
             type: "is-danger",
