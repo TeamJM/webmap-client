@@ -172,6 +172,15 @@
                 class="info-pane settings-pane">
         <div class="settings-pane-header">
             Settings
+
+            <a aria-controls="settingsPanel"
+               class="is-pulled-right has-text-primary"
+               slot="trigger"
+
+               @click="settingsVisible = !settingsVisible">
+
+                <font-awesome-icon icon="times-circle"></font-awesome-icon>
+            </a>
         </div>
         <div class="content">
             <div class="settings-group">

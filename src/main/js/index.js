@@ -8,7 +8,7 @@ import "leaflet/dist/leaflet.css"
 import "../css/index.css"
 
 import { LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer } from "vue2-leaflet"
-import { faCogs, faCube, faExpandArrowsAlt, faFileAlt, faGlobeEurope, faLocationArrow } from "@fortawesome/free-solid-svg-icons"
+import { faCogs, faCube, faExpandArrowsAlt, faFileAlt, faGlobeEurope, faLocationArrow, faTimesCircle } from "@fortawesome/free-solid-svg-icons"
 
 import Buefy from "buefy"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
@@ -29,7 +29,7 @@ import "leaflet-rotatedmarker"
 
 patch()
 
-library.add(faCube, faLocationArrow, faGlobeEurope, faCogs, faExpandArrowsAlt, faFileAlt)
+library.add(faCube, faLocationArrow, faGlobeEurope, faCogs, faExpandArrowsAlt, faFileAlt, faTimesCircle)
 
 Vue.component("font-awesome-icon", FontAwesomeIcon)
 
