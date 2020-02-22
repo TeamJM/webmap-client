@@ -124,13 +124,15 @@ class Journeymap {
             status = { status: "failed" }
         }
 
+        if (status.status === "ready" && status.status !== datastore.state.status) {
+            this.resetTiles()
+        }
+
         datastore.state.status = status.status
 
         if (status.status !== "ready") {
             return
         }
-
-        this.resetTiles()
 
         datastore.state.surfaceMappingAllowed = status.allowedMapTypes.surface
         datastore.state.topoMappingAllowed = status.allowedMapTypes.topo
