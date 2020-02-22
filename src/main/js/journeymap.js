@@ -112,7 +112,13 @@ class Journeymap {
     }
 
     async _checkForChanges() {
-        const status = await getStatus()
+        let status
+
+        try {
+            status = await getStatus()
+        } catch (err) {
+            status = { status: "failed" }
+        }
 
         datastore.state.status = status.status
 
@@ -193,7 +199,7 @@ class Journeymap {
             markers.push({
                 latLng: translateCoords(player.posX, player.posZ),
                 url: markerPlayer,
-                size: 32,
+                size: 48,
                 zIndex: 1000,
 
                 options: {
@@ -223,7 +229,7 @@ class Journeymap {
                     className: "round-icon",
                     latLng: translateCoords(animal.posX, animal.posZ),
                     url: getResourceUrl(animal.iconLocation),
-                    size: 14,
+                    size: 15,
                     zIndex: 2,
 
                     key: `${animal.entityId}/icon`,
@@ -251,7 +257,7 @@ class Journeymap {
                     className: "round-icon",
                     latLng: translateCoords(mob.posX, mob.posZ),
                     url: getResourceUrl(mob.iconLocation),
-                    size: 14,
+                    size: 15,
                     zIndex: 2,
 
                     key: `${mob.entityId}/icon`,
@@ -279,7 +285,7 @@ class Journeymap {
                     className: "round-icon",
                     latLng: translateCoords(villager.posX, villager.posZ),
                     url: getResourceUrl(villager.iconLocation),
-                    size: 14,
+                    size: 15,
                     zIndex: 2,
 
                     key: `${villager.entityId}/icon`,
@@ -307,7 +313,7 @@ class Journeymap {
                     className: "round-icon",
                     latLng: translateCoords(player.posX, player.posZ),
                     url: getSkinUrl(player.entityId),
-                    size: 14,
+                    size: 15,
                     zIndex: 2,
 
                     key: `${player.entityId}/icon`,

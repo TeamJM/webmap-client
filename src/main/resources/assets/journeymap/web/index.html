@@ -264,6 +264,9 @@
                 <div class="content" v-if="status === 'disabled'">
                     Mapping is currently disabled.
                 </div>
+                <div class="content" v-if="status === 'failed'">
+                    Unable to connect - is the webmap enabled?
+                </div>
                 <div class="content" v-if="status === 'other'">
                     Just a sec...
                 </div>

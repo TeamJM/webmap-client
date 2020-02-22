@@ -24,7 +24,7 @@ import { methods } from "./methods"
 import { patch } from "./utils"
 
 /* eslint sort-imports:0 */
-// Unfortunately, imports order is everything in JS - this has to be here to work.
+// Unfortunately, import order is everything in JS - this has to be here to work.
 import "leaflet-rotatedmarker"
 
 patch()
