@@ -44,6 +44,10 @@ class Journeymap {
         this.followMode = false
     }
 
+    resetTiles() {
+        this.changedTiles = this.changedTiles.concat(Object.keys(this.tiles))
+    }
+
     tileUrl(x, z, slice, mapType, dimension) {
         if (slice === undefined) {
             slice = this.currentSlice
@@ -125,6 +129,8 @@ class Journeymap {
         if (status.status !== "ready") {
             return
         }
+
+        this.resetTiles()
 
         datastore.state.surfaceMappingAllowed = status.allowedMapTypes.surface
         datastore.state.topoMappingAllowed = status.allowedMapTypes.topo
