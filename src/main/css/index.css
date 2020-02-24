@@ -18,6 +18,7 @@ html, body, #main {
     image-rendering: -moz-crisp-edges;
     image-rendering: -o-crisp-edges;
 
+    image-rendering: crisp-edges;
     image-rendering: pixelated;
 
     -ms-interpolation-mode: nearest-neighbor;
