@@ -6,6 +6,8 @@ JourneyMap Webmap Client
 This repository contains the rewritten client portion of the JourneyMap Webmap. **This project is currently a
 work-in-progress!**
 
+![Screenshot](.github/screenshot.png)
+
 Due to some technical debt we encountered while working with the Google Maps API, we decided to rebuild the webmap
 using [Vue](https://vuejs.org/) and [Leaflet](https://leafletjs.com/). We believe that these frameworks will
 eventually result in something easier to work with (and therefore more maintainable) in comparison to the old
