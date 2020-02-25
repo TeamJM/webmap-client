@@ -2,6 +2,7 @@
 
 // We have to do this first because plugins expect an L global
 import "leaflet/dist/leaflet"
+import "intersection-observer" // Polyfill for older browsers
 
 import "buefy/dist/buefy.css"
 import "leaflet/dist/leaflet.css"
