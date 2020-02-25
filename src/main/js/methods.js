@@ -80,7 +80,9 @@ export function dragStart(event) {
 }
 
 export function setMapMode(mapMode) {
-    JM.setMapMode(mapMode)
+    if (! (JM.followMode && datastore.state.followMapType)) {
+        JM.setMapMode(mapMode)
+    }
 }
 
 export function reloadLog() {
@@ -107,7 +109,7 @@ export function downloadLog() {
 }
 
 export function toggleFullScreen(event) {
-    if (!ENTER_FS_FUNC || !EXIT_FS_FUNC) {
+    if (! ENTER_FS_FUNC || ! EXIT_FS_FUNC) {
         Toast.open({
             type: "is-danger",
             message: "Full-screen mode is not supported in this browser.",
@@ -136,7 +138,7 @@ export function toggleFullScreen(event) {
         })
     }
 
-    isFullScreen = !isFullScreen
+    isFullScreen = ! isFullScreen
 }
 
 // export function onMapClicked(event) {

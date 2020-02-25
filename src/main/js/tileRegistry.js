@@ -40,7 +40,7 @@ class TileRegistryClass {
         })
 
         TileRegistry.visible.forEach((key) => {
-            if (!(key in datastore.state.tiles)) {
+            if (! (key in datastore.state.tiles)) {
                 console.warn(`Previously removed tile with key ${key} is visible`)
                 return
             }
@@ -48,7 +48,7 @@ class TileRegistryClass {
             const [coords, tileLayer, tile] = datastore.state.tiles[key]
             const url = tileLayer.getTileUrl(coords)
 
-            if (!tile.src.endsWith(url)) {
+            if (! tile.src.endsWith(url)) {
                 tile.src = url
             }
         })
@@ -87,7 +87,7 @@ function visibilityCallback(entries) {
     entries.forEach((entry) => {
         const coordKey = entry.target.getAttribute("data-coord-key")
 
-        if (typeof coordKey !== "string" && !(coordKey instanceof String)) {
+        if (typeof coordKey !== "string" && ! (coordKey instanceof String)) {
             console.warn("Tile observer received element with no coord key", entry)
             return
         }

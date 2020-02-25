@@ -16,7 +16,7 @@ export function translateCoords(x, z, hellTranslate, offset = 0) {
         z = Math.floor(z / 8)
     }
 
-    return [(z * -1) + offset, x + offset]
+    return [(z * - 1) + offset, x + offset]
 }
 
 export function reverseTranslateCoords(z, x, hellTranslate, offset = 0) {
@@ -25,5 +25,5 @@ export function reverseTranslateCoords(z, x, hellTranslate, offset = 0) {
         z = Math.floor(z * 8)
     }
 
-    return [x - offset, (z * -1) - offset]
+    return [x - offset, (z * - 1) - offset]
 }

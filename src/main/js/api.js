@@ -44,7 +44,7 @@ async function request(url, init = {}, params) {
 
     const response = await fetch(url, init)
 
-    if (!response.ok) {
+    if (! response.ok) {
         throw new JMHttpError(response.status, response.statusText, response)
     }
 
@@ -64,7 +64,7 @@ async function text(url, init, params) {
 }
 
 export async function getData(type, imagesSince) {
-    if (!Object.values(DATA_TYPES).includes(type)) {
+    if (! Object.values(DATA_TYPES).includes(type)) {
         throw TypeError(`Unknown type: ${type}`)
     }
 

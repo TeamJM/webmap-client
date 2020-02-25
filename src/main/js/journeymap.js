@@ -64,7 +64,7 @@ class Journeymap {
         const slug = this._slugifyTile(x, z, slice, mapType, dimension)
 
         if (slug in this.tiles) {
-            if (!this.changedTiles.includes(slug)) {
+            if (! this.changedTiles.includes(slug)) {
                 return this.tiles[slug]
             }
 
@@ -112,7 +112,7 @@ class Journeymap {
     }
 
     toggleFollowMode() {
-        this.setFollowMode(!this.followMode)
+        this.setFollowMode(! this.followMode)
     }
 
     async _checkForChanges() {
@@ -152,7 +152,7 @@ class Journeymap {
         for (const element of data.images.regions) {
             const slug = this._slugifyTile(element[0], element[1], this.currentSlice, this.currentMapType, this.currentDim)
 
-            if (!this.changedTiles.includes(slug)) {
+            if (! this.changedTiles.includes(slug)) {
                 this.changedTiles.push(slug)
             }
         }
@@ -176,19 +176,19 @@ class Journeymap {
 
         let mapType = this.currentMapType
 
-        if ((!datastore.state.surfaceMappingAllowed) && (mapType === "day" || mapType === "night")) {
+        if ((! datastore.state.surfaceMappingAllowed) && (mapType === "day" || mapType === "night")) {
             mapType = "topo"
         }
 
-        if ((!datastore.state.topoMappingAllowed) && mapType === "topo") {
+        if ((! datastore.state.topoMappingAllowed) && mapType === "topo") {
             mapType = "underground"
         }
 
-        if ((!datastore.state.caveMappingAllowed) && mapType === "underground") {
+        if ((! datastore.state.caveMappingAllowed) && mapType === "underground") {
             mapType = "day"
         }
 
-        if (mapType !== this.currentMapType && !this.followMode) {
+        if (mapType !== this.currentMapType && ! this.followMode) {
             this.setMapMode(mapType)
         }
 
@@ -338,7 +338,7 @@ class Journeymap {
     _buildPolygons(data) {
         const polygons = []
 
-        if (!datastore.state.visiblePolygons) {
+        if (! datastore.state.visiblePolygons) {
             return polygons
         }
 
@@ -382,7 +382,7 @@ class Journeymap {
     _buildWaypoints(data) {
         const waypoints = []
 
-        if (!datastore.state.visibleWaypoints) {
+        if (! datastore.state.visibleWaypoints) {
             return waypoints
         }
 
@@ -395,11 +395,11 @@ class Journeymap {
         }
 
         for (const waypoint of Object.values(data.waypoints)) {
-            if (!waypoint.enable || !waypoint.dimensions.includes(this.currentDim)) {
+            if (! waypoint.enable || ! waypoint.dimensions.includes(this.currentDim)) {
                 continue
             }
 
-            const hellTranslate = this.currentDim === -1
+            const hellTranslate = this.currentDim === - 1
             const coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5, hellTranslate)
 
             const red = waypoint.r.toString(16).padStart(2, "0")
@@ -448,7 +448,7 @@ class Journeymap {
         datastore.state.topoIcon = topoIcon
         datastore.state.undergroundIcon = undergroundIcon
 
-        if (this.currentDim === -1) { // Nether has only cave mode
+        if (this.currentDim === - 1) { // Nether has only cave mode
             datastore.state.dayIcon = dayIconDisabled
             datastore.state.nightIcon = nightIconDisabled
             datastore.state.topoIcon = topoIconDisabled
