@@ -101,6 +101,8 @@ class Journeymap {
                 type: "is-success",
                 message: "Follow mode enabled.",
             })
+
+            app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z))
         } else {
             datastore.state.followIcon = followIconOff
 
@@ -128,9 +130,8 @@ class Journeymap {
             this.resetTiles()
         }
 
-        datastore.state.status = status.status
-
         if (status.status !== "ready") {
+            datastore.state.status = status.status
             return
         }
 
@@ -140,6 +141,10 @@ class Journeymap {
 
         const now = Date.now()
         const data = await getAllData(this.lastTileCheck)
+
+        if (status.status === "ready" && status.status !== datastore.state.status) {
+            app.$refs.map.mapObject.setView(translateCoords(data.player.posX, data.player.posZ))
+        }
 
         this.setDimension(data.world.dimension)
 
@@ -199,6 +204,8 @@ class Journeymap {
                 this.setMapMode(status.mapType)
             }
         }
+
+        datastore.state.status = status.status
     }
 
     _buildMarkers(data) {
