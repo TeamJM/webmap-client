@@ -171,7 +171,7 @@
 
                 class="info-pane settings-pane">
         <div class="settings-pane-header">
-            Settings
+            Visibility
 
             <a aria-controls="settingsPanel"
                class="is-pulled-right has-text-primary"
@@ -223,6 +223,19 @@
                 <div class="field">
                     <b-switch v-model="visibleWaypoints">
                         Waypoints
+                    </b-switch>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-pane-header">
+            Follow Mode
+        </div>
+        <div class="content">
+            <div class="settings-group">
+                <div class="field">
+                    <b-switch v-model="followMapType">
+                        Match Minimap Type
                     </b-switch>
                 </div>
             </div>

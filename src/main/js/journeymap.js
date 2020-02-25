@@ -194,7 +194,10 @@ class Journeymap {
 
         if (this.followMode) {
             app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z))
-            this.setMapMode(status.mapType)
+
+            if (datastore.state.followMapType) {
+                this.setMapMode(status.mapType)
+            }
         }
     }
 

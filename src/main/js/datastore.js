@@ -53,6 +53,8 @@ export default {
 
         settingsVisible: false,
 
+        followMapType: true,
+
         visiblePlayer: true,
 
         visibleAnimals: true,
