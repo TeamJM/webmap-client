@@ -1,5 +1,6 @@
 "use strict"
 
+import Bowser from "bowser"
 import { JMTileLayer } from "./tile"
 import { Point } from "leaflet"
 
@@ -9,6 +10,8 @@ import jmIcon from "../images/journeymap.png"
 import nightIcon from "../images/night.png"
 import topoIcon from "../images/topo.png"
 import undergroundIcon from "../images/underground.png"
+
+const browser = Bowser.getParser(window.navigator.userAgent)
 
 export default {
     state: {
@@ -45,6 +48,7 @@ export default {
         logModalActive: false,
         logsLoading: false,
 
+        isSafari: browser.isBrowser("safari"),
         status: "other",
 
         settingsVisible: false,

@@ -25,7 +25,7 @@ html, body, #main {
 }
 
 .front {
-    z-index: 1000000000;
+    z-index: 10000;
 }
 
 .leaflet-container {
@@ -178,4 +178,10 @@ html, body, #main {
 
 .settings-pane .settings-group:last-child {
     padding-bottom: 0;
+}
+
+/* Snackbar on top */
+
+.notices {
+    z-index: 20000;
 }
