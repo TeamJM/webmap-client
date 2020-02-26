@@ -1,0 +1,646 @@
+FORMAT: 1A
+HOST: http://localhost:8080/
+
+# JourneyMap Webmap
+
+The JourneyMap Webmap allows JourneyMap users to see and interact with their map within a browser,
+either on the current device or on another device on the same network. The webmap is a single-page Vue
+application, and interacts with the JourneyMap mod via a REST API.
+
+While this API is designed only with the webmap in mind (and this documentation for those working on 
+the webmap-client project), there's no reason another application couldn't make use of them.
+
+If you're using the new webmap and it's running on port 8080, then you will be able to easily try
+out the example API calls in this document.
+
+
+## Group Notes
+
+## Coordinate Mapping [/coordinate-translation]
+
+When working with a mapping tool such as [Leaflet](https://leafletjs.com/), it's worth bearing
+in mind that Minecraft coordinates do not work like real-world coordinates do.
+
+Most browser-based maps use a coordinate representation system (CRS) that assumes a
+spherical world. Minecraft's worlds are flat and require no such CRS, so you'll need to use
+a CRS that doesn't automatically translate coordinates. For Leaflet, you can use
+[L.CRS.Simple](https://leafletjs.com/examples/crs-simple/crs-simple.html).
+
+Additionally, depending on the mapping tool you're using and how it's configured, you will need to
+translate between Minecraft coordinates and mapping coordinates. In the case of the official webmap
+client (using [Leaflet](https://leafletjs.com/)), you can use the following functions as an example.
+
+**Note:** `hellTranslate` only applies to waypoint coordinates in the Nether. You don't need to use
+that part of the translation if the coordinates aren't waypoint coordinates, and the waypoint isn't
+being displayed in a Nether-type world map.
+
+```js
+/* Translates coordinates from Minecraft's block format to Leaflet's LatLng format */
+export function translateCoords (x, z, hellTranslate, offset = 0) {
+    if (hellTranslate) {
+        x = Math.floor(x / 8)
+        z = Math.floor(z / 8)
+    }
+
+    return [(z * -1) + offset, x + offset]
+}
+
+/* Translates coordinates from Leaflet's LatLng format to Minecraft's block format */
+export function reverseTranslateCoords (z, x, hellTranslate, offset = 0) {
+    if (hellTranslate) {
+        x = Math.floor(x * 8)
+        z = Math.floor(z * 8)
+    }
+
+    return [x - offset, (z * -1) - offset]
+}
+```
+
+## Security [/security]
+
+The webmap API is an unauthenticated API, and it accepts API requests from all origins. We do not
+currently believe that this is a security problem as the API doesn't really provide access to anything
+unsafe, but we are willing to enforce an authorization header should the need to do so arise.
+
+If you have a concrete reason to believe that the API should have proper authentication, please open
+an issue on GitHub or approach us directly on Discord.
+
+
+## Group Endpoints
+
+## Data Caches [/data/{type}/{?images.since}]
+
+The data caches contain various types of live data, which can be accessed based on type. Some of the
+types require a slightly different set of parameters, but all will be detailed below.
+
+### All Data [GET]
+
+Despite the type string given, this endpoint doesn't actually return data for _all_ of the data caches.
+Instead, it's a combination of the following types: `images`, `player`, `waypoints` and `world`.
+
++ Parameters
+    + type: all (fixed)
+        The type of data to retrieve (in this case, `all`)
+
+    + images.since: 0 (number)
+        A timestamp referring to the last time you polled this endpoint, used to retrieve tiles that have
+        been updated since then - only used by the following types: `all` and `images`
+
++ Response 200 (application/json)
+
+        {
+            "images": {  // A list of tiles that have been changed since the images.since parameter given
+                "since": 1582214596273,
+                "regions": [  // Tiles really just refer to chunk regions
+                    [0, 0],
+                    [0, 1]
+                ]
+            },
+            "player": {  // Information on the current player
+                "biome": "Plains",
+                "chunkCoordX": 22,
+                "chunkCoordY": 4,
+                "chunkCoordZ": 0,
+                "color": -16776961,  // RGB hex code serialised as an integer
+                "dimension": 0,
+                "entityId": "1a07ce68-7eba-4609-909a-d6731a090138",  // Player UUID
+                "heading": 199,  // Degrees, the direction the player is facing
+                "hostile": false,  // Always false
+                "iconLocation": "minecraft:skins/22cf7b450975247aa83157679bf920de9c783d45665444c07da44e4fbdfb2b1a",
+                "invisible": false,
+                "npc": false,  // Always false
+                "passiveAnimal": false,  // Always false
+                "posX": 358.18921501485806,
+                "posY": 64,  // Remember, this is height in Minecraft
+                "posZ": 4.623600573409505,
+                "sneaking": false,
+                "underground": false,
+                "username": "gdude2002"
+            },
+            "waypoints": {  // All of the player's waypoints that can be seen in the current dimension
+                "Town_294,63,-270": {
+                    "dimensions": [0],
+                    "enable": true,
+                    "icon": "waypoint-normal.png",
+                    "id": "Town_294,63,-270",
+                    "name": "Town",
+                    "origin": "journeymap",  // The mod that created this waypoint
+                    "persistent": true,  // Whether this waypoint will exist after the next client load
+                    "type": "Normal"  // "Normal" or "Death"
+                    
+                    // Block coordinates
+                    "x": 294,
+                    "y": 63,
+                    "z": -270,
+                    
+                    // Colour defined ingame
+                    "r": 130,
+                    "g": 180,
+                    "b": 233,
+                }
+            },
+            "world": {  // Information on the current world
+                "browser_poll": 2000,  // How often the browser should poll, as configured ingame
+                "dimension": 0,
+                "features": {  // List of enabled features
+                    "MapCaves": true,
+                    "MapSurface": true,
+                    "MapTopo": true,
+                    "RadarAnimals": true,
+                    "RadarMobs": true,
+                    "RadarPlayers": true,
+                    "RadarVillagers": true
+                },
+                "hardcore": false,
+                "jm_version": "5.5.6b",
+                "latest_journeymap_version": "5.5.9.jar",
+                "mc_version": "1.12.2",
+                "mod_name": "JourneyMap 1.12.2-5.5.6b1",
+                "name": "World",
+                "singlePlayer": true,
+                "time": 12080  // Current ingame world time
+            }
+        }
+
+### Animals [GET]
+
+Returns an object containing all of the animals that are within the client's render distance,
+in all directions.
+
++ Parameters
+    + type: animals (fixed)
+        The type of data to retrieve (in this case, `animals`)
+
++ Response 200 (application/json)
+
+        {
+            "id98827faf-3d82-49dc-af04-5d9a698d1fe9": {  // "id" + entityId
+                "chunkCoordX": 20,
+                "chunkCoordY": 3,
+                "chunkCoordZ": 1,
+                "color": -4473925,
+                "dimension": 0,
+                "entityId": "98827faf-3d82-49dc-af04-5d9a698d1fe9",
+                "heading": 45.0,
+                "hostile": false,
+                "iconLocation": "minecraft:textures/entity_icon/squid.png",
+                "invisible": false,
+                "npc": false,
+                "passiveAnimal": true,
+                "posX": 335.748166015625,
+                "posY": 62.47802473958333,
+                "posZ": 17.599926754832268,
+                "sneaking": false
+            }
+        }
+
+### Images [GET]
+
+Returns an object containing all of the tiles that have changed since the time given in the `images.since`
+parameter.
+
++ Parameters
+    + type: images (fixed)
+        The type of data to retrieve (in this case, `images`)
+
+    + images.since: 0 (number)
+        A timestamp referring to the last time you polled this endpoint, used to retrieve tiles that have
+        been updated since then - only used by the following types: `all` and `images`
+
++ Response 200 (application/json)
+
+        {
+            "since": 1582214596273,
+            "regions": [  // Tiles really just refer to chunk regions
+                [0, 0],
+                [0, 1]
+            ]
+        }
+
+### Messages (Translations) [GET]
+
+Returns an object containing a list of translations (keys and strings). 
+
+**Note:** This currently only returns English strings and they don't match the strings in the
+webmap client, so they aren't currently in use.
+
++ Parameters
+    + type: messages (fixed)
+        The type of data to retrieve (in this case, `messages`)
+
++ Response 200 (application/json)
+
+        {
+            "google_domain": "Google Maps API Domain",  // Webmap used to use GMaps
+            "pets_menu_item_title": "Show nearby pets",
+            "players_menu_item_text": "Players",
+            "rss_feed_title": "Subscribe to JourneyMap news by RSS feed"
+            
+            // ... (there's a lot)
+        }
+
+### Mobs [GET]
+
+Returns an object containing all of the mobs that are within the client's render distance,
+in all directions.
+
++ Parameters
+    + type: mobs (fixed)
+        The type of data to retrieve (in this case, `mobs`)
+
++ Response 200 (application/json)
+
+        {
+            "id459cc552-e36e-4eae-b562-e27459c1fe94": {
+                "chunkCoordX": 21,
+                "chunkCoordY": 3,
+                "chunkCoordZ": 0,
+                "color": -65536,
+                "dimension": 0,
+                "entityId": "459cc552-e36e-4eae-b562-e27459c1fe94",
+                "heading": -167.0,
+                "hostile": true,
+                "iconLocation": "minecraft:textures/entity_icon/skeleton/skeleton.png",
+                "invisible": false,
+                "npc": false,
+                "passiveAnimal": false,
+                "posX": 339.39306640625,
+                "posY": 51.0,
+                "posZ": 7.0380859375,
+                "sneaking": false,
+            },
+        }
+
+### Player [GET]
+
+Returns an object containing information pertaining to the current player.
+
++ Parameters
+    + type: player (fixed)
+        The type of data to retrieve (in this case, `player`)
+
++ Response 200 (application/json)
+
+        {
+            "biome": "Plains",
+            "chunkCoordX": 22,
+            "chunkCoordY": 4,
+            "chunkCoordZ": 0,
+            "color": -16776961,  // RGB hex code serialised as an integer
+            "dimension": 0,
+            "entityId": "1a07ce68-7eba-4609-909a-d6731a090138",  // Player UUID
+            "heading": 199,  // Degrees, the direction the player is facing
+            "hostile": false,  // Always false
+            "iconLocation": "minecraft:skins/22cf7b450975247aa83157679bf920de9c783d45665444c07da44e4fbdfb2b1a",
+            "invisible": false,
+            "npc": false,  // Always false
+            "passiveAnimal": false,  // Always false
+            "posX": 358.18921501485806,
+            "posY": 64,  // Remember, this is height in Minecraft
+            "posZ": 4.623600573409505,
+            "sneaking": false,
+            "underground": false,
+            "username": "gdude2002"
+        }
+
+### Players [GET]
+
+Returns an object containing all of the players that are within the client's render distance,
+in all directions - not including the current player.
+
++ Parameters
+    + type: players (fixed)
+        The type of data to retrieve (in this case, `players`)
+
++ Response 200 (application/json)
+
+        {
+            "idcfb971e3-a019-4a42-893c-4d2c0b4ac9e6": {
+                "chunkCoordX": 13,
+                "chunkCoordY": 3,
+                "chunkCoordZ": -6,
+                "color": -1,
+                "dimension": 0,
+                "entityId": "cfb971e3-a019-4a42-893c-4d2c0b4ac9e6",
+                "heading": -8.0,
+                "hostile": false,
+                "iconLocation": "minecraft:skins/278342ae57aad4d2299f411415a5faaf2b243c8d657f88f34a77995ee2f4016a",
+                "invisible": false,
+                "npc": false,
+                "passiveAnimal": false,
+                "posX": 211.2998046875,
+                "posY": 62.0,
+                "posZ": -94.5810546875,
+                "sneaking": false,
+                "username": "TotallyNotStaff",
+            }
+        }
+
+### Villagers [GET]
+
+Returns an object containing all of the villagers that are within the client's render distance,
+in all directions.
+
++ Parameters
+    + type: villagers (fixed)
+        The type of data to retrieve (in this case, `villagers`)
+
++ Response 200 (application/json)
+
+        {
+            "id6ff8eba0-7fa6-4810-99e1-e8021e4186dd": {
+                "chunkCoordX": 13,
+                "chunkCoordY": 4,
+                "chunkCoordZ": -6,
+                "color": -7806584
+                "dimension": 0,
+                "entityId": "6ff8eba0-7fa6-4810-99e1-e8021e4186dd",
+                "heading": -80.0,
+                "hostile": false,
+                "iconLocation": "minecraft:textures/entity_icon/villager/priest.png",
+                "invisible": false,
+                "npc": false,
+                "passiveAnimal": false,
+                "posX": 219.5,
+                "posY": 64.0,
+                "posZ": -95.5,
+                "profession": "cleric",  // Villager job
+                "sneaking": false,
+            }
+        }
+
+### World [GET]
+
+Returns an object containing information pertaining to the current world.
+
++ Parameters
+    + type: world (fixed)
+        The type of data to retrieve (in this case, `world`)
+
++ Response 200 (application/json)
+
+        {
+            "browser_poll": 2000,  // How often the browser should poll, as configured ingame
+            "dimension": 0,
+            "features": {  // List of enabled features
+                "MapCaves": true,
+                "MapSurface": true,
+                "MapTopo": true,
+                "RadarAnimals": true,
+                "RadarMobs": true,
+                "RadarPlayers": true,
+                "RadarVillagers": true
+            },
+            "hardcore": false,
+            "jm_version": "5.5.6b",
+            "latest_journeymap_version": "5.5.9.jar",
+            "mc_version": "1.12.2",
+            "mod_name": "JourneyMap 1.12.2-5.5.6b1",
+            "name": "World",
+            "singlePlayer": true,
+            "time": 12080  // Current ingame world time
+        }
+
+
+## Logs [/logs]
+
+The logs endpoint allows you to get the entire contents of the `journeymap.log` file. This file contains
+logging output from the JourneyMap mod itself, and excludes everything else you'd normally find in your
+Forge logfile.
+
+### Get Logs [GET]
+
++ Response 200 (text/plain)
+
+    ```
+    [16:02:42] [main/INFO] [JMLogger] JourneyMap log initialized.
+    [16:02:42] [main/INFO] [JourneymapClient] initialize ENTER
+    [16:02:42] [Client thread/INFO] [?] Version: JourneyMap 1.12.2-5.5.6b1, built with Forge 14.23.5.2768
+    Forge: 14.23.5.2768
+    Environment: os.name, os.arch, java.version, user.country, user.language=null, game language=en_us, locale=en_us
+    
+    ...
+    ```
+
+
+## Polygons [/polygons]
+
+Polygons are shapes that are drawn directly onto the map, either by JourneyMap itself, or by
+other mods. They consist of a fill colour and opacity, and a stroke colour, opacity and width, and
+include a set of points and a set of holes.
+
+Holes are themselves just sets of points. These points are within the drawn boundaries of the polygon,
+and should be treated as an exclusion - that is to say, holes should not be counted as part of the polygon,
+meaning extra strokes should be drawn around the hole and the hole itself should not be filled.
+
+Sets of points are not explicitly joined (the start point will not be included at the end), but they
+should be treated as if the first and last points are directly joined.
+
+### Get All Polygons [GET]
+
+Returns an object containing all of the polygons that are to be drawn on the map.
+
++ Response 200
+
+        [
+            {  // This is just a square polygon, as an example
+                "fillColor": "#000000",
+                "fillOpacity": 0.2,
+                "strokeColor": "#ff0000",
+                "strokeOpacity": 0.7,
+                "strokeWidth": 2.0,
+
+                "holes": [],  // Areas within the polygon's bounds that should not be part of the polygon
+                "points": [  // Corner points - assume that the last point joins up with the first one
+                    {
+                        "x": 1,
+                        "y": 70,
+                        "z": 0
+                    },
+                    {
+                        "x": 512,
+                        "y": 70,
+                        "z": 0
+                    },
+                    {
+                        "x": 512,
+                        "y": 70,
+                        "z": -511
+                    },
+                    {
+                        "x": 1,
+                        "y": 70,
+                        "z": -511
+                    }
+                ]
+            }
+        ]
+
+
+## Properties [/properties]
+
+This endpoint can be used to get and set configuration properties.
+
+**Note:** This endpoint was used in the old webmap. We don't currently make use of it in
+any way in the current webmap. This may change, but for the time being please note that it does
+not affect the webmap in any way.
+
+Because we don't currently use this endpoint, the sample data given has been heavily truncated. If
+you'd like to get a full listing, please attempt to call the endpoint yourself by clicking on one
+of the responses given below.
+
+### Get All Properties [GET]
+
+Returns an object containing all defined properties.
+
++ Response 200 (application/json)
+
+        {
+            "enabled": {
+                "category": "WebMap",
+                "default": "false",
+                "isMaster": "true",
+                "key": "jm.webmap.enable",
+                "type": "BooleanField",
+                "value": "true"
+            },
+            "port": {
+                "ATTR_NEG": "false",
+                "ATTR_NUM": "true",
+                "category": "WebMap",
+                "default": "8080",
+                "key": "jm.advanced.port",
+                "max": "10000",
+                "min": "80",
+                "order": "100",
+                "type": "CustomField",
+                "value": "8080"
+            },
+            
+            // ... (there's a lot)
+        }
+
+### Set Property [POST]
+
+As per the spec for the old webmap, it's only possible to set a small subset of the properties
+that you'll find returned by the previous endpoint.
+
++ Request
+
+    + Parameters
+        + showCaves: true (boolean, optional)
+        + showEntityNames: true (boolean, optional)
+        + showGrid: true (boolean, optional)
+        + showSelf: true (boolean, optional)
+        + showWaypoints: true (boolean, optional)
+
++ Response 200 (text/plain)
+
+        true
+
+
+## Resources [/resources{?resource}]
+
+Resources are assets that are available at a `ResourceLocation`, which is a Minecraft concept referring
+to files provided by resource packs, mods, and Minecraft itself. Our primary use-case for this is
+retrieving mob icons, and you can do so by providing the `iconLocation` in an entity object returned
+by one of the data cache endpoints.
+
+This endpoint is intended for image files only, and it will assume that the resource is an image and
+try to load it into a Java `BufferedImage`. Additionally, you will not be able to retrieve a player's 
+skin this way - see the Skins resource for that.
+
+### Get Resource [GET]
+
++ Parameters
+    + resource: minecraft:textures/entity_icon/squid.png (string) - The resource location to get data for
+
++ Response 200 (application/octet-stream)
+
+
+## Skins [/skin/{uuid}]
+
+This endpoint retrieves the face image, generated from a player's skin, in PNG format. Please note that
+this will only work for players that are currently known to the client - any other players will return
+a blank, fully transparent 24x24 PNG image.
+
+### Get Skin [GET]
+
++ Parameters
+
+    + uuid: `1a07ce68-7eba-4609-909a-d6731a090138` (string) - The player's UUID
+
++ Response 200 (image/png)
+
+
+## Status [/status]
+
+The status endpoint provides the current status of the webmap. This allows you to see what the
+readiness of the webmap is, what the map type currently displayed on the ingame minimap is, and
+what map types are allowed to be shown at the moment.
+
+### Get Status [GET]
+
++ Response 200 (application/json)
+
+        {
+            "allowedMapTypes": {
+                "cave": true,
+                "surface": true,
+                "topo": true
+            },
+            "mapType": "day",  // May also be "night", "topo" or "underground"
+            "status": "ready"  // May also be "disabled", "no_world" or "starting"
+        }
+
+## Tiles [/tiles/tile.png{?x,y,z,dimension,mapTypeString,t,zoom}]
+
+The tiles endpoint allows you to retrieve a map tile based on quite a few different parameters.
+Assuming the parameters are correct, this endpoint returns a PNG-format tile.
+
+At this time, this endpoint will only return tile data for the current world that the player is in.
+This may change at a later time - but for now, please ensure that you request tiles with the same
+dimension ID that is given by the data cache endpoints (either `all`, `player` or `world`).
+
+If a tile is requested for the `underground` map type but the player is currently playing on a hardcore
+multiplayer server, then a blank PNG will be returned instead.
+
+**Note:** Tile coordinates match chunk region coordinates ingame.
+
+### Get Tile [GET]
+
+You may recieve one of several errors depending on the parameters you've given, and the current
+state of the client.
+
+* HTTP 400 (Bad Request):
+    * `Invalid map type: xxx` - A tile was requested with an unknown map type
+    * `JourneyMap is still starting` - A tile was requested before JourneyMap had started mapping.
+    * `World not loaded` - A tile was requested when the client hadn't loaded a world or joined a server yet.
+
+* HTTP 404 (Not Found):
+    * `World not found` - A tile was requested, but the world directory couldn't be found
+
++ Parameters
+    + dimension: 0 (number) - The dimension ID corresponding to the world type
+    + mapTypeString: day (string) - One of `day`, `night`, `topo` or `underground`
+
+    + t: 0 (number, optional)
+        Not processed by the API, but set this to the time of request to avoid caching
+        
+    + x: 0 (number) - The X coordinate of the tile to get
+    + y: 0 (number, optional) - The vertical slice of the tile to get, when in cave mode
+    + z: 0 (number) - The Z coordinate of the tile to get
+    
+    + zoom: 0 (number, optional)
+        The map zoom to generate a tile image for; this isn't used by the webmap client
+
++ Response 200 (image/png)
+
++ Request
+
+    + Parameters
+        + mapTypeString: xxx (fixed)
+
++ Response 400 (text/plain)
+
+        Invalid map type: xxx
