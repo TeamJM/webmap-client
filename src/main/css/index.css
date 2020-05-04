@@ -12,6 +12,7 @@ html, body, #main {
     overflow: hidden;
 }
 
+/*noinspection ALL*/
 .pixelated img.leaflet-tile {
     /*noinspection CssInvalidPropertyValue*/
     image-rendering: -webkit-crisp-edges;
@@ -22,6 +23,15 @@ html, body, #main {
     image-rendering: pixelated;
 
     -ms-interpolation-mode: nearest-neighbor;
+
+    /* Attempt to fix the blurry tiles problem once and for all */
+    filter: none;
+
+    -webkit-filter: blur(0px);
+    -moz-filter: blur(0px);
+    -ms-filter: blur(0px);
+
+    filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='0');
 }
 
 .front {
