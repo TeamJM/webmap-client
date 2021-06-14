@@ -32,7 +32,7 @@ class Journeymap {
         this.changedTiles = []
         this.lastTileCheck = Date.now()
 
-        this.currentDim = 0
+        this.currentDim = "minecraft:overworld"
         this.currentMapType = "day"
         this.currentSlice = 0
         this.currentZoom = 0
@@ -406,7 +406,7 @@ class Journeymap {
                 continue
             }
 
-            const hellTranslate = this.currentDim === - 1
+            const hellTranslate = this.currentDim === "minecraft:the_nether"
             const coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5, hellTranslate)
 
             const red = waypoint.r.toString(16).padStart(2, "0")
@@ -455,7 +455,7 @@ class Journeymap {
         datastore.state.topoIcon = topoIcon
         datastore.state.undergroundIcon = undergroundIcon
 
-        if (this.currentDim === - 1) { // Nether has only cave mode
+        if (this.currentDim === "minecraft:the_nether") { // Nether has only cave mode
             datastore.state.dayIcon = dayIconDisabled
             datastore.state.nightIcon = nightIconDisabled
             datastore.state.topoIcon = topoIconDisabled
@@ -465,7 +465,7 @@ class Journeymap {
             return
         }
 
-        if (this.currentDim === 1) {
+        if (this.currentDim === "minecraft:the_end") {
             datastore.state.nightIcon = nightIconDisabled
 
             if (mapMode === "night") { // End has no night mode
