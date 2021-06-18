@@ -14,7 +14,7 @@ export const DATA_TYPES = {
 }
 
 const GET = { method: "GET" }
-const POST = { method: "POST" }
+// const POST = { method: "POST" }
 
 const REQUIRES_IMAGES_SINCE = [DATA_TYPES.ALL, DATA_TYPES.IMAGES]
 const URLS = {
@@ -98,14 +98,6 @@ export async function getAllData(imagesSince) {
 
 export async function getLogs() {
     return text(URLS.LOGS, GET)
-}
-
-export async function getProperties() {
-    return json(URLS.PROPERTIES, GET)
-}
-
-export async function setProperties(properties) {
-    return json(URLS.PROPERTIES, POST, properties)
 }
 
 export async function getPolygons() {

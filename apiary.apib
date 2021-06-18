@@ -477,68 +477,6 @@ Returns an object containing all of the polygons that are to be drawn on the map
         ]
 
 
-## Properties [/properties]
-
-This endpoint can be used to get and set configuration properties.
-
-**Note:** This endpoint was used in the old webmap. We don't currently make use of it in
-any way in the current webmap. This may change, but for the time being please note that it does
-not affect the webmap in any way.
-
-Because we don't currently use this endpoint, the sample data given has been heavily truncated. If
-you'd like to get a full listing, please attempt to call the endpoint yourself by clicking on one
-of the responses given below.
-
-### Get All Properties [GET]
-
-Returns an object containing all defined properties.
-
-+ Response 200 (application/json)
-
-        {
-            "enabled": {
-                "category": "WebMap",
-                "default": "false",
-                "isMaster": "true",
-                "key": "jm.webmap.enable",
-                "type": "BooleanField",
-                "value": "true"
-            },
-            "port": {
-                "ATTR_NEG": "false",
-                "ATTR_NUM": "true",
-                "category": "WebMap",
-                "default": "8080",
-                "key": "jm.advanced.port",
-                "max": "10000",
-                "min": "80",
-                "order": "100",
-                "type": "CustomField",
-                "value": "8080"
-            },
-            
-            // ... (there's a lot)
-        }
-
-### Set Property [POST]
-
-As per the spec for the old webmap, it's only possible to set a small subset of the properties
-that you'll find returned by the previous endpoint.
-
-+ Request
-
-    + Parameters
-        + showCaves: true (boolean, optional)
-        + showEntityNames: true (boolean, optional)
-        + showGrid: true (boolean, optional)
-        + showSelf: true (boolean, optional)
-        + showWaypoints: true (boolean, optional)
-
-+ Response 200 (text/plain)
-
-        true
-
-
 ## Resources [/resources{?resource}]
 
 Resources are assets that are available at a `ResourceLocation`, which is a Minecraft concept referring
