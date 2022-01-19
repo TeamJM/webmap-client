@@ -21,6 +21,12 @@ jobs:
         distribution: "adopt"
         java-version: "8"
 
+    - name: Set up secrets
+      run: 'echo "$NPM_AUTH" >> ~/.npmrc'
+
+      env:
+        NPM_AUTH: ${{secrets.NPM_AUTH}}
+
     - name: NodeJS Set-Up
       run: npm install --save
 
