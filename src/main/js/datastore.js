@@ -1,6 +1,8 @@
 "use strict"
 
 import Bowser from "bowser"
+import L from "leaflet"
+
 import { JMTileLayer } from "./tile"
 import { Point } from "leaflet"
 
@@ -15,6 +17,8 @@ const browser = Bowser.getParser(window.navigator.userAgent)
 
 export default {
     state: {
+        "L": L,
+
         map_bounds: [
             new Point(- 29999984, - 29999984),
             new Point(29999984, 29999984),

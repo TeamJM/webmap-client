@@ -224,6 +224,8 @@ class Journeymap {
                     rotationAngle: player.heading,
                     rotationOrigin: "center",
                 },
+
+                key : "myself",
             })
         }
 
@@ -240,7 +242,7 @@ class Journeymap {
                         rotationOrigin: "center",
                     },
 
-                    key: animal.entityId,
+                    key: `animal/${animal.entityId}`,
                 })
 
                 markers.push({
@@ -250,7 +252,7 @@ class Journeymap {
                     size: 15,
                     zIndex: 2,
 
-                    key: `${animal.entityId}/icon`,
+                    key: `animal/${animal.entityId}/icon`,
                 })
             }
         }
@@ -268,7 +270,7 @@ class Journeymap {
                         rotationOrigin: "center",
                     },
 
-                    key: mob.entityId,
+                    key: `mob/${mob.entityId}`,
                 })
 
                 markers.push({
@@ -278,7 +280,7 @@ class Journeymap {
                     size: 15,
                     zIndex: 2,
 
-                    key: `${mob.entityId}/icon`,
+                    key: `mob/${mob.entityId}/icon`,
                 })
             }
         }
@@ -296,7 +298,7 @@ class Journeymap {
                         rotationOrigin: "center",
                     },
 
-                    key: villager.entityId,
+                    key: `villager/${villager.entityId}`,
                 })
 
                 markers.push({
@@ -306,7 +308,7 @@ class Journeymap {
                     size: 15,
                     zIndex: 2,
 
-                    key: `${villager.entityId}/icon`,
+                    key: `villager/${villager.entityId}/icon`,
                 })
             }
         }
@@ -324,7 +326,7 @@ class Journeymap {
                         rotationOrigin: "center",
                     },
 
-                    key: player.entityId,
+                    key: `player/${player.entityId}`,
                 })
 
                 markers.push({
@@ -334,7 +336,7 @@ class Journeymap {
                     size: 15,
                     zIndex: 2,
 
-                    key: `${player.entityId}/icon`,
+                    key: `player/${player.entityId}/icon`,
                 })
             }
         }
@@ -450,45 +452,49 @@ class Journeymap {
     }
 
     setMapMode(mapMode) {
-        datastore.state.dayIcon = dayIcon
-        datastore.state.nightIcon = nightIcon
-        datastore.state.topoIcon = topoIcon
-        datastore.state.undergroundIcon = undergroundIcon
+        try {
+            datastore.state.dayIcon = dayIcon
+            datastore.state.nightIcon = nightIcon
+            datastore.state.topoIcon = topoIcon
+            datastore.state.undergroundIcon = undergroundIcon
 
-        if (this.currentDim === "minecraft:the_nether") { // Nether has only cave mode
-            datastore.state.dayIcon = dayIconDisabled
-            datastore.state.nightIcon = nightIconDisabled
-            datastore.state.topoIcon = topoIconDisabled
-            datastore.state.undergroundIcon = undergroundIconActive
+            if (this.currentDim === "minecraft:the_nether") { // Nether has only cave mode
+                datastore.state.dayIcon = dayIconDisabled
+                datastore.state.nightIcon = nightIconDisabled
+                datastore.state.topoIcon = topoIconDisabled
+                datastore.state.undergroundIcon = undergroundIconActive
 
-            this.currentMapType = "underground"
-            return
-        }
-
-        if (this.currentDim === "minecraft:the_end") {
-            datastore.state.nightIcon = nightIconDisabled
-
-            if (mapMode === "night") { // End has no night mode
-                return this.setMapMode("day")
+                this.currentMapType = "underground"
+                return
             }
-        }
 
-        switch (mapMode) {
-        case "day":
-            datastore.state.dayIcon = dayIconActive
-            break
-        case "night":
-            datastore.state.nightIcon = nightIconActive
-            break
-        case "topo":
-            datastore.state.topoIcon = topoIconActive
-            break
-        case "underground":
-            datastore.state.undergroundIcon = undergroundIconActive
-            break
-        }
+            if (this.currentDim === "minecraft:the_end") {
+                datastore.state.nightIcon = nightIconDisabled
 
-        this.currentMapType = mapMode
+                if (mapMode === "night") { // End has no night mode
+                    return this.setMapMode("day")
+                }
+            }
+
+            switch (mapMode) {
+                case "day":
+                    datastore.state.dayIcon = dayIconActive
+                    break
+                case "night":
+                    datastore.state.nightIcon = nightIconActive
+                    break
+                case "topo":
+                    datastore.state.topoIcon = topoIconActive
+                    break
+                case "underground":
+                    datastore.state.undergroundIcon = undergroundIconActive
+                    break
+            }
+
+            this.currentMapType = mapMode
+        } catch (e) {
+            console.error("Map mode: " + mapMode + " | ", e)
+        }
     }
 
     setDimension(dim) {

@@ -19,7 +19,7 @@
 <body>
 
 <div id="main">
-    <l-map :bounds="map_bounds"
+    <l-map :max-bounds="map_bounds"
            :crs="L.CRS.Simple"
            :fade-animation="false"
            :max-zoom="5"
@@ -149,6 +149,7 @@
                    :fill-color="waypoint.color"
                    :fill-opacity="0.7"
                    :lat-lngs="waypoint.latLngs"
+                   :key="waypoint.id"
 
                    v-if="visibleWaypoints"
                    v-for="(waypoint) in waypoints"
@@ -160,6 +161,7 @@
                    :lat-lngs="polygon.latLngs"
                    :opacity="polygon.strokeOpacity"
                    :weight="polygon.strokeWidth"
+                   :key="polygon.id"
 
                    v-if="visiblePolygons"
                    v-for="(polygon) in polygons"

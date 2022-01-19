@@ -1,3 +1,4 @@
+// const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 const TerserJSPlugin = require("terser-webpack-plugin")
@@ -9,7 +10,7 @@ module.exports = {
     entry: ["babel-polyfill", "./src/main/js/index.js"],
     mode: "production",
 
-    devtool: "eval-source-map",
+    devtool: "source-map",
 
     output: {
         path: path.resolve(__dirname, "src/main/resources/assets/journeymap/web/bundled"),
@@ -17,6 +18,13 @@ module.exports = {
     },
 
     plugins: [
+        // new ESLintPlugin({
+        //     exclude:[
+        //         "node_modules",
+        //         "src/main/resources"
+        //     ]
+        // }),
+
         new VueLoaderPlugin(),
 
         new MiniCssExtractPlugin({
@@ -41,12 +49,6 @@ module.exports = {
 
     module: {
         rules: [
-            { // Use ESLint to lint the JS files
-                enforce: "pre",
-                test: /\.js$/,
-                exclude: /(node_modules|src\/main\/resources)/,
-                loader: "eslint-loader",
-            },
             { // Use babel to transpile JS files to older versions
                 test: /\.m?js$/,
                 exclude: /(node_modules|bower_components|src\/main\/resources)/,

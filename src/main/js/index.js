@@ -1,7 +1,8 @@
 "use strict"
 
 // We have to do this first because plugins expect an L global
-import "leaflet/dist/leaflet"
+import "leaflet"
+
 import "intersection-observer" // Polyfill for older browsers
 
 import "buefy/dist/buefy.css"
@@ -27,6 +28,8 @@ import { patch } from "./utils"
 /* eslint sort-imports:0 */
 // Unfortunately, import order is everything in JS - this has to be here to work.
 import "leaflet-rotatedmarker"
+
+window.datastore = datastore
 
 patch()
 
