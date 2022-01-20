@@ -264,7 +264,7 @@ class Journeymap {
                 name: waypoint.name,
 
                 className: className,
-                size: 48,
+                size: 24,
             })
         }
 
