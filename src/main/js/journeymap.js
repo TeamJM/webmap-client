@@ -243,7 +243,7 @@ class Journeymap {
             }
 
             let style = ""
-            let iconUrl = getResourceUrl(waypoint.icon)
+            let iconUrl = getResourceUrl(waypoint.colorizedIcon)
             let className = "marker-" + waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_")
 
             let tooltipColor = color
