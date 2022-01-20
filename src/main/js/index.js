@@ -3,13 +3,16 @@
 // We have to do this first because plugins expect an L global
 import "leaflet"
 
-import "intersection-observer" // Polyfill for older browsers
+// Polyfills for older browsers
+import "intersection-observer"
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 import "buefy/dist/buefy.css"
 import "leaflet/dist/leaflet.css"
 import "../css/index.css"
 
-import { LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer } from "vue2-leaflet"
+import { LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer, LTooltip } from "vue2-leaflet"
 import { faCogs, faCube, faExpandArrowsAlt, faFileAlt, faGlobeEurope, faLocationArrow, faTimesCircle } from "@fortawesome/free-solid-svg-icons"
 
 import Buefy, { SnackbarProgrammatic as Snackbar } from "buefy"
@@ -43,6 +46,13 @@ Vue.component("l-map", LMap)
 Vue.component("l-marker", LMarker)
 Vue.component("l-polygon", LPolygon)
 Vue.component("l-tile-layer", LTileLayer)
+Vue.component("l-tooltip", LTooltip)
+
+Vue.component('v-style', {
+    render: function (createElement) {
+        return createElement('style', this.$slots.default)
+    }
+});
 
 delete Icon.Default.prototype._getIconUrl
 

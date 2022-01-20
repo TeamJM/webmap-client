@@ -19,6 +19,25 @@
 <body>
 
 <div id="main">
+    <v-style v-if="visibleWaypoints">
+        <template v-for="(waypoint) in waypoints">
+.leaflet-tooltip.{{waypoint.className}} {
+    color: {{waypoint.tooltipColor}};
+    border-color: {{waypoint.tooltipColor}};
+}
+        </template>
+    </v-style>
+
+    <v-style v-if="visibleAnimals || visibleMobs || visibleVillagers">
+        <template v-for="(marker) in markers">
+            <template v-if="marker.color !== undefined">
+.leaflet-tooltip.{{ marker.key.replaceAll("/", "_") }} {
+    border-color: {{ marker.color }};
+}
+            </template>
+        </template>
+    </v-style>
+
     <l-map :max-bounds="map_bounds"
            :crs="L.CRS.Simple"
            :fade-animation="false"
@@ -142,18 +161,36 @@
                   :options="marker.options"
                   :z-index-offset="marker.zIndex ? marker.zIndex : 0"
 
-                  v-for="(marker) in markers"
-        ></l-marker>
+                  v-for="(marker) in markers">
+            <l-tooltip v-if="marker.tooltip !== undefined"
+                       :options="{permanent: true, direction: 'center', offset: [0, 32], className: marker.key.replaceAll('/', '_')}">
+                <div v-html="marker.tooltip.text"></div>
+            </l-tooltip>
+        </l-marker>
 
-        <l-polygon :color="waypoint.color"
-                   :fill-color="waypoint.color"
-                   :fill-opacity="0.7"
-                   :lat-lngs="waypoint.latLngs"
-                   :key="waypoint.id"
+        <l-marker :icon="getMarkerIconObj(waypoint)"
+                  :key="waypoint.key"
+                  :lat-lng="waypoint.latLng"
+                  :style="waypoint.type"
+                  :options="{interactive: false}"
 
-                   v-if="visibleWaypoints"
-                   v-for="(waypoint) in waypoints"
-        ></l-polygon>
+                  v-if="visibleWaypoints"
+                  v-for="(waypoint) in waypoints"
+        >
+            <l-tooltip :options="{permanent: true, direction: 'center', offset: [0, 40], className: waypoint.className}">
+                {{ waypoint.name }}
+            </l-tooltip>
+        </l-marker>
+
+        <!--        <l-polygon :color="waypoint.color"-->
+        <!--                   :fill-color="waypoint.color"-->
+        <!--                   :fill-opacity="0.7"-->
+        <!--                   :lat-lngs="waypoint.latLngs"-->
+        <!--                   :key="waypoint.id"-->
+
+        <!--                   v-if="visibleWaypoints"-->
+        <!--                   v-for="(waypoint) in waypoints"-->
+        <!--        ></l-polygon>-->
 
         <l-polygon :color="polygon.strokeColor"
                    :fill-color="polygon.fillColor"
@@ -252,7 +289,9 @@
              id="logModal"
     >
         <div class="content">
-            <pre id="logContent">{{ logContent ? logContent : "Click 'Load Logs' to get the latest logs from journeymap.log"  }}</pre>
+            <pre id="logContent">{{
+                    logContent ? logContent : "Click 'Load Logs' to get the latest logs from journeymap.log"
+                }}</pre>
 
             <button :class="'button is-info is-pulled-left' + (logsLoading ? ' is-loading' : '')" @click="reloadLog"
                     type="button">Reload Logs

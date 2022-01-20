@@ -26,7 +26,13 @@ jobs:
           NPM_AUTH: ${{secrets.NPM_AUTH}}
 
       - name: NodeJS Set-Up
-        run: npm install --save
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: yarn install
 
       - name: Gradle Build
         run: /bin/sh ./gradlew build

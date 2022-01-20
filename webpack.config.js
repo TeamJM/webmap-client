@@ -7,7 +7,7 @@ const VueLoaderPlugin = require("vue-loader/lib/plugin")
 const path = require("path")
 
 module.exports = {
-    entry: ["babel-polyfill", "./src/main/js/index.js"],
+    entry: ["./src/main/js/index.js"],
     mode: "production",
 
     devtool: "source-map",

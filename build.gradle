@@ -32,7 +32,8 @@ repositories {
 }
 
 task webpack(type: Exec) {
-    inputs.file("package-lock.json")
+    inputs.file("package.json")
+    inputs.file("yarn.lock")
     inputs.file("webpack.config.js")
     inputs.dir("$projectDir/src/main/js")
     inputs.dir("$projectDir/src/main/css")
@@ -42,9 +43,9 @@ task webpack(type: Exec) {
     outputs.dir("$projectDir/src/main/resources/assets/journeymap/web/bundled")
 
     if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
-        commandLine "cmd", "/c", "npm", "run", "build"
+        commandLine "cmd", "/c", "yarn", "run", "build"
     } else {
-        commandLine "npm", "run", "build"
+        commandLine "yarn", "run", "build"
     }
 }
 
@@ -57,27 +58,6 @@ clean.doFirst {
 
 def bintrayUser = project.findProperty("bintray.user") ?: System.getenv("BINTRAY_USER")
 def bintrayKey = project.findProperty("bintray.password") ?: System.getenv("BINTRAY_PASSWORD")
-
-if (project.hasProperty("production")) {
-    // Bintray is _only_ for releases, not snapshots
-    bintray {
-        user = bintrayUser
-        key = bintrayKey
-
-        pkg {
-            name = "webmap-client"
-            repo = "JourneyMap"
-            userOrg = "teamjm"
-
-            publications = ["maven"]
-
-            version {
-                name = project.release
-                released = new Date()
-            }
-        }
-    }
-}
 
 publishing {
     repositories {

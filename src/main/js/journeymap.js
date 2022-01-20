@@ -1,8 +1,10 @@
 "use strict"
 
-import { getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl } from "./api"
+import { Converter } from '@gorymoon/minecraft-text';
 
-import { ToastProgrammatic as Toast } from "buefy"
+import {getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl} from "./api"
+
+import {ToastProgrammatic as Toast} from "buefy"
 import datastore from "./datastore"
 import dayIcon from "../images/day.png"
 import dayIconActive from "../images/day-active.png"
@@ -20,7 +22,7 @@ import nightIconDisabled from "../images/night-disabled.png"
 import topoIcon from "../images/topo.png"
 import topoIconActive from "../images/topo-active.png"
 import topoIconDisabled from "../images/topo-disabled.png"
-import { translateCoords } from "./utils"
+import {translateCoords} from "./utils"
 import undergroundIcon from "../images/underground.png"
 import undergroundIconActive from "../images/underground-active.png"
 
@@ -42,6 +44,8 @@ class Journeymap {
         this.player_z = 0
 
         this.followMode = false
+
+        this.textConverter = new Converter()
     }
 
     resetTiles() {
@@ -123,7 +127,7 @@ class Journeymap {
         try {
             status = await getStatus()
         } catch (err) {
-            status = { status: "failed" }
+            status = {status: "failed"}
         }
 
         if (status.status === "ready" && status.status !== datastore.state.status) {
@@ -166,7 +170,8 @@ class Journeymap {
 
         datastore.state.markers = this._buildMarkers(data)
         datastore.state.polygons = this._buildPolygons(data)
-        datastore.state.waypoints = this._buildWaypoints(data)
+        // datastore.state.waypoints = this._buildWaypoints(data)
+        datastore.state.waypoints = this._buildWaypointMarkers(data)
 
         this.player_x = data.player.posX
         this.player_y = data.player.posY
@@ -208,6 +213,64 @@ class Journeymap {
         datastore.state.status = status.status
     }
 
+    _buildWaypointMarkers(data) {
+        const markers = []
+
+        if (! datastore.state.visibleWaypoints) {
+            return markers
+        }
+
+        for (const waypoint of Object.values(data.waypoints)) {
+            if (! waypoint.enable || ! waypoint.dimensions.includes(this.currentDim)) {
+                continue
+            }
+
+            const hellTranslate = this.currentDim === "minecraft:the_nether"
+            const coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5, hellTranslate)
+
+            const masked = waypoint.icon.startsWith("journeymap:") || waypoint.iconColor !== -1
+
+            let color
+
+            if (waypoint.iconColor !== -1) {
+                color = "#" + (0 + waypoint.iconColor).toString(16)
+            } else {
+                const red = waypoint.r.toString(16).padStart(2, "0")
+                const green = waypoint.g.toString(16).padStart(2, "0")
+                const blue = waypoint.b.toString(16).padStart(2, "0")
+
+                color = `#${red}${green}${blue}`
+            }
+
+            let style = ""
+            let iconUrl = getResourceUrl(waypoint.icon)
+            let className = "marker-" + waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_")
+
+            let tooltipColor = color
+
+            if (waypoint.type === "Death") {
+                tooltipColor = "#FF0000"
+            }
+
+            markers.push({
+                color: color,
+                tooltipColor: tooltipColor,
+                latLng: coords,
+                masked: masked,
+                style: style,
+                type: waypoint.type,
+                key: waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_"),
+                url: iconUrl,
+                name: waypoint.name,
+
+                className: className,
+                size: 48,
+            })
+        }
+
+        return markers
+    }
+
     _buildMarkers(data) {
         const markers = []
 
@@ -225,17 +288,28 @@ class Journeymap {
                     rotationOrigin: "center",
                 },
 
-                key : "myself",
+                key: "myself",
             })
         }
 
         if (datastore.state.visibleAnimals) {
             for (const animal of Object.values(data.animals)) {
-                markers.push({
+                if (animal.iconLocation == "minecraft:textures/entity_icon/villager/villager.png") {
+                    continue
+                }
+
+                if (animal.disabled) {
+                    continue
+                }
+
+                const hexColor = "#AAAAAA"
+
+                const dot = {
                     latLng: translateCoords(animal.posX, animal.posZ),
                     url: animal.hostile ? markerDotHostile : markerDotNeutral,
                     size: 48,
                     zIndex: 1,
+                    color: hexColor,
 
                     options: {
                         rotationAngle: animal.heading,
@@ -243,7 +317,15 @@ class Journeymap {
                     },
 
                     key: `animal/${animal.entityId}`,
-                })
+                }
+
+                if (animal.serializedCustomName !== undefined && animal.serializedCustomName.length > 0) {
+                    dot.tooltip = {
+                        "text": this.textConverter.toHTML(this.textConverter.parse(animal.serializedCustomName))
+                    }
+                }
+
+                markers.push(dot)
 
                 markers.push({
                     className: "round-icon",
@@ -259,11 +341,18 @@ class Journeymap {
 
         if (datastore.state.visibleMobs) {
             for (const mob of Object.values(data.mobs)) {
-                markers.push({
+                if (mob.disabled) {
+                    continue
+                }
+
+                const hexColor = "#FF0000"
+
+                const dot = {
                     latLng: translateCoords(mob.posX, mob.posZ),
                     url: mob.hostile ? markerDotHostile : markerDotNeutral,
                     size: 48,
                     zIndex: 1,
+                    color: hexColor,
 
                     options: {
                         rotationAngle: mob.heading,
@@ -271,7 +360,15 @@ class Journeymap {
                     },
 
                     key: `mob/${mob.entityId}`,
-                })
+                }
+
+                if (mob.serializedCustomName !== undefined && mob.serializedCustomName.length > 0) {
+                    dot.tooltip = {
+                        "text": this.textConverter.toHTML(this.textConverter.parse(mob.serializedCustomName))
+                    }
+                }
+
+                markers.push(dot)
 
                 markers.push({
                     className: "round-icon",
@@ -287,11 +384,18 @@ class Journeymap {
 
         if (datastore.state.visibleVillagers) {
             for (const villager of Object.values(data.villagers)) {
-                markers.push({
+                if (villager.disabled) {
+                    continue
+                }
+
+                const hexColor = "#88E188"
+
+                const dot = {
                     latLng: translateCoords(villager.posX, villager.posZ),
                     url: villager.hostile ? markerDotHostile : markerDotVillager,
                     size: 48,
                     zIndex: 1,
+                    color: hexColor,
 
                     options: {
                         rotationAngle: villager.heading,
@@ -299,7 +403,15 @@ class Journeymap {
                     },
 
                     key: `villager/${villager.entityId}`,
-                })
+                }
+
+                if (villager.serializedCustomName !== undefined && villager.serializedCustomName.length > 0) {
+                    dot.tooltip = {
+                        "text": this.textConverter.toHTML(this.textConverter.parse(villager.serializedCustomName))
+                    }
+                }
+
+                markers.push(dot)
 
                 markers.push({
                     className: "round-icon",
@@ -315,11 +427,18 @@ class Journeymap {
 
         if (datastore.state.visiblePlayers) {
             for (const player of Object.values(data.players)) {
-                markers.push({
+                if (player.disabled) {
+                    continue
+                }
+
+                const hexColor = "#303DC1"
+
+                const dot = {
                     latLng: translateCoords(player.posX, player.posZ),
                     url: markerDotPlayer,
                     size: 48,
                     zIndex: 1,
+                    color: hexColor,
 
                     options: {
                         rotationAngle: player.heading,
@@ -327,7 +446,21 @@ class Journeymap {
                     },
 
                     key: `player/${player.entityId}`,
-                })
+                }
+
+                if (player.username !== undefined && player.username.length > 0) {
+                    let text = player.username
+
+                    if (text.startsWith("{")) {
+                        text = this.textConverter.toHTML(this.textConverter.parse(text))
+                    }
+
+                    dot.tooltip = {
+                        "text": text
+                    }
+                }
+
+                markers.push(dot)
 
                 markers.push({
                     className: "round-icon",
@@ -519,30 +652,30 @@ class Journeymap {
             zoomOffset = zoomOffset - (this.currentZoom * 3)
         }
 
-        for (const waypoint of Object.values(window.app.waypoints)) {
-            let latLngs
-
-            if (waypoint.type === "Death") {
-                // Draw an X for death markers
-                latLngs = [
-                    [waypoint.coords[0] + zoomOffset, waypoint.coords[1] + zoomOffset],
-                    [waypoint.coords[0] - zoomOffset, waypoint.coords[1] - zoomOffset],
-                    [waypoint.coords[0], waypoint.coords[1]], // Center of the X
-                    [waypoint.coords[0] - zoomOffset, waypoint.coords[1] + zoomOffset],
-                    [waypoint.coords[0] + zoomOffset, waypoint.coords[1] - zoomOffset],
-                    [waypoint.coords[0], waypoint.coords[1]], // Center of the X
-                ]
-            } else {
-                latLngs = [
-                    [waypoint.coords[0] + zoomOffset, waypoint.coords[1]],
-                    [waypoint.coords[0], waypoint.coords[1] + zoomOffset],
-                    [waypoint.coords[0] - zoomOffset, waypoint.coords[1]],
-                    [waypoint.coords[0], waypoint.coords[1] - zoomOffset],
-                ]
-            }
-
-            waypoint.latLngs = latLngs
-        }
+        // for (const waypoint of Object.values(window.app.waypoints)) {
+        //     let latLngs
+        //
+        //     if (waypoint.type === "Death") {
+        //         // Draw an X for death markers
+        //         latLngs = [
+        //             [waypoint.coords[0] + zoomOffset, waypoint.coords[1] + zoomOffset],
+        //             [waypoint.coords[0] - zoomOffset, waypoint.coords[1] - zoomOffset],
+        //             [waypoint.coords[0], waypoint.coords[1]], // Center of the X
+        //             [waypoint.coords[0] - zoomOffset, waypoint.coords[1] + zoomOffset],
+        //             [waypoint.coords[0] + zoomOffset, waypoint.coords[1] - zoomOffset],
+        //             [waypoint.coords[0], waypoint.coords[1]], // Center of the X
+        //         ]
+        //     } else {
+        //         latLngs = [
+        //             [waypoint.coords[0] + zoomOffset, waypoint.coords[1]],
+        //             [waypoint.coords[0], waypoint.coords[1] + zoomOffset],
+        //             [waypoint.coords[0] - zoomOffset, waypoint.coords[1]],
+        //             [waypoint.coords[0], waypoint.coords[1] - zoomOffset],
+        //         ]
+        //     }
+        //
+        //     waypoint.latLngs = latLngs
+        // }
     }
 }
 

@@ -12,6 +12,13 @@ html, body, #main {
     overflow: hidden;
 }
 
+.leaflet-tooltip {
+    background-color: #000000BB;
+    border-color: white;
+    border-radius: 6px;
+    color: white;
+}
+
 .pixelated img.leaflet-tile {
     /*noinspection CssInvalidPropertyValue*/
     image-rendering: -webkit-crisp-edges;
@@ -43,7 +50,7 @@ html, body, #main {
     background-clip: padding-box;
     background-color: #fff;
     border-radius: 4px;
-    box-shadow: 0 1px 5px rgba(0,0,0,.65);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .65);
     clear: both;
     color: #000;
     cursor: auto;

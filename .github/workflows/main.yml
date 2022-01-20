@@ -28,7 +28,7 @@ jobs:
         NPM_AUTH: ${{secrets.NPM_AUTH}}
 
     - name: NodeJS Set-Up
-      run: npm install --save
+      run: yarn install --save
 
     - name: Gradle Build
       run: /bin/sh ./gradlew build
