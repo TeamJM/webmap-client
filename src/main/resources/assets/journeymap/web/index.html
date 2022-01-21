@@ -162,9 +162,14 @@
                   :z-index-offset="marker.zIndex ? marker.zIndex : 0"
 
                   v-for="(marker) in markers">
-            <l-tooltip v-if="marker.tooltip !== undefined"
+            <l-tooltip v-if="marker.nameTooltip !== undefined"
                        :options="{permanent: true, direction: 'center', offset: [0, 32], className: marker.key.replaceAll('/', '_')}">
-                <div v-html="marker.tooltip.text"></div>
+                <div v-html="marker.nameTooltip.text"></div>
+            </l-tooltip>
+
+            <l-tooltip v-if="marker.customTooltip !== undefined"
+                       :options="{direction: 'right', offset: [16, 0]}">
+                <div v-html="marker.customTooltip.text"></div>
             </l-tooltip>
         </l-marker>
 

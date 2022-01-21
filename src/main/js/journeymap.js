@@ -1,6 +1,6 @@
 "use strict"
 
-import { Converter } from '@gorymoon/minecraft-text';
+import {Converter} from "@gorymoon/minecraft-text"
 
 import {getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl} from "./api"
 
@@ -271,6 +271,10 @@ class Journeymap {
         return markers
     }
 
+    _formatText(text) {
+        return this.textConverter.toHTML(this.textConverter.parse(text))
+    }
+
     _buildMarkers(data) {
         const markers = []
 
@@ -320,14 +324,14 @@ class Journeymap {
                 }
 
                 if (animal.serializedCustomName !== undefined && animal.serializedCustomName.length > 0) {
-                    dot.tooltip = {
-                        "text": this.textConverter.toHTML(this.textConverter.parse(animal.serializedCustomName))
+                    dot.nameTooltip = {
+                        "text": this._formatText(animal.serializedCustomName),
                     }
                 }
 
                 markers.push(dot)
 
-                markers.push({
+                const marker = {
                     className: "round-icon",
                     latLng: translateCoords(animal.posX, animal.posZ),
                     url: getResourceUrl(animal.iconLocation),
@@ -335,7 +339,21 @@ class Journeymap {
                     zIndex: 2,
 
                     key: `animal/${animal.entityId}/icon`,
-                })
+                }
+
+                if (animal.serializedTooltips !== undefined && animal.serializedTooltips.length > 0) {
+                    let text = []
+
+                    for (const tip of Object.values(animal.serializedTooltips)) {
+                        text.push(this._formatText(tip))
+                    }
+
+                    marker.customTooltip = {
+                        "text": text.join("<br />"),
+                    }
+                }
+
+                markers.push(marker)
             }
         }
 
@@ -363,14 +381,14 @@ class Journeymap {
                 }
 
                 if (mob.serializedCustomName !== undefined && mob.serializedCustomName.length > 0) {
-                    dot.tooltip = {
-                        "text": this.textConverter.toHTML(this.textConverter.parse(mob.serializedCustomName))
+                    dot.nameTooltip = {
+                        "text": this.textConverter.toHTML(this.textConverter.parse(mob.serializedCustomName)),
                     }
                 }
 
                 markers.push(dot)
 
-                markers.push({
+                const marker = {
                     className: "round-icon",
                     latLng: translateCoords(mob.posX, mob.posZ),
                     url: getResourceUrl(mob.iconLocation),
@@ -378,7 +396,21 @@ class Journeymap {
                     zIndex: 2,
 
                     key: `mob/${mob.entityId}/icon`,
-                })
+                }
+
+                if (mob.serializedTooltips !== undefined && mob.serializedTooltips.length > 0) {
+                    let text = []
+
+                    for (const tip of Object.values(mob.serializedTooltips)) {
+                        text.push(this._formatText(tip))
+                    }
+
+                    marker.customTooltip = {
+                        "text": text.join("<br />"),
+                    }
+                }
+
+                markers.push(marker)
             }
         }
 
@@ -406,14 +438,14 @@ class Journeymap {
                 }
 
                 if (villager.serializedCustomName !== undefined && villager.serializedCustomName.length > 0) {
-                    dot.tooltip = {
-                        "text": this.textConverter.toHTML(this.textConverter.parse(villager.serializedCustomName))
+                    dot.nameTooltip = {
+                        "text": this.textConverter.toHTML(this.textConverter.parse(villager.serializedCustomName)),
                     }
                 }
 
                 markers.push(dot)
 
-                markers.push({
+                const marker = {
                     className: "round-icon",
                     latLng: translateCoords(villager.posX, villager.posZ),
                     url: getResourceUrl(villager.iconLocation),
@@ -421,7 +453,21 @@ class Journeymap {
                     zIndex: 2,
 
                     key: `villager/${villager.entityId}/icon`,
-                })
+                }
+
+                if (villager.serializedTooltips !== undefined && villager.serializedTooltips.length > 0) {
+                    let text = []
+
+                    for (const tip of Object.values(villager.serializedTooltips)) {
+                        text.push(this._formatText(tip))
+                    }
+
+                    marker.customTooltip = {
+                        "text": text.join("<br />"),
+                    }
+                }
+
+                markers.push(marker)
             }
         }
 
@@ -455,14 +501,14 @@ class Journeymap {
                         text = this.textConverter.toHTML(this.textConverter.parse(text))
                     }
 
-                    dot.tooltip = {
-                        "text": text
+                    dot.nameTooltip = {
+                        "text": text,
                     }
                 }
 
                 markers.push(dot)
 
-                markers.push({
+                const marker = {
                     className: "round-icon",
                     latLng: translateCoords(player.posX, player.posZ),
                     url: getSkinUrl(player.entityId),
@@ -470,7 +516,21 @@ class Journeymap {
                     zIndex: 2,
 
                     key: `player/${player.entityId}/icon`,
-                })
+                }
+
+                if (player.serializedTooltips !== undefined && player.serializedTooltips.length > 0) {
+                    let text = []
+
+                    for (const tip of Object.values(player.serializedTooltips)) {
+                        text.push(this._formatText(tip))
+                    }
+
+                    marker.customTooltip = {
+                        "text": text.join("<br />"),
+                    }
+                }
+
+                markers.push(marker)
             }
         }
 
@@ -679,4 +739,5 @@ class Journeymap {
     }
 }
 
-export const JM = new Journeymap()
+export const
+    JM = new Journeymap()

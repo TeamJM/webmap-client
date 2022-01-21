@@ -14,7 +14,7 @@ html, body, #main {
 
 .leaflet-tooltip {
     background-color: #000000BB;
-    border-color: white;
+    border-color: #AAAAAA;
     border-radius: 6px;
     color: white;
 }
