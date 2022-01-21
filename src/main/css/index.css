@@ -40,6 +40,15 @@ html, body, #main {
     background-color: #222436;
 }
 
+.leaflet-marker-pane img {
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
 .round-icon {
     border-radius: 100%;
 }
