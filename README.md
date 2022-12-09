@@ -46,6 +46,7 @@ New to Git? Check out [the Pro Git book](https://git-scm.com/book/)
    click the "Fork" button at the top right to create a fork under your own GitHub account, and clone that.
 2. Create a branch for the changes you're making. Do not push directly to `master`, even if you're on a fork!
 3. Install the project dependencies using `npm install --save`.
+4. Install yarn for building `npm install -g yarn`.
 
 Building
 --------
