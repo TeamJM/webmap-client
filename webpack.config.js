@@ -1,6 +1,6 @@
 // const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+const OptimizeCSSAssetsPlugin = require("css-minimizer-webpack-plugin")
 const TerserJSPlugin = require("terser-webpack-plugin")
 const VueLoaderPlugin = require("vue-loader/lib/plugin")
 
