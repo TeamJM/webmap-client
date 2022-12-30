@@ -552,7 +552,7 @@ class Journeymap {
                 coords.push(translateCoords(point.x, point.z))
             }
 
-            if (polygon.holes.size > 0) {
+            if (polygon.holes.length > 0) {
                 for (const holeObj of Object.values(polygon.holes)) {
                     const hole = []
 
@@ -563,7 +563,7 @@ class Journeymap {
                     holes.push(hole)
                 }
 
-                coords = coords.concat([coords], holes)
+                coords = [[coords], holes]
             }
 
             polygons.push({
@@ -575,6 +575,13 @@ class Journeymap {
 
                 fillColor: polygon.fillColor,
                 fillOpacity: polygon.fillOpacity,
+
+                texturePositionX: polygon.texturePositionX,
+                texturePositionY: polygon.texturePositionY,
+                textureScaleX: polygon.textureScaleX,
+                textureScaleY: polygon.textureScaleY,
+
+                fillPattern: polygon.imageLocation ? getResourceUrl(polygon.imageLocation) : null,
             })
         }
 

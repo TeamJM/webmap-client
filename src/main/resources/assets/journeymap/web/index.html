@@ -43,7 +43,7 @@
            :fade-animation="false"
            :max-zoom="5"
            :min-zoom="-2"
-           :options="{'attributionControl': false}"
+           :options="{'attributionControl': false, 'preferCanvas': true}"
            :zoom="0"
 
            @zoom="updateZoom"
@@ -204,6 +204,14 @@
                    :opacity="polygon.strokeOpacity"
                    :weight="polygon.strokeWidth"
                    :key="polygon.id"
+
+                   :options="{
+                       'imgId': polygon.fillPattern,
+                       'texturePositionX': polygon.texturePositionX,
+                       'texturePositionY': polygon.texturePositionY,
+                       'textureScaleX': polygon.textureScaleX,
+                       'textureScaleY': polygon.textureScaleY,
+                   }"
 
                    v-if="visiblePolygons"
                    v-for="(polygon) in polygons"
