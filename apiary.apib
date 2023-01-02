@@ -7,7 +7,7 @@ The JourneyMap Webmap allows JourneyMap users to see and interact with their map
 either on the current device or on another device on the same network. The webmap is a single-page Vue
 application, and interacts with the JourneyMap mod via a REST API.
 
-While this API is designed only with the webmap in mind (and this documentation for those working on 
+While this API is designed only with the webmap in mind (and this documentation for those working on
 the webmap-client project), there's no reason another application couldn't make use of them.
 
 If you're using the new webmap and it's running on port 8080, then you will be able to easily try
@@ -127,12 +127,12 @@ Instead, it's a combination of the following types: `images`, `player`, `waypoin
                     "origin": "journeymap",  // The mod that created this waypoint
                     "persistent": true,  // Whether this waypoint will exist after the next client load
                     "type": "Normal"  // "Normal" or "Death"
-                    
+
                     // Block coordinates
                     "x": 294,
                     "y": 63,
                     "z": -270,
-                    
+
                     // Colour defined ingame
                     "r": 130,
                     "g": 180,
@@ -219,7 +219,7 @@ parameter.
 
 ### Messages (Translations) [GET]
 
-Returns an object containing a list of translations (keys and strings). 
+Returns an object containing a list of translations (keys and strings).
 
 **Note:** This currently only returns English strings and they don't match the strings in the
 webmap client, so they aren't currently in use.
@@ -235,7 +235,7 @@ webmap client, so they aren't currently in use.
             "pets_menu_item_title": "Show nearby pets",
             "players_menu_item_text": "Players",
             "rss_feed_title": "Subscribe to JourneyMap news by RSS feed"
-            
+
             // ... (there's a lot)
         }
 
@@ -418,7 +418,7 @@ Forge logfile.
     [16:02:42] [Client thread/INFO] [?] Version: JourneyMap 1.12.2-5.5.6b1, built with Forge 14.23.5.2768
     Forge: 14.23.5.2768
     Environment: os.name, os.arch, java.version, user.country, user.language=null, game language=en_us, locale=en_us
-    
+
     ...
     ```
 
@@ -427,7 +427,7 @@ Forge logfile.
 
 Polygons are shapes that are drawn directly onto the map, either by JourneyMap itself, or by
 other mods. They consist of a fill colour and opacity, and a stroke colour, opacity and width, and
-include a set of points and a set of holes.
+texture location, position and scale, and include a set of points and a set of holes.
 
 Holes are themselves just sets of points. These points are within the drawn boundaries of the polygon,
 and should be treated as an exclusion - that is to say, holes should not be counted as part of the polygon,
@@ -449,6 +449,12 @@ Returns an object containing all of the polygons that are to be drawn on the map
                 "strokeColor": "#ff0000",
                 "strokeOpacity": 0.7,
                 "strokeWidth": 2.0,
+
+                "imageLocation": "ui/img/ico/journeymap.png",  // May be empty
+                "texturePositionX": -20,
+                "texturePositionY": 8,
+                "textureScaleX": 0.8,
+                "textureScaleY": 0.4,
 
                 "holes": [],  // Areas within the polygon's bounds that should not be part of the polygon
                 "points": [  // Corner points - assume that the last point joins up with the first one
@@ -485,7 +491,7 @@ retrieving mob icons, and you can do so by providing the `iconLocation` in an en
 by one of the data cache endpoints.
 
 This endpoint is intended for image files only, and it will assume that the resource is an image and
-try to load it into a Java `BufferedImage`. Additionally, you will not be able to retrieve a player's 
+try to load it into a Java `BufferedImage`. Additionally, you will not be able to retrieve a player's
 skin this way - see the Skins resource for that.
 
 ### Get Resource [GET]
@@ -564,11 +570,11 @@ state of the client.
 
     + t: 0 (number, optional)
         Not processed by the API, but set this to the time of request to avoid caching
-        
+
     + x: 0 (number) - The X coordinate of the tile to get
     + y: 0 (number, optional) - The vertical slice of the tile to get, when in cave mode
     + z: 0 (number) - The Z coordinate of the tile to get
-    
+
     + zoom: 0 (number, optional)
         The map zoom to generate a tile image for; this isn't used by the webmap client
 
