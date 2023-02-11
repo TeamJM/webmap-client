@@ -2,6 +2,7 @@ import { JMError, JMHttpError } from "./error"
 
 export const DATA_TYPES = {
     ALL: "all",
+    AMBIENT: "ambient",
     ANIMALS: "animals",
     MOBS: "mobs",
     IMAGES: "images",
@@ -85,7 +86,7 @@ export async function getData(type, imagesSince) {
 
 export async function getAllData(imagesSince) {
     const data = await getData(DATA_TYPES.ALL, imagesSince)
-
+    data.ambient = await getData(DATA_TYPES.AMBIENT)
     data.animals = await getData(DATA_TYPES.ANIMALS)
     data.mobs = await getData(DATA_TYPES.MOBS)
     data.players = await getData(DATA_TYPES.PLAYERS)
