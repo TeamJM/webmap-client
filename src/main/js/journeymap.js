@@ -1,10 +1,8 @@
 "use strict"
 
-import { Converter } from "@gorymoon/minecraft-text"
-
-import { getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl } from "./api"
-
-import { ToastProgrammatic as Toast } from "buefy"
+import {Converter} from "@gorymoon/minecraft-text"
+import {getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl, getWaypointIconUrl} from "./api"
+import {ToastProgrammatic as Toast} from "buefy"
 import datastore from "./datastore"
 import dayIcon from "../images/day.png"
 import dayIconActive from "../images/day-active.png"
@@ -22,7 +20,7 @@ import nightIconDisabled from "../images/night-disabled.png"
 import topoIcon from "../images/topo.png"
 import topoIconActive from "../images/topo-active.png"
 import topoIconDisabled from "../images/topo-disabled.png"
-import { translateCoords } from "./utils"
+import {translateCoords} from "./utils"
 import undergroundIcon from "../images/underground.png"
 import undergroundIconActive from "../images/underground-active.png"
 
@@ -127,7 +125,7 @@ class Journeymap {
         try {
             status = await getStatus()
         } catch (err) {
-            status = { status: "failed" }
+            status = {status: "failed"}
         }
 
         if (status.status === "ready" && status.status !== datastore.state.status) {
@@ -221,29 +219,29 @@ class Journeymap {
         }
 
         for (const waypoint of Object.values(data.waypoints)) {
-            if (! waypoint.enable || ! waypoint.dimensions.includes(this.currentDim)) {
+            if (! waypoint.settings.enable || ! waypoint.dimensions.includes(this.currentDim)) {
                 continue
             }
 
             const hellTranslate = this.currentDim === "minecraft:the_nether"
             const coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5, hellTranslate)
 
-            const masked = waypoint.icon.startsWith("journeymap:") || waypoint.iconColor !== - 1
+            const masked = waypoint.icon.resourceLocation.namespace.startsWith("journeymap") || waypoint.icon.color !== -1
 
             let color
 
-            if (waypoint.iconColor !== - 1) {
-                color = "#" + (0 + waypoint.iconColor).toString(16)
+            if (waypoint.icon.color !== -1) {
+                color = "#" + (0 + waypoint.icon.color).toString(16)
             } else {
-                const red = waypoint.r.toString(16).padStart(2, "0")
-                const green = waypoint.g.toString(16).padStart(2, "0")
-                const blue = waypoint.b.toString(16).padStart(2, "0")
+                const red = waypoint.red.toString(16).padStart(2, "0")
+                const blue = waypoint.blue.toString(16).padStart(2, "0")
+                const green = waypoint.green.toString(16).padStart(2, "0")
 
                 color = `#${red}${green}${blue}`
             }
 
             const style = ""
-            const iconUrl = getResourceUrl(waypoint.colorizedIcon)
+            const iconUrl = getWaypointIconUrl(waypoint.id)
             const className = "marker-" + waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_")
 
             let tooltipColor = color
@@ -738,18 +736,18 @@ class Journeymap {
             }
 
             switch (mapMode) {
-            case "day":
-                datastore.state.dayIcon = dayIconActive
-                break
-            case "night":
-                datastore.state.nightIcon = nightIconActive
-                break
-            case "topo":
-                datastore.state.topoIcon = topoIconActive
-                break
-            case "underground":
-                datastore.state.undergroundIcon = undergroundIconActive
-                break
+                case "day":
+                    datastore.state.dayIcon = dayIconActive
+                    break
+                case "night":
+                    datastore.state.nightIcon = nightIconActive
+                    break
+                case "topo":
+                    datastore.state.topoIcon = topoIconActive
+                    break
+                case "underground":
+                    datastore.state.undergroundIcon = undergroundIconActive
+                    break
             }
 
             this.currentMapType = mapMode

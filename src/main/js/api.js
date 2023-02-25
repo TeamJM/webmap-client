@@ -19,6 +19,7 @@ const GET = { method: "GET" }
 
 const REQUIRES_IMAGES_SINCE = [DATA_TYPES.ALL, DATA_TYPES.IMAGES]
 const URLS = {
+    WAYPOINT: "/waypoint/{id}/icon",
     ACTIONS: "/actions",
     DATA: "/data/{type}",
     LOGS: "/logs",
@@ -107,6 +108,10 @@ export async function getPolygons() {
 
 export function getResourceUrl(resource) {
     return URLS.RESOURCES.format({ resource: encodeURIComponent(resource) })
+}
+
+export function getWaypointIconUrl(id) {
+    return URLS.WAYPOINT.format({ id: encodeURIComponent(id) })
 }
 
 export function getSkinUrl(username) {
