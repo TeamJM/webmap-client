@@ -61,6 +61,7 @@ export default {
 
         visiblePlayer: true,
 
+        visibleAmbient: true,
         visibleAnimals: true,
         visibleMobs: true,
         visiblePlayers: true,

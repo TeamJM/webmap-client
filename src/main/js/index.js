@@ -110,8 +110,26 @@ if (datastore.state.isSafari) {
                 var options = layer.options
 
                 if (options.imgId && options.textureScaleX !== 0 && options.textureScaleY !== 0) {
-                    const img = new Image();
-                    img.src = options.imgId
+                    if (!layer.image || options.imgId !== layer.image.imgId) {
+                        if (layer.image) {
+                            layer.image.remove()
+                        }
+
+                        layer.image = this.getPane().querySelector("[src='"+options.imgId+"']")
+                        if (!layer.image) {
+                            layer.image = new Image()
+                            layer.image.hidden = true
+                            layer.image.src = options.imgId
+                            layer.image.imgId = options.imgId
+                            this.getPane().appendChild(layer.image)
+                        }
+                    }
+
+                    const img = layer.image
+
+                    if (!img.complete) {
+                        return
+                    }
 
                     const offscreen = new OffscreenCanvas(img.width, img.height);
                     const ctxOffscreen = offscreen.getContext("2d")

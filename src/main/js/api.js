@@ -2,6 +2,7 @@ import { JMError, JMHttpError } from "./error"
 
 export const DATA_TYPES = {
     ALL: "all",
+    AMBIENT: "ambient",
     ANIMALS: "animals",
     MOBS: "mobs",
     IMAGES: "images",
@@ -18,6 +19,7 @@ const GET = { method: "GET" }
 
 const REQUIRES_IMAGES_SINCE = [DATA_TYPES.ALL, DATA_TYPES.IMAGES]
 const URLS = {
+    WAYPOINT: "/waypoint/{id}/icon",
     ACTIONS: "/actions",
     DATA: "/data/{type}",
     LOGS: "/logs",
@@ -85,7 +87,7 @@ export async function getData(type, imagesSince) {
 
 export async function getAllData(imagesSince) {
     const data = await getData(DATA_TYPES.ALL, imagesSince)
-
+    data.ambient = await getData(DATA_TYPES.AMBIENT)
     data.animals = await getData(DATA_TYPES.ANIMALS)
     data.mobs = await getData(DATA_TYPES.MOBS)
     data.players = await getData(DATA_TYPES.PLAYERS)
@@ -106,6 +108,10 @@ export async function getPolygons() {
 
 export function getResourceUrl(resource) {
     return URLS.RESOURCES.format({ resource: encodeURIComponent(resource) })
+}
+
+export function getWaypointIconUrl(id) {
+    return URLS.WAYPOINT.format({ id: encodeURIComponent(id) })
 }
 
 export function getSkinUrl(username) {

@@ -1,9 +1,7 @@
 "use strict"
 
 import {Converter} from "@gorymoon/minecraft-text"
-
-import {getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl} from "./api"
-
+import {getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl, getWaypointIconUrl} from "./api"
 import {ToastProgrammatic as Toast} from "buefy"
 import datastore from "./datastore"
 import dayIcon from "../images/day.png"
@@ -78,10 +76,10 @@ class Journeymap {
         }
 
         const params = {
-            x: x,
-            z: z,
+            x,
+            z,
 
-            dimension: dimension,
+            dimension,
             mapTypeString: mapType,
             y: slice,
             zoom: 0,
@@ -221,30 +219,30 @@ class Journeymap {
         }
 
         for (const waypoint of Object.values(data.waypoints)) {
-            if (! waypoint.enable || ! waypoint.dimensions.includes(this.currentDim)) {
+            if (! waypoint.settings.enable || ! waypoint.dimensions.includes(this.currentDim)) {
                 continue
             }
 
             const hellTranslate = this.currentDim === "minecraft:the_nether"
             const coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5, hellTranslate)
 
-            const masked = waypoint.icon.startsWith("journeymap:") || waypoint.iconColor !== -1
+            const masked = waypoint.icon.resourceLocation.namespace.startsWith("journeymap") || waypoint.icon.color !== -1
 
             let color
 
-            if (waypoint.iconColor !== -1) {
-                color = "#" + (0 + waypoint.iconColor).toString(16)
+            if (waypoint.icon.color !== -1) {
+                color = "#" + (0 + waypoint.icon.color).toString(16)
             } else {
-                const red = waypoint.r.toString(16).padStart(2, "0")
-                const green = waypoint.g.toString(16).padStart(2, "0")
-                const blue = waypoint.b.toString(16).padStart(2, "0")
+                const red = waypoint.red.toString(16).padStart(2, "0")
+                const blue = waypoint.blue.toString(16).padStart(2, "0")
+                const green = waypoint.green.toString(16).padStart(2, "0")
 
                 color = `#${red}${green}${blue}`
             }
 
-            let style = ""
-            let iconUrl = getResourceUrl(waypoint.colorizedIcon)
-            let className = "marker-" + waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_")
+            const style = ""
+            const iconUrl = getWaypointIconUrl(waypoint.id)
+            const className = "marker-" + waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_")
 
             let tooltipColor = color
 
@@ -253,17 +251,17 @@ class Journeymap {
             }
 
             markers.push({
-                color: color,
-                tooltipColor: tooltipColor,
+                color,
+                tooltipColor,
                 latLng: coords,
-                masked: masked,
-                style: style,
+                masked,
+                style,
                 type: waypoint.type,
                 key: waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_"),
                 url: iconUrl,
                 name: waypoint.name,
 
-                className: className,
+                className,
                 size: 48,
             })
         }
@@ -296,9 +294,70 @@ class Journeymap {
             })
         }
 
+        if (datastore.state.visibleAmbient) {
+            for (const ambient of Object.values(data.ambient)) {
+                if (ambient.iconLocation === "minecraft:textures/entity_icon/villager/villager.png") {
+                    continue
+                }
+
+                if (ambient.disabled) {
+                    continue
+                }
+
+                const hexColor = "#AAAAAA"
+
+                const dot = {
+                    latLng: translateCoords(ambient.posX, ambient.posZ),
+                    url: ambient.hostile ? markerDotHostile : markerDotNeutral,
+                    size: 48,
+                    zIndex: 1,
+                    color: hexColor,
+
+                    options: {
+                        rotationAngle: ambient.heading,
+                        rotationOrigin: "center",
+                    },
+
+                    key: `ambient/${ambient.entityId}`,
+                }
+
+                if (ambient.serializedCustomName !== undefined && ambient.serializedCustomName.length > 0) {
+                    dot.nameTooltip = {
+                        text: this._formatText(ambient.serializedCustomName),
+                    }
+                }
+
+                markers.push(dot)
+
+                const marker = {
+                    className: "round-icon",
+                    latLng: translateCoords(ambient.posX, ambient.posZ),
+                    url: getResourceUrl(ambient.iconLocation),
+                    size: 15,
+                    zIndex: 2,
+
+                    key: `animal/${ambient.entityId}/icon`,
+                }
+
+                if (ambient.serializedTooltips !== undefined && ambient.serializedTooltips.length > 0) {
+                    const text = []
+
+                    for (const tip of Object.values(ambient.serializedTooltips)) {
+                        text.push(this._formatText(tip))
+                    }
+
+                    marker.customTooltip = {
+                        text: text.join("<br />"),
+                    }
+                }
+
+                markers.push(marker)
+            }
+        }
+
         if (datastore.state.visibleAnimals) {
             for (const animal of Object.values(data.animals)) {
-                if (animal.iconLocation == "minecraft:textures/entity_icon/villager/villager.png") {
+                if (animal.iconLocation === "minecraft:textures/entity_icon/villager/villager.png") {
                     continue
                 }
 
@@ -325,7 +384,7 @@ class Journeymap {
 
                 if (animal.serializedCustomName !== undefined && animal.serializedCustomName.length > 0) {
                     dot.nameTooltip = {
-                        "text": this._formatText(animal.serializedCustomName),
+                        text: this._formatText(animal.serializedCustomName),
                     }
                 }
 
@@ -342,14 +401,14 @@ class Journeymap {
                 }
 
                 if (animal.serializedTooltips !== undefined && animal.serializedTooltips.length > 0) {
-                    let text = []
+                    const text = []
 
                     for (const tip of Object.values(animal.serializedTooltips)) {
                         text.push(this._formatText(tip))
                     }
 
                     marker.customTooltip = {
-                        "text": text.join("<br />"),
+                        text: text.join("<br />"),
                     }
                 }
 
@@ -382,7 +441,7 @@ class Journeymap {
 
                 if (mob.serializedCustomName !== undefined && mob.serializedCustomName.length > 0) {
                     dot.nameTooltip = {
-                        "text": this.textConverter.toHTML(this.textConverter.parse(mob.serializedCustomName)),
+                        text: this.textConverter.toHTML(this.textConverter.parse(mob.serializedCustomName)),
                     }
                 }
 
@@ -399,14 +458,14 @@ class Journeymap {
                 }
 
                 if (mob.serializedTooltips !== undefined && mob.serializedTooltips.length > 0) {
-                    let text = []
+                    const text = []
 
                     for (const tip of Object.values(mob.serializedTooltips)) {
                         text.push(this._formatText(tip))
                     }
 
                     marker.customTooltip = {
-                        "text": text.join("<br />"),
+                        text: text.join("<br />"),
                     }
                 }
 
@@ -439,7 +498,7 @@ class Journeymap {
 
                 if (villager.serializedCustomName !== undefined && villager.serializedCustomName.length > 0) {
                     dot.nameTooltip = {
-                        "text": this.textConverter.toHTML(this.textConverter.parse(villager.serializedCustomName)),
+                        text: this.textConverter.toHTML(this.textConverter.parse(villager.serializedCustomName)),
                     }
                 }
 
@@ -456,14 +515,14 @@ class Journeymap {
                 }
 
                 if (villager.serializedTooltips !== undefined && villager.serializedTooltips.length > 0) {
-                    let text = []
+                    const text = []
 
                     for (const tip of Object.values(villager.serializedTooltips)) {
                         text.push(this._formatText(tip))
                     }
 
                     marker.customTooltip = {
-                        "text": text.join("<br />"),
+                        text: text.join("<br />"),
                     }
                 }
 
@@ -502,7 +561,7 @@ class Journeymap {
                     }
 
                     dot.nameTooltip = {
-                        "text": text,
+                        text,
                     }
                 }
 
@@ -519,14 +578,14 @@ class Journeymap {
                 }
 
                 if (player.serializedTooltips !== undefined && player.serializedTooltips.length > 0) {
-                    let text = []
+                    const text = []
 
                     for (const tip of Object.values(player.serializedTooltips)) {
                         text.push(this._formatText(tip))
                     }
 
                     marker.customTooltip = {
-                        "text": text.join("<br />"),
+                        text: text.join("<br />"),
                     }
                 }
 
@@ -638,8 +697,8 @@ class Journeymap {
 
             waypoints.push({
                 color: `#${red}${green}${blue}`,
-                coords: coords,
-                latLngs: latLngs,
+                coords,
+                latLngs,
                 type: waypoint.type,
             })
         }

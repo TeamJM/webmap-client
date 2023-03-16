@@ -13,12 +13,12 @@ html, body, #main {
 }
 
 .leaflet-tooltip {
-    background-color: #FFFFFFBB;
+    background-color: rgba(15, 0, 15, 0.83);
     border-color: #AAAAAA;
     border-radius: 6px;
     color: white;
 }
-
+/*rgba(8, 0, 51, 0.83) #100010*/
 .pixelated img.leaflet-tile {
     /*noinspection CssInvalidPropertyValue*/
     image-rendering: -webkit-crisp-edges;
