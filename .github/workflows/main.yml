@@ -12,14 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    
-    - name: Java Set-Up
-      # Java 8 by default, doesn't really matter for us
-      uses: olafurpg/setup-scala@v6
+      - uses: actions/checkout@v1
 
-    - name: NodeJS Set-Up
-      run: npm install --save
+      - name: Java Set-Up
+        uses: actions/setup-java@v2
 
-    - name: Gradle Build
-      run: /bin/sh ./gradlew build
+        with:
+          distribution: "adopt"
+          java-version: "8"
+
+      - name: Set up secrets
+        run: 'echo "$NPM_AUTH" >> ~/.npmrc'
+
+        env:
+          NPM_AUTH: ${{secrets.NPM_AUTH}}
+
+      - name: NodeJS Set-Up
+        run: yarn install --save
+
+      - name: Gradle Build
+        run: /bin/sh ./gradlew build
