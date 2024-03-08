@@ -30,7 +30,6 @@ export default {
         undergroundIcon: undergroundIcon,
 
         markers: [],
-        polygons: [],
         tiles: {},
         waypoints: [],
 
@@ -62,7 +61,6 @@ export default {
         visiblePlayers: true,
         visibleVillagers: true,
 
-        visiblePolygons: true,
         visibleWaypoints: true,
 
         JMTileLayer: JMTileLayer,

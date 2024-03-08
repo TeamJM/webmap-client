@@ -22,7 +22,6 @@ const URLS = {
     DATA: "/data/{type}",
     LOGS: "/logs",
     PROPERTIES: "/properties",
-    POLYGONS: "/polygons",
     RESOURCES: "/resources?resource={resource}",
     SKIN: "/skin/{uuid}",
     STATUS: "/status",
@@ -91,8 +90,6 @@ export async function getAllData(imagesSince) {
     data.players = await getData(DATA_TYPES.PLAYERS)
     data.villagers = await getData(DATA_TYPES.VILLAGERS)
 
-    data.polygons = await getPolygons()
-
     return data
 }
 
@@ -108,9 +105,6 @@ export async function setProperties(properties) {
     return json(URLS.PROPERTIES, POST, properties)
 }
 
-export async function getPolygons() {
-    return json(URLS.POLYGONS, GET)
-}
 
 export function getResourceUrl(resource) {
     return URLS.RESOURCES.format({ resource: encodeURIComponent(resource) })
