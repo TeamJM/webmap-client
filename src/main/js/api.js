@@ -105,7 +105,6 @@ export async function setProperties(properties) {
     return json(URLS.PROPERTIES, POST, properties)
 }
 
-
 export function getResourceUrl(resource) {
     return URLS.RESOURCES.format({ resource: encodeURIComponent(resource) })
 }
