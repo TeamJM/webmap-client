@@ -3,7 +3,7 @@ name: Master
 on:
   push:
     branches:
-      - 'legacy_version'
+      - 'journeymap_legacy_webmap_client'
 
 jobs:
   build:

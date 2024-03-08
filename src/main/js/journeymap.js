@@ -17,9 +17,6 @@ import markerPlayer from "../images/player/self.png"
 import nightIcon from "../images/night.png"
 import nightIconActive from "../images/night-active.png"
 import nightIconDisabled from "../images/night-disabled.png"
-import topoIcon from "../images/topo.png"
-import topoIconActive from "../images/topo-active.png"
-import topoIconDisabled from "../images/topo-disabled.png"
 import { translateCoords } from "./utils"
 import undergroundIcon from "../images/underground.png"
 import undergroundIconActive from "../images/underground-active.png"
@@ -135,8 +132,6 @@ class Journeymap {
             return
         }
 
-        datastore.state.surfaceMappingAllowed = status.allowedMapTypes.surface
-        datastore.state.topoMappingAllowed = status.allowedMapTypes.topo
         datastore.state.caveMappingAllowed = status.allowedMapTypes.cave
 
         const now = Date.now()
@@ -180,14 +175,6 @@ class Journeymap {
         datastore.state.playerWorld = `${data.world.name}`
 
         let mapType = this.currentMapType
-
-        if ((! datastore.state.surfaceMappingAllowed) && (mapType === "day" || mapType === "night")) {
-            mapType = "topo"
-        }
-
-        if ((! datastore.state.topoMappingAllowed) && mapType === "topo") {
-            mapType = "underground"
-        }
 
         if ((! datastore.state.caveMappingAllowed) && mapType === "underground") {
             mapType = "day"
@@ -246,7 +233,7 @@ class Journeymap {
                 markers.push({
                     className: "round-icon",
                     latLng: translateCoords(animal.posX, animal.posZ),
-                    url: getResourceUrl(animal.iconLocation),
+                    url: getResourceUrl(animal.filename),
                     size: 15,
                     zIndex: 2,
 
@@ -274,7 +261,7 @@ class Journeymap {
                 markers.push({
                     className: "round-icon",
                     latLng: translateCoords(mob.posX, mob.posZ),
-                    url: getResourceUrl(mob.iconLocation),
+                    url: getResourceUrl(mob.filename),
                     size: 15,
                     zIndex: 2,
 
@@ -302,7 +289,7 @@ class Journeymap {
                 markers.push({
                     className: "round-icon",
                     latLng: translateCoords(villager.posX, villager.posZ),
-                    url: getResourceUrl(villager.iconLocation),
+                    url: getResourceUrl(villager.filename),
                     size: 15,
                     zIndex: 2,
 
@@ -452,13 +439,11 @@ class Journeymap {
     setMapMode(mapMode) {
         datastore.state.dayIcon = dayIcon
         datastore.state.nightIcon = nightIcon
-        datastore.state.topoIcon = topoIcon
         datastore.state.undergroundIcon = undergroundIcon
 
         if (this.currentDim === - 1) { // Nether has only cave mode
             datastore.state.dayIcon = dayIconDisabled
             datastore.state.nightIcon = nightIconDisabled
-            datastore.state.topoIcon = topoIconDisabled
             datastore.state.undergroundIcon = undergroundIconActive
 
             this.currentMapType = "underground"
@@ -479,9 +464,6 @@ class Journeymap {
             break
         case "night":
             datastore.state.nightIcon = nightIconActive
-            break
-        case "topo":
-            datastore.state.topoIcon = topoIconActive
             break
         case "underground":
             datastore.state.undergroundIcon = undergroundIconActive

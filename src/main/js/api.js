@@ -113,6 +113,7 @@ export async function getPolygons() {
 }
 
 export function getResourceUrl(resource) {
+    console.log(resource)
     return URLS.RESOURCES.format({ resource: encodeURIComponent(resource) })
 }
 

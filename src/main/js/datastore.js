@@ -8,7 +8,6 @@ import dayIconActive from "../images/day-active.png"
 import followIconOff from "../images/follow-off.png"
 import jmIcon from "../images/journeymap.png"
 import nightIcon from "../images/night.png"
-import topoIcon from "../images/topo.png"
 import undergroundIcon from "../images/underground.png"
 
 const browser = Bowser.getParser(window.navigator.userAgent)
@@ -26,7 +25,6 @@ export default {
         dayIcon: dayIconActive,
         followIcon: followIconOff,
         nightIcon: nightIcon,
-        topoIcon: topoIcon,
         undergroundIcon: undergroundIcon,
 
         markers: [],
@@ -35,8 +33,6 @@ export default {
         waypoints: [],
 
         caveMappingAllowed: true,
-        surfaceMappingAllowed: true,
-        topoMappingAllowed: true,
 
         playerBiome: "N/A",
         playerWorld: "N/A",

@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - 'master'
+      - 'journeymap_legacy_webmap_client'
 
   pull_request:
 

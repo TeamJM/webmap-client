@@ -98,15 +98,6 @@
 
         <l-control :position="'topleft'"
                    class="leaflet-bar leaflet-control">
-            <a @click="setMapMode('day')" id="mapTypeDay" v-if="surfaceMappingAllowed">
-                <img :src="dayIcon"/>
-            </a>
-            <a @click="setMapMode('night')" id="mapTypeNight" v-if="surfaceMappingAllowed">
-                <img :src="nightIcon"/>
-            </a>
-            <a @click="setMapMode('topo')" id="mapTypeTopo" v-if="topoMappingAllowed">
-                <img :src="topoIcon"/>
-            </a>
             <a @click="setMapMode('underground')" id="mapTypeUnderground" v-if="caveMappingAllowed">
                 <img :src="undergroundIcon"/>
             </a>
