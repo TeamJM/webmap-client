@@ -3,7 +3,7 @@ name: Master
 on:
   push:
     branches:
-      - 'master'
+      - 'legacy_version'
 
 jobs:
   build:
