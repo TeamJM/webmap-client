@@ -19,6 +19,14 @@
 <body>
 
 <div id="main">
+    <v-style v-if="visibleWaypoints">
+        <template v-for="(waypoint) in waypoints">
+            .leaflet-tooltip.{{waypoint.className}} {
+            color: {{waypoint.tooltipColor}};
+            border-color: {{waypoint.tooltipColor}};
+            }
+        </template>
+    </v-style>
     <l-map :bounds="map_bounds"
            :crs="L.CRS.Simple"
            :fade-animation="false"
@@ -143,7 +151,11 @@
 
                    v-if="visibleWaypoints"
                    v-for="(waypoint) in waypoints"
-        ></l-polygon>
+                   >
+            <l-tooltip :options="{permanent: true, direction: 'center', offset: [0, 43], className: waypoint.className}">
+                {{ waypoint.name }}
+            </l-tooltip>
+        </l-polygon>
 
         <l-polygon :color="polygon.strokeColor"
                    :fill-color="polygon.fillColor"

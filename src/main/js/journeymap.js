@@ -399,9 +399,13 @@ class Journeymap {
             const red = waypoint.r.toString(16).padStart(2, "0")
             const green = waypoint.g.toString(16).padStart(2, "0")
             const blue = waypoint.b.toString(16).padStart(2, "0")
-
+            const color = `#${red}${green}${blue}`
             let latLngs
+            let tooltipColor = color
 
+            if (waypoint.type === "Death") {
+                tooltipColor = "#FF0000"
+            }
             if (waypoint.type === "Death") {
                 // Draw an X for death markers
                 latLngs = [
@@ -422,10 +426,12 @@ class Journeymap {
             }
 
             waypoints.push({
-                color: `#${red}${green}${blue}`,
+                tooltipColor,
+                color: color,
                 coords: coords,
                 latLngs: latLngs,
                 type: waypoint.type,
+                name: waypoint.name,
             })
         }
 
