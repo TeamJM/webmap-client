@@ -165,6 +165,7 @@ class Journeymap {
         this.lastTileCheck = now
 
         datastore.state.markers = this._buildMarkers(data)
+        datastore.state.polygons = this._buildPolygons(data)
         datastore.state.waypoints = this._buildWaypoints(data)
 
         this.player_x = data.player.posX
@@ -341,6 +342,50 @@ class Journeymap {
         return markers
     }
 
+    _buildPolygons(data) {
+        const polygons = []
+
+        if (! datastore.state.visiblePolygons) {
+            return polygons
+        }
+
+        for (const polygon of Object.values(data.polygons)) {
+            let coords = []
+            const holes = []
+
+            for (const point of Object.values(polygon.points)) {
+                coords.push(translateCoords(point.x, point.z))
+            }
+
+            if (polygon.holes.size > 0) {
+                for (const holeObj of Object.values(polygon.holes)) {
+                    const hole = []
+
+                    for (const point of Object.values(holeObj)) {
+                        hole.push(translateCoords(point.x, point.z))
+                    }
+
+                    holes.push(hole)
+                }
+
+                coords = coords.concat([coords], holes)
+            }
+
+            polygons.push({
+                latLngs: coords,
+
+                strokeColor: polygon.strokeColor,
+                strokeOpacity: polygon.strokeOpacity,
+                strokeWidth: polygon.strokeWidth,
+
+                fillColor: polygon.fillColor,
+                fillOpacity: polygon.fillOpacity,
+            })
+        }
+
+        return polygons
+    }
+
     _buildWaypoints(data) {
         const waypoints = []
 
@@ -367,9 +412,13 @@ class Journeymap {
             const red = waypoint.r.toString(16).padStart(2, "0")
             const green = waypoint.g.toString(16).padStart(2, "0")
             const blue = waypoint.b.toString(16).padStart(2, "0")
-
+            const color = `#${red}${green}${blue}`
             let latLngs
+            let tooltipColor = color
 
+            if (waypoint.type === "Death") {
+                tooltipColor = "#FF0000"
+            }
             if (waypoint.type === "Death") {
                 // Draw an X for death markers
                 latLngs = [
@@ -390,10 +439,12 @@ class Journeymap {
             }
 
             waypoints.push({
-                color: `#${red}${green}${blue}`,
+                tooltipColor,
+                color: color,
                 coords: coords,
                 latLngs: latLngs,
                 type: waypoint.type,
+                name: waypoint.name,
             })
         }
 
