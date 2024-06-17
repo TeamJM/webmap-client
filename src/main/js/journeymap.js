@@ -20,7 +20,7 @@ import nightIconDisabled from "../images/night-disabled.png"
 import topoIcon from "../images/topo.png"
 import topoIconActive from "../images/topo-active.png"
 import topoIconDisabled from "../images/topo-disabled.png"
-import {translateCoords} from "./utils"
+import {toRgbHex, translateCoords} from "./utils"
 import undergroundIcon from "../images/underground.png"
 import undergroundIconActive from "../images/underground-active.png"
 
@@ -230,14 +230,14 @@ class Journeymap {
 
             let color
 
-            if (waypoint.icon.color !== null) {
+            if (waypoint.icon.color !== undefined) {
                 color = "#" + (0 + waypoint.icon.color).toString(16)
             } else {
-                const red = waypoint.red.toString(16).padStart(2, "0")
-                const blue = waypoint.blue.toString(16).padStart(2, "0")
-                const green = waypoint.green.toString(16).padStart(2, "0")
+                // const red = waypoint.red.toString(16).padStart(2, "0")
+                // const blue = waypoint.blue.toString(16).padStart(2, "0")
+                // const green = waypoint.green.toString(16).padStart(2, "0")
 
-                color = `#${red}${green}${blue}`
+                color = toRgbHex(waypoint.color)
             }
 
             const style = ""
