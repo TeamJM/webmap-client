@@ -226,7 +226,7 @@ class Journeymap {
             const hellTranslate = this.currentDim === "minecraft:the_nether"
             const coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5, hellTranslate)
 
-            const masked = waypoint.icon.resourceLocation.startsWith("journeymap") || waypoint.icon.color !== -1
+            const masked = waypoint.icon.resourceLocation.startsWith("journeymap") || waypoint.icon.color !== null
 
             let color
 
