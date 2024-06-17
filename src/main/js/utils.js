@@ -29,8 +29,8 @@ export function reverseTranslateCoords(z, x, hellTranslate, offset = 0) {
 }
 
 export function toRgbHex(color) {
-    let red = (this.color >> 16) & 0xFF;
-    let green = (this.color >> 8) & 0xFF;
-    let blue = (this.color) & 0xFF;
+    let red = (color >> 16) & 0xFF;
+    let green = (color >> 8) & 0xFF;
+    let blue = (color) & 0xFF;
     return `#${red}${green}${blue}`
 }
