@@ -230,7 +230,7 @@ class Journeymap {
 
             let color
 
-            if (waypoint.icon.color !== -1) {
+            if (waypoint.icon.color !== null) {
                 color = "#" + (0 + waypoint.icon.color).toString(16)
             } else {
                 const red = waypoint.red.toString(16).padStart(2, "0")
@@ -241,8 +241,8 @@ class Journeymap {
             }
 
             const style = ""
-            const iconUrl = getWaypointIconUrl(waypoint.id)
-            const className = "marker-" + waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_")
+            const iconUrl = getWaypointIconUrl(waypoint.guid)
+            const className = "marker-" + waypoint.guid.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_")
 
             let tooltipColor = color
 
@@ -257,7 +257,7 @@ class Journeymap {
                 masked,
                 style,
                 type: waypoint.type,
-                key: waypoint.id.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_"),
+                key: waypoint.guid.replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_"),
                 url: iconUrl,
                 name: waypoint.name,
 
