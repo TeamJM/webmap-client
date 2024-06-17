@@ -20,7 +20,7 @@ import nightIconDisabled from "../images/night-disabled.png"
 import topoIcon from "../images/topo.png"
 import topoIconActive from "../images/topo-active.png"
 import topoIconDisabled from "../images/topo-disabled.png"
-import {toRgbHex, translateCoords} from "./utils"
+import {translateCoords} from "./utils"
 import undergroundIcon from "../images/underground.png"
 import undergroundIconActive from "../images/underground-active.png"
 
@@ -224,7 +224,9 @@ class Journeymap {
             }
 
             const hellTranslate = this.currentDim === "minecraft:the_nether"
-            const coords = translateCoords(waypoint.x + 0.5, waypoint.z + 0.5, hellTranslate)
+            const posX = waypoint.pos.x;
+            const posZ = waypoint.pos.Z;
+            const coords = translateCoords(posX + 0.5, posZ + 0.5, hellTranslate)
 
             const masked = waypoint.icon.resourceLocation.startsWith("journeymap") || waypoint.icon.color !== null
 
@@ -233,11 +235,11 @@ class Journeymap {
             if (waypoint.icon.color !== undefined) {
                 color = "#" + (0 + waypoint.icon.color).toString(16)
             } else {
-                // const red = waypoint.red.toString(16).padStart(2, "0")
-                // const blue = waypoint.blue.toString(16).padStart(2, "0")
-                // const green = waypoint.green.toString(16).padStart(2, "0")
+                const red = ((waypoint.color >> 16) & 0xFF).toString(16).padStart(2, "0")
+                const blue = ((waypoint.color >> 8) & 0xFF).toString(16).padStart(2, "0")
+                const green = ((waypoint.color) & 0xFF).toString(16).padStart(2, "0")
 
-                color = toRgbHex(waypoint.color)
+                color = `#${red}${green}${blue}`
             }
 
             const style = ""
