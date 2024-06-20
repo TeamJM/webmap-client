@@ -572,7 +572,8 @@ class Journeymap {
                 strokeColor: polygon.strokeColor,
                 strokeOpacity: polygon.strokeOpacity,
                 strokeWidth: polygon.strokeWidth,
-
+                label: polygon.label,
+                fontColor: polygon.fontColor,
                 fillColor: polygon.fillColor,
                 fillOpacity: polygon.fillOpacity,
             })

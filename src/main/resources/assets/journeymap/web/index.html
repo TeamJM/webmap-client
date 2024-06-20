@@ -21,19 +21,26 @@
 <div id="main">
     <v-style v-if="visibleWaypoints">
         <template v-for="(waypoint) in waypoints">
-.leaflet-tooltip.{{waypoint.className}} {
-    color: {{waypoint.tooltipColor}};
-    border-color: {{waypoint.tooltipColor}};
-}
+            .leaflet-tooltip.{{ waypoint.className }} {
+            color: {{ waypoint.tooltipColor }};
+            border-color: {{ waypoint.tooltipColor }};
+            }
         </template>
     </v-style>
-
+    <v-style v-if="visiblePolygons">
+        <template v-for="(polygon) in polygons">
+            .leaflet-tooltip.{{ polygon.className }} {
+            color: {{ polygon.fontColor }};
+            border-color: {{ polygon.strokeColor }};
+            }
+        </template>
+    </v-style>
     <v-style v-if="visibleAnimals || visibleMobs || visibleVillagers">
         <template v-for="(marker) in markers">
             <template v-if="marker.color !== undefined">
-.leaflet-tooltip.{{ marker.key.replaceAll("/", "_") }} {
-    border-color: {{ marker.color }};
-}
+                .leaflet-tooltip.{{ marker.key.replaceAll("/", "_") }} {
+                border-color: {{ marker.color }};
+                }
             </template>
         </template>
     </v-style>
@@ -182,7 +189,8 @@
                   v-if="visibleWaypoints"
                   v-for="(waypoint) in waypoints"
         >
-            <l-tooltip :options="{permanent: true, direction: 'center', offset: [0, 43], className: waypoint.className}">
+            <l-tooltip
+                    :options="{permanent: true, direction: 'center', offset: [0, 43], className: waypoint.className}">
                 {{ waypoint.name }}
             </l-tooltip>
         </l-marker>
@@ -207,7 +215,12 @@
 
                    v-if="visiblePolygons"
                    v-for="(polygon) in polygons"
-        ></l-polygon>
+
+        >
+            <l-tooltip :options="{permanent: true, direction: 'center', offset: [0, 43], className: polygon.className}">
+                {{ polygon.label }}
+            </l-tooltip>
+        </l-polygon>
     </l-map>
 
     <b-collapse :open.sync="settingsVisible"

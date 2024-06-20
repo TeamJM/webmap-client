@@ -1,0 +1,37 @@
+name: manual_publish
+
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Java Set-Up
+        uses: actions/setup-java@v2
+
+        with:
+          distribution: "adopt"
+          java-version: "8"
+
+      - name: Set up secrets
+        run: 'echo "$NPM_AUTH" >> ~/.npmrc'
+
+        env:
+          NPM_AUTH: ${{secrets.NPM_AUTH}}
+
+      - name: NodeJS Set-Up
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Gradle Build
+        run: /bin/sh ./gradlew build
+
+      - name: Gradle Publish
+        run: /bin/sh ./gradlew -Pjourneymap.user=${{ secrets.JOURNEYMAP_USER }} -Pjourneymap.password=${{ secrets.JOURNEYMAP_PASSWORD }} publish
