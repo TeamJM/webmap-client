@@ -627,7 +627,8 @@ class Journeymap {
 
                 coords = [[coords], holes]
             }
-
+            let firstPoint = Object.values(polygon.points)
+            let className = "polygon-" + (translateCoords(firstPoint[0].x, firstPoint[0].z) + "_" + polygon.label).replaceAll(",", "_").replaceAll(":", "_").replaceAll(" ", "_").replaceAll("\n", "").toLowerCase()
             polygons.push({
                 latLngs: coords,
 
@@ -637,7 +638,9 @@ class Journeymap {
 
                 fillColor: polygon.fillColor,
                 fillOpacity: polygon.fillOpacity,
-
+                label: polygon.label,
+                fontColor: polygon.fontColor,
+                className: className,
                 texturePositionX: polygon.texturePositionX,
                 texturePositionY: polygon.texturePositionY,
                 textureScaleX: polygon.textureScaleX,
