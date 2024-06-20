@@ -215,9 +215,8 @@
 
                    v-if="visiblePolygons"
                    v-for="(polygon) in polygons"
-
         >
-            <l-tooltip :options="{permanent: true, direction: 'center', offset: [0, 43], className: polygon.className}">
+            <l-tooltip :options="{permanent: true, direction: 'center', offset: [0, 32], className: polygon.className}">
                 {{ polygon.label }}
             </l-tooltip>
         </l-polygon>
