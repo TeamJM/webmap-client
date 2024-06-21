@@ -20,7 +20,7 @@ import nightIconDisabled from "../images/night-disabled.png"
 import topoIcon from "../images/topo.png"
 import topoIconActive from "../images/topo-active.png"
 import topoIconDisabled from "../images/topo-disabled.png"
-import {translateCoords} from "./utils"
+import {reverseTranslateCoords, translateCoords} from "./utils"
 import undergroundIcon from "../images/underground.png"
 import undergroundIconActive from "../images/underground-active.png"
 
@@ -223,11 +223,12 @@ class Journeymap {
                 continue
             }
 
-            const hellTranslate = this.currentDim === "minecraft:the_nether"
+            const reverseHellTranslate = ((this.currentDim !== "minecraft:the_nether") && (waypoint.pos.primaryDimension === "minecraft:the_nether"))
 
             const posX = waypoint.pos.x;
             const posZ = waypoint.pos.z;
-            const coords = translateCoords(posX + 0.5, posZ + 0.5, hellTranslate)
+
+            const coords = reverseTranslateCoords(posX + 0.5, posZ + 0.5, reverseHellTranslate)
 
             const masked = waypoint.icon.resourceLocation.startsWith("journeymap") || waypoint.icon.color !== null
 
