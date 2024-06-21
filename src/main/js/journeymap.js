@@ -224,9 +224,18 @@ class Journeymap {
             }
 
             const reverseHellTranslate = ((this.currentDim !== "minecraft:the_nether") && (waypoint.pos.primaryDimension === "minecraft:the_nether"))
+            console.log(reverseHellTranslate
+                + " : " +
+                (this.currentDim !== "minecraft:the_nether")
+                + " : " +
+                (waypoint.pos.primaryDimension === "minecraft:the_nether")
+                + " : " +
+                this.currentDim
+                + " : " +
+                waypoint.pos.primaryDimension)
 
-            const posX = waypoint.pos.x;
-            const posZ = waypoint.pos.z;
+            const posX = waypoint.pos.x
+            const posZ = waypoint.pos.z
 
             const coords = reverseTranslateCoords(posX + 0.5, posZ + 0.5, reverseHellTranslate)
 
