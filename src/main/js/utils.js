@@ -12,8 +12,8 @@ export function patch() {
 
 export function translateCoords(x, z, hellTranslate, offset = 0) {
     if (hellTranslate) {
-        x = Math.floor(x / 8)
-        z = Math.floor(z / 8)
+        x = x << 3
+        z = z << 3
     }
 
     return [(z * - 1) + offset, x + offset]
