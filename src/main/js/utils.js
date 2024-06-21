@@ -19,11 +19,11 @@ export function translateCoords(x, z, hellTranslate, offset = 0) {
     return [(z * - 1) + offset, x + offset]
 }
 
-export function reverseTranslateCoords(z, x, hellTranslate) {
+export function reverseTranslateCoords(z, x, hellTranslate, offset = 0) {
     if (hellTranslate) {
         x = x << 3
         z = z << 3
     }
 
-    return [x, z]
+    return [x - offset, (z * - 1) - offset]
 }
