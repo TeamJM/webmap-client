@@ -79,6 +79,18 @@ module.exports = {
                 test: /\.vue$/,
                 loader: "vue-loader",
             },
+            {
+                test: /\.m?js$/,
+                resolve: {
+                    fullySpecified: false,
+                },
+                include: [
+                    path.resolve(
+                        __dirname,
+                        'node_modules/@gorymoon/minecraft-text'
+                    ),
+                ],
+            },
         ],
     },
 }

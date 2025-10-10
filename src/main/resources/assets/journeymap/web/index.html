@@ -78,7 +78,7 @@
                    class="info-pane">
             <b-tooltip :animated="true" label="Player biome" position="is-left">
                 <div>
-                    <font-awesome-icon icon="cube"></font-awesome-icon>
+                    <lucide-icon-box></lucide-icon-box>
                     <span v-text="playerBiome"></span>
                 </div>
             </b-tooltip>
@@ -116,7 +116,7 @@
                        position="is-left">
                 <div>
                     <a @click="settingsVisible = !settingsVisible">
-                        <font-awesome-icon icon="cogs"></font-awesome-icon>
+                        <lucide-icon-settings></lucide-icon-settings>
                     </a>
                 </div>
             </b-tooltip>
@@ -151,7 +151,7 @@
                    class="leaflet-bar leaflet-control">
             <b-tooltip :animated="true" class="is-flex" label="Toggle full-screen" position="is-right">
                 <a @click="toggleFullScreen">
-                    <font-awesome-icon icon="expand-arrows-alt"></font-awesome-icon>
+                    <lucide-icon-expand></lucide-icon-expand>
                 </a>
             </b-tooltip>
 
