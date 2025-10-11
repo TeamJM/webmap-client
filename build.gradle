@@ -2,9 +2,6 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
-    }
 }
 
 plugins {
@@ -13,8 +10,6 @@ plugins {
     id 'com.palantir.git-version' version '0.12.2'
 }
 
-// This is weird, but I can't seem to get at the plugin the other way
-apply plugin: 'com.jfrog.bintray'
 
 group 'info.journeymap'
 
@@ -64,9 +59,6 @@ clean.doFirst {
     // Remove the Webpack bundled assets as part of the clean task
     delete "$projectDir/src/main/resources/assets/journeymap/web/bundled"
 }
-
-def bintrayUser = project.findProperty("bintray.user") ?: System.getenv("BINTRAY_USER")
-def bintrayKey = project.findProperty("bintray.password") ?: System.getenv("BINTRAY_PASSWORD")
 
 publishing {
     repositories {
