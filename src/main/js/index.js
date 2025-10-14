@@ -13,7 +13,7 @@ import "leaflet/dist/leaflet.css"
 import "../css/index.css"
 
 import { LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer, LTooltip } from "vue2-leaflet"
-import { Settings, Box, Expand } from 'lucide-vue'
+import { Settings, Box, Expand, Navigation, Earth, File, CircleX } from 'lucide-vue'
 
 import Buefy, { SnackbarProgrammatic as Snackbar } from "buefy"
 import { Icon } from "leaflet"
@@ -37,6 +37,10 @@ patch()
 Vue.component('lucide-icon-settings', Settings)
 Vue.component('lucide-icon-box', Box)
 Vue.component('lucide-icon-expand', Expand)
+Vue.component('lucide-icon-navigation', Navigation)
+Vue.component('lucide-icon-earth', Earth)
+Vue.component('lucide-icon-file', File)
+Vue.component('lucide-icon-circle-x', CircleX)
 
 Vue.component("l-circle-marker", LCircleMarker)
 Vue.component("l-control", LControl)
