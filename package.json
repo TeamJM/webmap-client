@@ -5,10 +5,6 @@
   "dependencies": {
     "@babel/core": "7.16.10",
     "@babel/preset-env": "7.16.10",
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-brands-svg-icons": "^5.15.4",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/vue-fontawesome": "^2.0.6",
     "@gorymoon/minecraft-text": "^1.0.1",
     "@types/leaflet": "1.7.8",
     "babel-loader": "8.2.3",
@@ -30,6 +26,7 @@
     "intersection-observer": "0.12.0",
     "leaflet": "^1.7.1",
     "leaflet-rotatedmarker": "0.2.0",
+    "lucide-vue": "^0.517.0",
     "mini-css-extract-plugin": "2.5.2",
     "regenerator-runtime": "^0.13.9",
     "terser-webpack-plugin": "5.3.0",

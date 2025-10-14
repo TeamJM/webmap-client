@@ -13,10 +13,9 @@ import "leaflet/dist/leaflet.css"
 import "../css/index.css"
 
 import { LCircleMarker, LControl, LMap, LMarker, LPolygon, LTileLayer, LTooltip } from "vue2-leaflet"
-import { faCogs, faCube, faExpandArrowsAlt, faFileAlt, faGlobeEurope, faLocationArrow, faTimesCircle } from "@fortawesome/free-solid-svg-icons"
+import { Settings, Box, Expand, Navigation, Earth, File, CircleX } from 'lucide-vue'
 
 import Buefy, { SnackbarProgrammatic as Snackbar } from "buefy"
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { Icon } from "leaflet"
 import MarkerIcon from "leaflet/dist/images/marker-icon.png"
 import MarkerIcon2x from "leaflet/dist/images/marker-icon-2x.png"
@@ -24,7 +23,6 @@ import MarkerShadow from "leaflet/dist/images/marker-shadow.png"
 import Vue from "vue"
 
 import datastore from "./datastore"
-import { library } from "@fortawesome/fontawesome-svg-core"
 import { methods } from "./methods"
 import { patch } from "./utils"
 
@@ -36,9 +34,13 @@ window.datastore = datastore
 
 patch()
 
-library.add(faCube, faLocationArrow, faGlobeEurope, faCogs, faExpandArrowsAlt, faFileAlt, faTimesCircle)
-
-Vue.component("font-awesome-icon", FontAwesomeIcon)
+Vue.component('lucide-icon-settings', Settings)
+Vue.component('lucide-icon-box', Box)
+Vue.component('lucide-icon-expand', Expand)
+Vue.component('lucide-icon-navigation', Navigation)
+Vue.component('lucide-icon-earth', Earth)
+Vue.component('lucide-icon-file', File)
+Vue.component('lucide-icon-circle-x', CircleX)
 
 Vue.component("l-circle-marker", LCircleMarker)
 Vue.component("l-control", LControl)

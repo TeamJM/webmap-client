@@ -78,15 +78,14 @@
                    class="info-pane">
             <b-tooltip :animated="true" label="Player biome" position="is-left">
                 <div>
-                    <font-awesome-icon icon="cube"></font-awesome-icon>
+                    <lucide-icon-box></lucide-icon-box>
                     <span v-text="playerBiome"></span>
                 </div>
             </b-tooltip>
 
             <b-tooltip :animated="true" label="Player coordinates" position="is-left">
                 <div class="truncate">
-                    <font-awesome-icon icon="location-arrow"></font-awesome-icon>
-
+                    <lucide-icon-navigation></lucide-icon-navigation>
                     <span class="light-text">x:</span>
                     <span v-text="playerX"></span>
                     <span class="light-text">z:</span>
@@ -101,7 +100,7 @@
                    class="info-pane">
             <b-tooltip :animated="true" label="World" position="is-left">
                 <div>
-                    <font-awesome-icon icon="globe-europe"></font-awesome-icon>
+                    <lucide-icon-earth></lucide-icon-earth>
                     <span v-text="playerWorld"></span>
                 </div>
             </b-tooltip>
@@ -116,7 +115,7 @@
                        position="is-left">
                 <div>
                     <a @click="settingsVisible = !settingsVisible">
-                        <font-awesome-icon icon="cogs"></font-awesome-icon>
+                        <lucide-icon-settings></lucide-icon-settings>
                     </a>
                 </div>
             </b-tooltip>
@@ -151,13 +150,13 @@
                    class="leaflet-bar leaflet-control">
             <b-tooltip :animated="true" class="is-flex" label="Toggle full-screen" position="is-right">
                 <a @click="toggleFullScreen">
-                    <font-awesome-icon icon="expand-arrows-alt"></font-awesome-icon>
+                    <lucide-icon-expand></lucide-icon-expand>
                 </a>
             </b-tooltip>
 
             <b-tooltip :animated="true" class="is-flex" label="View journeymap.log" position="is-right">
                 <a @click="logModalActive = true" id="logButton">
-                    <font-awesome-icon icon="file-alt"></font-awesome-icon>
+                    <lucide-icon-file></lucide-icon-file>
                 </a>
             </b-tooltip>
         </l-control>
@@ -243,7 +242,7 @@
 
                @click="settingsVisible = !settingsVisible">
 
-                <font-awesome-icon icon="times-circle"></font-awesome-icon>
+                <lucide-icon-circle-x></lucide-icon-circle-x>
             </a>
         </div>
         <div class="content">
