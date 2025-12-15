@@ -229,7 +229,7 @@ class Journeymap {
 
             const coords = translateCoords(posX + 0.5, posZ + 0.5, reverseHellTranslate)
 
-            const masked = waypoint.icon.resourceLocation.startsWith("journeymap") || waypoint.icon.color !== null
+            const masked = waypoint.icon.id.startsWith("journeymap") || waypoint.icon.color !== null
 
             let color
 
