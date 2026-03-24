@@ -723,14 +723,12 @@ class Journeymap {
             datastore.state.topoIcon = topoIcon
             datastore.state.undergroundIcon = undergroundIcon
 
-            if (this.currentDim === "minecraft:the_nether") { // Nether has only cave mode
-                datastore.state.dayIcon = dayIconDisabled
+            if (this.currentDim === "minecraft:the_nether") {
                 datastore.state.nightIcon = nightIconDisabled
-                datastore.state.topoIcon = topoIconDisabled
-                datastore.state.undergroundIcon = undergroundIconActive
 
-                this.currentMapType = "underground"
-                return
+                if (mapMode === "night") { // Nether has no night mode
+                    return this.setMapMode("day")
+                }
             }
 
             if (this.currentDim === "minecraft:the_end") {
