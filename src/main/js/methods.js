@@ -45,6 +45,16 @@ export function mapReady() {
             }
         },
         1000)
+
+    setInterval(
+        () => {
+            try {
+                JM._updatePlayerPosition().then()
+            } catch (e) {
+                // Silently ignore player position update errors
+            }
+        },
+        200)
 }
 
 export function updateZoom() {

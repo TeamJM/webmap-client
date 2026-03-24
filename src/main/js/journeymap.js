@@ -1,7 +1,7 @@
 "use strict"
 
 import {Converter} from "@gorymoon/minecraft-text"
-import {getAllData, getResourceUrl, getSkinUrl, getStatus, getTileUrl, getWaypointIconUrl} from "./api"
+import {getAllData, getPlayerData, getResourceUrl, getSkinUrl, getStatus, getTileUrl, getWaypointIconUrl} from "./api"
 import {ToastProgrammatic as Toast} from "buefy"
 import datastore from "./datastore"
 import dayIcon from "../images/day.png"
@@ -201,7 +201,7 @@ class Journeymap {
         }
 
         if (this.followMode) {
-            app.$refs.map.mapObject.setView(translateCoords(this.player_x, this.player_z))
+            app.$refs.map.mapObject.panTo(translateCoords(this.player_x, this.player_z), {animate: true, duration: 0.25})
 
             if (datastore.state.followMapType) {
                 this.setMapMode(status.mapType)
@@ -209,6 +209,32 @@ class Journeymap {
         }
 
         datastore.state.status = status.status
+    }
+
+    async _updatePlayerPosition() {
+        if (datastore.state.status !== "ready") {
+            return
+        }
+
+        let player
+
+        try {
+            player = await getPlayerData()
+        } catch (err) {
+            return
+        }
+
+        this.player_x = player.posX
+        this.player_y = player.posY
+        this.player_z = player.posZ
+
+        datastore.state.playerX = `${Math.floor(this.player_x)}`
+        datastore.state.playerY = `${Math.floor(this.player_y)}`
+        datastore.state.playerZ = `${Math.floor(this.player_z)}`
+
+        if (this.followMode) {
+            app.$refs.map.mapObject.panTo(translateCoords(this.player_x, this.player_z), {animate: true, duration: 0.25})
+        }
     }
 
     _buildWaypointMarkers(data) {

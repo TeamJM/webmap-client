@@ -85,6 +85,10 @@ export async function getData(type, imagesSince) {
     return json(url, GET)
 }
 
+export async function getPlayerData() {
+    return getData(DATA_TYPES.PLAYER)
+}
+
 export async function getAllData(imagesSince) {
     const data = await getData(DATA_TYPES.ALL, imagesSince)
     data.ambient = await getData(DATA_TYPES.AMBIENT)
